@@ -19,6 +19,8 @@ public:
 	bool writeData(char * lpBuf, DWORD dwToWrite);
 	int checkPortStatus();
 
+	BOOL ReadFromCOMPort(unsigned char* c_Data);
+	BOOL WriteToCOMPort(unsigned char* c_Data);
 
 private:
 	Com _com;

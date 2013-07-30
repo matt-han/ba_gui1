@@ -1,39 +1,36 @@
-﻿Der Buildvorgang wurde am 30.07.2013 10:13:48 gestartet.
+﻿Der Buildvorgang wurde am 30.07.2013 14:00:42 gestartet.
      1>Projekt "C:\Users\m.hansertvivar\Documents\Visual Studio 2010\Projects\ba_gui1\ba_gui1\ba_gui1.vcxproj" auf Knoten "2", build Ziel(e).
      1>InitializeBuildStatus:
          "Debug\ba_gui1.unsuccessfulbuild" wird erstellt, da "AlwaysCreate" angegeben wurde.
        ClCompile:
-         c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /ZI /nologo /W4 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt Com.cpp FileManager.cpp Interpreter.cpp Logger.cpp PortHandler.cpp Tools.cpp Window.cpp main.cpp
-         Tools.cpp
-     1>c:\users\m.hansertvivar\documents\visual studio 2010\projects\ba_gui1\ba_gui1\tools.cpp(44): warning C4996: 'localtime': This function or variable may be unsafe. Consider using localtime_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-                 c:\program files (x86)\microsoft visual studio 10.0\vc\include\time.inl(112): Siehe Deklaration von 'localtime'
-     1>c:\users\m.hansertvivar\documents\visual studio 2010\projects\ba_gui1\ba_gui1\tools.cpp(46): warning C4996: 'asctime': This function or variable may be unsafe. Consider using asctime_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-                 c:\program files (x86)\microsoft visual studio 10.0\vc\include\time.h(153): Siehe Deklaration von 'asctime'
-         PortHandler.cpp
-     1>c:\users\m.hansertvivar\documents\visual studio 2010\projects\ba_gui1\ba_gui1\porthandler.cpp(140): warning C4800: 'BOOL': Variable wird auf booleschen Wert ('True' oder 'False') gesetzt (Auswirkungen auf Leistungsverhalten möglich)
-     1>c:\users\m.hansertvivar\documents\visual studio 2010\projects\ba_gui1\ba_gui1\porthandler.cpp(178): error C2065: 'bWaitingOnStatusHandle': nichtdeklarierter Bezeichner
-     1>c:\users\m.hansertvivar\documents\visual studio 2010\projects\ba_gui1\ba_gui1\porthandler.cpp(186): error C3861: "ReportStatusEvent": Bezeichner wurde nicht gefunden.
-     1>c:\users\m.hansertvivar\documents\visual studio 2010\projects\ba_gui1\ba_gui1\porthandler.cpp(207): error C3861: "ReportStatusEvent": Bezeichner wurde nicht gefunden.
-         FileManager.cpp
-     1>c:\users\m.hansertvivar\documents\visual studio 2010\projects\ba_gui1\ba_gui1\filemanager.cpp(69): error C2143: Syntaxfehler: Es fehlt ')' vor '{'
-     1>c:\users\m.hansertvivar\documents\visual studio 2010\projects\ba_gui1\ba_gui1\filemanager.cpp(72): error C2106: '=': Linker Operand muss ein L-Wert sein
-         Com.cpp
-     1>c:\users\m.hansertvivar\documents\visual studio 2010\projects\ba_gui1\ba_gui1\com.cpp(172): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-                 c:\program files (x86)\microsoft visual studio 10.0\vc\include\stdio.h(371): Siehe Deklaration von 'sprintf'
-     1>c:\users\m.hansertvivar\documents\visual studio 2010\projects\ba_gui1\ba_gui1\com.cpp(174): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-                 c:\program files (x86)\microsoft visual studio 10.0\vc\include\stdio.h(371): Siehe Deklaration von 'sprintf'
-         Code wird generiert...
-         Kompilieren...
+         c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /ZI /nologo /W4 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt main.cpp
          main.cpp
-     1>c:\users\m.hansertvivar\documents\visual studio 2010\projects\ba_gui1\ba_gui1\main.cpp(9): warning C4100: 'pCmdLine': Unreferenzierter formaler Parameter
-         Window.cpp
-         Logger.cpp
-     1>c:\users\m.hansertvivar\documents\visual studio 2010\projects\ba_gui1\ba_gui1\logger.cpp(15): warning C4996: 'getenv': This function or variable may be unsafe. Consider using _dupenv_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-                 c:\program files (x86)\microsoft visual studio 10.0\vc\include\stdlib.h(433): Siehe Deklaration von 'getenv'
-         Interpreter.cpp
-         Code wird generiert...
-     1>Die Erstellung des Projekts "C:\Users\m.hansertvivar\Documents\Visual Studio 2010\Projects\ba_gui1\ba_gui1\ba_gui1.vcxproj" ist abgeschlossen, build Ziel(e) -- FEHLER.
+     1>c:\users\m.hansertvivar\documents\visual studio 2010\projects\ba_gui1\ba_gui1\main.cpp(42): warning C4244: '=': Konvertierung von 'int' in 'unsigned char', möglicher Datenverlust
+     1>c:\users\m.hansertvivar\documents\visual studio 2010\projects\ba_gui1\ba_gui1\main.cpp(11): warning C4100: 'pCmdLine': Unreferenzierter formaler Parameter
+       ManifestResourceCompile:
+         Alle Ausgaben sind aktuell.
+       Link:
+         c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\m.hansertvivar\Documents\Visual Studio 2010\Projects\ba_gui1\Debug\ba_gui1.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"Debug\ba_gui1.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"C:\Users\m.hansertvivar\Documents\Visual Studio 2010\Projects\ba_gui1\Debug\ba_gui1.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\m.hansertvivar\Documents\Visual Studio 2010\Projects\ba_gui1\Debug\ba_gui1.lib" /MACHINE:X86 Debug\ba_gui1.exe.embed.manifest.res
+         Debug\Com.obj
+         Debug\FileManager.obj
+         Debug\Interpreter.obj
+         Debug\Logger.obj
+         Debug\main.obj
+         Debug\PortHandler.obj
+         Debug\TestProperties.obj
+         Debug\Tools.obj
+         Debug\Window.obj
+       Manifest:
+         C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\mt.exe /nologo /verbose /out:"Debug\ba_gui1.exe.embed.manifest" /manifest Debug\ba_gui1.exe.intermediate.manifest
+         Alle Ausgaben sind aktuell.
+       LinkEmbedManifest:
+         Alle Ausgaben sind aktuell.
+         ba_gui1.vcxproj -> C:\Users\m.hansertvivar\Documents\Visual Studio 2010\Projects\ba_gui1\Debug\ba_gui1.exe
+       FinalizeBuildStatus:
+         Die Datei "Debug\ba_gui1.unsuccessfulbuild" wird gelöscht.
+         Aktualisieren des Timestamps von "Debug\ba_gui1.lastbuildstate".
+     1>Die Erstellung des Projekts "C:\Users\m.hansertvivar\Documents\Visual Studio 2010\Projects\ba_gui1\ba_gui1\ba_gui1.vcxproj" ist abgeschlossen, build Ziel(e).
 
-Fehler beim Erstellen
+Das Erstellen war erfolgreich.
 
-Verstrichene Zeit 00:00:08.76
+Verstrichene Zeit 00:00:01.73

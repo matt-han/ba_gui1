@@ -1,6 +1,7 @@
 #ifndef _COM_H
 #define _COM_H
 
+//#include "PortHandler.h"
 #include "Constants.h"
 #include "Tools.h"
 
@@ -20,6 +21,11 @@ public:
 	Com(void);
 	~Com(void);
 
+
+	//PortHandler portHandler;
+
+
+
 	vector<string> vPortList;
 	//determine from registry or device manager
 	string sBaudrates[11];
@@ -36,13 +42,17 @@ public:
 
 	void enumeratePorts();
 
+HANDLE hCom;
+
+
+
 protected:
 
 	
 
 	//Device-Control Block
 	DCB dcb;
-	HANDLE hCom;
+	
 
 	bool protocol;
 

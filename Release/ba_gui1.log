@@ -1,0 +1,50 @@
+﻿Der Buildvorgang wurde am 30.07.2013 14:01:21 gestartet.
+     1>Projekt "C:\Users\m.hansertvivar\Documents\Visual Studio 2010\Projects\ba_gui1\ba_gui1\ba_gui1.vcxproj" auf Knoten "2", build Ziel(e).
+     1>PrepareForBuild:
+         Das Verzeichnis "C:\Users\m.hansertvivar\Documents\Visual Studio 2010\Projects\ba_gui1\Release\" wird erstellt.
+       InitializeBuildStatus:
+         "Release\ba_gui1.unsuccessfulbuild" wird erstellt, da "AlwaysCreate" angegeben wurde.
+       ClCompile:
+         c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /Zi /nologo /W3 /WX- /O2 /Oi /Oy- /GL /D WIN32 /D NDEBUG /D _WINDOWS /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt Com.cpp FileManager.cpp Interpreter.cpp Logger.cpp main.cpp PortHandler.cpp TestProperties.cpp Tools.cpp Window.cpp
+         Com.cpp
+     1>Com.cpp(196): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\stdio.h(371): Siehe Deklaration von 'sprintf'
+     1>Com.cpp(198): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\stdio.h(371): Siehe Deklaration von 'sprintf'
+         FileManager.cpp
+         Interpreter.cpp
+         Logger.cpp
+     1>Logger.cpp(15): warning C4996: 'getenv': This function or variable may be unsafe. Consider using _dupenv_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\stdlib.h(433): Siehe Deklaration von 'getenv'
+         main.cpp
+         PortHandler.cpp
+         TestProperties.cpp
+         Tools.cpp
+     1>Tools.cpp(44): warning C4996: 'localtime': This function or variable may be unsafe. Consider using localtime_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\time.inl(112): Siehe Deklaration von 'localtime'
+     1>Tools.cpp(46): warning C4996: 'asctime': This function or variable may be unsafe. Consider using asctime_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\time.h(153): Siehe Deklaration von 'asctime'
+         Window.cpp
+       Link:
+         c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\m.hansertvivar\Documents\Visual Studio 2010\Projects\ba_gui1\Release\ba_gui1.exe" /INCREMENTAL:NO /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"Release\ba_gui1.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"C:\Users\m.hansertvivar\Documents\Visual Studio 2010\Projects\ba_gui1\Release\ba_gui1.pdb" /SUBSYSTEM:WINDOWS /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\m.hansertvivar\Documents\Visual Studio 2010\Projects\ba_gui1\Release\ba_gui1.lib" /MACHINE:X86 Release\Com.obj
+         Release\FileManager.obj
+         Release\Interpreter.obj
+         Release\Logger.obj
+         Release\main.obj
+         Release\PortHandler.obj
+         Release\TestProperties.obj
+         Release\Tools.obj
+         Release\Window.obj
+         Code wird generiert.
+         Codegenerierung ist abgeschlossen.
+         ba_gui1.vcxproj -> C:\Users\m.hansertvivar\Documents\Visual Studio 2010\Projects\ba_gui1\Release\ba_gui1.exe
+       Manifest:
+         C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\mt.exe /nologo /verbose /outputresource:"C:\Users\m.hansertvivar\Documents\Visual Studio 2010\Projects\ba_gui1\Release\ba_gui1.exe;#1" /manifest Release\ba_gui1.exe.intermediate.manifest
+       FinalizeBuildStatus:
+         Die Datei "Release\ba_gui1.unsuccessfulbuild" wird gelöscht.
+         Aktualisieren des Timestamps von "Release\ba_gui1.lastbuildstate".
+     1>Die Erstellung des Projekts "C:\Users\m.hansertvivar\Documents\Visual Studio 2010\Projects\ba_gui1\ba_gui1\ba_gui1.vcxproj" ist abgeschlossen, build Ziel(e).
+
+Das Erstellen war erfolgreich.
+
+Verstrichene Zeit 00:00:06.75

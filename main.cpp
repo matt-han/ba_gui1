@@ -5,15 +5,30 @@
 #include "Logger.h"
 #include <windows.h>
 
+#include "PortHandler.h"
+
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdShow)
 {
-	string port = "COM1";
-    Logger log(true, port);
-	
+	int z = 0;
+	string port1 = "COM1";
+	string port2 = "COM2";
+    Logger log(true, port1);
+	unsigned char info[15];// = "Hallo Welt";
+	unsigned char get_info[15];
+
+	//string trans = "Hallo Welt";
+	//unsigned char c;
+
+
 	Window win;
 	Interpreter interpreter(&win);
-	Com com(port);
+
+	Com com(port1);
+	Com com2(port2);
+
+	PortHandler portHandler(com.hCom);
+	PortHandler portHandler2(com2.hCom);
 	
 
 
@@ -22,6 +37,19 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdShow
 	if(com.iExitCode == 0)
 	{
 		clog << "Port init ok" << endl;
+
+		for (; z < 14; z++)
+			info[z] = 65 + z;
+		info[14] = '\0';
+
+		MessageBoxA(NULL, (LPCSTR)info, "SENT", MB_OK);
+
+		portHandler.WriteToCOMPort(info);
+
+		portHandler2.ReadFromCOMPort(get_info);
+
+		MessageBoxA(NULL, (LPCSTR)get_info, "ARRIVED", MB_OK);
+
 	}
 	if (com.closePort() == true)
 	{

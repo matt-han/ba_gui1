@@ -4,6 +4,7 @@
 //Constructor for new object
 Com::Com(string sPort)
 {
+	
 	_dwError = 0;
 	iExitCode = 0;
 
@@ -36,7 +37,30 @@ Com::Com(string sPort)
 		{
 			clog << "Port " << sPort << " settings successfully opened" << endl;
 		}
-	}// if open
+
+		COMMTIMEOUTS timeouts;
+
+		// Specify time-out between charactor for receiving.
+		timeouts.ReadIntervalTimeout = 20;
+		// Specify value that is multiplied 
+		// by the requested number of bytes to be read. 
+		timeouts.ReadTotalTimeoutMultiplier = 10;
+		// Specify value is added to the product of the 
+		// ReadTotalTimeoutMultiplier member
+		timeouts.ReadTotalTimeoutConstant = 100;
+		// Specify value that is multiplied 
+		// by the requested number of bytes to be sent.
+		timeouts.WriteTotalTimeoutMultiplier = 10;
+		// Specify value is added to the product of the 
+		// WriteTotalTimeoutMultiplier member
+		timeouts.WriteTotalTimeoutConstant = 100;
+
+		//set the parameter to the open port
+		if (!SetCommTimeouts(hCom, &timeouts))
+		{
+			clog << "Error setting the timeouts" << endl;
+		}
+	}
 	
 
    
@@ -189,3 +213,56 @@ void Com::enumeratePorts()
         } 
     }
 }
+
+
+/*
+switch(atoi(m_baudRate))
+  {
+  case 110:
+    configSerial_.BaudRate = CBR_110;
+    break;
+  case 300:
+    configSerial_.BaudRate = CBR_300;
+    break;
+  case 600:
+    configSerial_.BaudRate = CBR_600;
+    break;
+  case 1200:
+    configSerial_.BaudRate = CBR_1200;
+    break;
+  case 2400:
+    configSerial_.BaudRate = CBR_2400;
+    break;
+  case 4800:
+    configSerial_.BaudRate = CBR_4800;
+    break;
+  case 9600:
+    configSerial_.BaudRate = CBR_9600;
+    break;
+  case 14400:
+    configSerial_.BaudRate = CBR_14400;
+    break;
+  case 19200:
+    configSerial_.BaudRate = CBR_19200;
+    break;
+  case 38400:
+    configSerial_.BaudRate = CBR_38400;
+    break;
+  case 56000:
+    configSerial_.BaudRate = CBR_56000;
+    break;
+  case 57600:
+    configSerial_.BaudRate = CBR_57600;
+    break;
+  case 115200 :
+    configSerial_.BaudRate = CBR_115200;
+    break;
+  case 128000:
+    configSerial_.BaudRate = CBR_128000;
+    break;
+  case 256000:
+    configSerial_.BaudRate = CBR_256000;
+    break;
+  default:
+    break;
+  }*/

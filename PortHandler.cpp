@@ -15,6 +15,57 @@ PortHandler::~PortHandler(void)
 {
 }
 
+
+BOOL PortHandler::ReadFromCOMPort(unsigned char* c_Data)
+{
+    BOOL error;
+
+    DWORD numberOfBytesRead = 0;
+    error = ReadFile(hCom,
+                c_Data,
+                10,                 // Number Of Bytes To Read,
+                &numberOfBytesRead,
+                NULL);
+
+    if(numberOfBytesRead == 0)
+        return FALSE;
+
+    c_Data[numberOfBytesRead] = '\0' ;
+    //SetDlgItemText(LBL_VIS_SLABEL, (LPCTSTR)c_Data);
+
+    return TRUE;
+}
+
+BOOL PortHandler::WriteToCOMPort(unsigned char* c_Data)
+{
+    BOOL fSuccess;
+    DWORD numberOfBytesWritten=0;
+
+    // send the bytes out on the wire
+    if (INVALID_HANDLE_VALUE == hCom)
+    {
+        MessageBox(NULL,L"Error: Cannot send. Port closed!\n",L"ERROR", MB_OK);   // busy shutting down the app
+        return FALSE;
+    }
+
+    fSuccess = WriteFile(hCom,
+                c_Data,
+                10,                 //  Number Of Bytes To Write,
+                &numberOfBytesWritten,
+                NULL);
+    return TRUE;
+
+    if(!fSuccess)
+    {
+        MessageBox(NULL, L"Error: Could not Write the data to RS232 port!",L"ERROR", MB_OK|MB_ICONEXCLAMATION);
+        return FALSE;
+    }
+    return TRUE;
+}
+
+
+
+/*
 //
 //
 //
@@ -232,3 +283,5 @@ int PortHandler::checkPortStatus()
 
 	CloseHandle(osStatus.hEvent);
 }
+
+*/
