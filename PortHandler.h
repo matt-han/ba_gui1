@@ -5,6 +5,7 @@
 #define READ_TIMEOUT      500      // milliseconds
 
 #include "Com.h"
+#include "Tools.h"
 #include <Windows.h>
 
 class PortHandler
@@ -15,8 +16,8 @@ public:
 	~PortHandler(void);
 
 	int iExitCode;
-	bool readData();
-	bool writeData(char * lpBuf, DWORD dwToWrite);
+	bool readData(char * lpBuf);
+	bool writeData(char * lpBuf);
 	int checkPortStatus();
 
 	BOOL ReadFromCOMPort(unsigned char* c_Data);
@@ -25,8 +26,8 @@ public:
 private:
 	Com _com;
 	HANDLE hCom;
-	
-	char * _lpBuf;
+	Tools tools;
+	//char * _lpBuf;
 };
 
 #endif

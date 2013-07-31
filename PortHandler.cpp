@@ -16,61 +16,77 @@ PortHandler::~PortHandler(void)
 }
 
 
-BOOL PortHandler::ReadFromCOMPort(unsigned char* c_Data)
-{
-    BOOL error;
+//BOOL PortHandler::ReadFromCOMPort(unsigned char* c_Data)
+//{
+//    BOOL error;
+//
+//    DWORD numberOfBytesRead = 0;
+//    error = ReadFile(hCom,
+//                c_Data,
+//                (DWORD)10,                 // Number Of Bytes To Read,
+//                &numberOfBytesRead,
+//                &ovStruct);
+//
+//	if (error == 0)
+//	{
+//		error = GetLastError();
+//		clog << "System error reading from port: " << error << endl;
+//		return FALSE;
+//	}
+//    if(numberOfBytesRead == 0)
+//        return FALSE;
+//
+//    c_Data[numberOfBytesRead] = '\0' ;
+//    //SetDlgItemText(LBL_VIS_SLABEL, (LPCTSTR)c_Data);
+//
+//    return TRUE;
+//}
+//
+//BOOL PortHandler::WriteToCOMPort(unsigned char* c_Data)
+//{
+//    BOOL fSuccess;
+//	BOOL error;
+//    DWORD numberOfBytesWritten=0;
+//
+//    // send the bytes out on the wire
+//    if (INVALID_HANDLE_VALUE == hCom)
+//    {
+//        MessageBox(NULL,L"Error: Cannot send. Port closed!\n",L"ERROR", MB_OK);   // busy shutting down the app
+//        return FALSE;
+//    }
+//
+//	clog<<"================================="<<endl;
+//	clog << "hCom " << hCom << endl;
+//	clog << "c_Data " << c_Data << endl;
+//
+//    fSuccess = WriteFile(this->hCom,
+//                c_Data,
+//                sizeof(c_Data),                 //  Number Of Bytes To Write,
+//                &numberOfBytesWritten,
+//                &ovStruct);
+//
+//	
+//	clog << "numberOfBytesWritten " << numberOfBytesWritten << endl;
+//
+//    if(0 == fSuccess)
+//    {       
+//		error = GetLastError();
+//		clog << "System error writting to port: " << error << endl;
+//
+//		MessageBox(NULL, L"Error: Could not Write the data to RS232 port!",L"ERROR", MB_OK|MB_ICONEXCLAMATION);
+//        return FALSE;
+//    }
+//    return TRUE;
+//}
 
-    DWORD numberOfBytesRead = 0;
-    error = ReadFile(hCom,
-                c_Data,
-                10,                 // Number Of Bytes To Read,
-                &numberOfBytesRead,
-                NULL);
-
-    if(numberOfBytesRead == 0)
-        return FALSE;
-
-    c_Data[numberOfBytesRead] = '\0' ;
-    //SetDlgItemText(LBL_VIS_SLABEL, (LPCTSTR)c_Data);
-
-    return TRUE;
-}
-
-BOOL PortHandler::WriteToCOMPort(unsigned char* c_Data)
-{
-    BOOL fSuccess;
-    DWORD numberOfBytesWritten=0;
-
-    // send the bytes out on the wire
-    if (INVALID_HANDLE_VALUE == hCom)
-    {
-        MessageBox(NULL,L"Error: Cannot send. Port closed!\n",L"ERROR", MB_OK);   // busy shutting down the app
-        return FALSE;
-    }
-
-    fSuccess = WriteFile(hCom,
-                c_Data,
-                10,                 //  Number Of Bytes To Write,
-                &numberOfBytesWritten,
-                NULL);
-    return TRUE;
-
-    if(!fSuccess)
-    {
-        MessageBox(NULL, L"Error: Could not Write the data to RS232 port!",L"ERROR", MB_OK|MB_ICONEXCLAMATION);
-        return FALSE;
-    }
-    return TRUE;
-}
 
 
 
-/*
 //
 //
 //
 //Read from opened port
-bool PortHandler::readData()
+bool PortHandler::readData(char * lpBuf)
 {
 	DWORD dwRead;
 	DWORD dwRes;
@@ -92,11 +108,12 @@ bool PortHandler::readData()
 	if (!fWaitingOnRead)
 	{
 		// Issue read operation.
-		if (!ReadFile(hCom, _lpBuf, READ_BUF_SIZE, &dwRead, &osReader))
+		if (!ReadFile(hCom, lpBuf, sizeof(lpBuf), &dwRead, &osReader))
 		{
+			//if not true
 			if (GetLastError() != ERROR_IO_PENDING)     // read not delayed?
 				// Error in communications; report it.
-				clog << "error in communications" << endl;
+				clog << "Read error in communications" << endl;
 			else
 				fWaitingOnRead = TRUE;
 		}
@@ -112,6 +129,7 @@ bool PortHandler::readData()
 	if (fWaitingOnRead)
 	{
 		dwRes = WaitForSingleObject(osReader.hEvent, READ_TIMEOUT);
+		clog << "dwres " << dwRes << endl;
 		switch(dwRes)
 		{
 			// Read completed.
@@ -120,11 +138,12 @@ bool PortHandler::readData()
 				// Error in communications; report it.
 					clog << "error in communications" << endl;
 				else
-				// Read completed successfully.
-				//HandleASuccessfulRead(_lpBuf, dwRead);
-				clog << "2. read successfully finished" << endl;
-				
-				//  Reset flag so that another opertion can be issued.
+				{
+					// Read completed successfully.
+					//HandleASuccessfulRead(_lpBuf, dwRead);
+					clog << "2. read successfully finished" << endl;
+				}
+				//  Reset flag so that another operation can be issued.
 				fWaitingOnRead = FALSE;
 				break;
 
@@ -134,6 +153,7 @@ bool PortHandler::readData()
 				// to issue another read until the first one finishes.
 				//
 				// This is a good time to do some background work.
+				tools.warte(3);
 				break;                       
 
 			default:
@@ -142,56 +162,144 @@ bool PortHandler::readData()
 				// event handle.
 				clog << "Error while reading in the WaitForSingleObject,\n problem with the overlapped stucture handle" << endl;
 				return false;
-				break;
 		}//switch
 	}//if fWaitingOnRead
 
 	return true;
 }
+
+
 //
 //
 //
 //Write lpBuf to opened port
-bool PortHandler::writeData(char * lpBuf, DWORD dwToWrite)
+bool PortHandler::writeData(char * lpBuf)
 {
 	OVERLAPPED osWrite = {0};
 	DWORD dwWritten;
-	BOOL fRes;
+	DWORD dwRes;
+	BOOL  fRes;
 
-	// Create this writes OVERLAPPED structure hEvent.
+	// Create this write operation's OVERLAPPED structure hEvent.
 	osWrite.hEvent = CreateEvent(NULL, TRUE, FALSE, NULL);
-	
 	if (osWrite.hEvent == NULL)
 		// Error creating overlapped event handle.
 		return FALSE;
 
-	// Issue write.
-	if (!WriteFile(hCom, lpBuf, dwToWrite, &dwWritten, &osWrite))
+   // Issue write
+	if (!WriteFile(hCom, lpBuf, sizeof(lpBuf), &dwWritten, &osWrite))
 	{
 		if (GetLastError() != ERROR_IO_PENDING)
-		{
-			// WriteFile failed, but it isn't delayed. Report error and abort.
+		{ 
+			// WriteFile failed, but it isn't delayed. Report error.
 			fRes = FALSE;
 		}
 		else
 		{
 			// Write is pending.
-			if (!GetOverlappedResult(hCom, &osWrite, &dwWritten, TRUE))
-				fRes = FALSE;
-			else
-				// Write operation completed successfully.
-				fRes = TRUE;
+			dwRes = WaitForSingleObject(osWrite.hEvent, INFINITE);
+			clog << "dwres " << dwRes << endl;
+			switch(dwRes)
+			{
+            // Overlapped event has been signaled. 
+				case WAIT_OBJECT_0:
+					if (!GetOverlappedResult(hCom, &osWrite, &dwWritten, FALSE))
+						fRes = FALSE;
+					else
+					{
+						if (dwWritten != sizeof(lpBuf))
+						{
+							// The write operation timed out. I now need to 
+							// decide if I want to abort or retry. If I retry, 
+							// I need to send only the bytes that weren't sent. 
+							// If I want to abort, I would just set fRes to 
+							// FALSE and return.
+							fRes = FALSE;
+						}
+						else
+						{
+							clog << "Write operation completed successfully" << endl;
+							fRes = TRUE;
+						}
+					}
+					break;
+            
+				default:
+					// An error has occurred in WaitForSingleObject. This usually 
+					// indicates a problem with the overlapped event handle.
+					clog <<"Write error in WaitForSingleObject.\nThis usually indicates a problem with the overlapped event handle." << endl;
+					fRes = FALSE;
+					break;
+			}//switch
 		}
-	}
+	}//writefile
 	else
+	{
 		// WriteFile completed immediately.
-		fRes = TRUE;
+
+		if (dwWritten != sizeof(lpBuf)) {
+			// The write operation timed out. I now need to 
+			// decide if I want to abort or retry. If I retry, 
+			// I need to send only the bytes that weren't sent. 
+			// If I want to abort, then I would just set fRes to 
+			// FALSE and return.
+			fRes = FALSE;
+		}
+		else
+			fRes = TRUE;
+	}
 
 	CloseHandle(osWrite.hEvent);
+
 	return fRes;
 }
 
 
+
+//
+//
+//{
+//	OVERLAPPED osWrite = {0};
+//	DWORD dwWritten;
+//	BOOL fRes;
+//
+//	// Create this writes OVERLAPPED structure hEvent.
+//	osWrite.hEvent = CreateEvent(NULL, TRUE, FALSE, NULL);
+//	
+//	if (osWrite.hEvent == NULL)
+//	{
+//		// Error creating overlapped event handle.
+//		clog << "Error creating overlapped event handle" << endl;
+//		return FALSE;
+//	}
+//
+//	// Issue write.
+//	if (!WriteFile(hCom, lpBuf, sizeof(lpBuf), &dwWritten, &osWrite))
+//	{
+//		if (GetLastError() != ERROR_IO_PENDING)
+//		{
+//			// WriteFile failed, but it isn't delayed. Report error and abort.
+//			fRes = FALSE;
+//		}
+//		else
+//		{
+//			// Write is pending.
+//			if (!GetOverlappedResult(hCom, &osWrite, &dwWritten, TRUE))
+//				fRes = FALSE;
+//			else
+//				// Write operation completed successfully.
+//				fRes = TRUE;
+//		}
+//	}
+//	else
+//		// WriteFile completed immediately.
+//		fRes = TRUE;
+//
+//	CloseHandle(osWrite.hEvent);
+//	return fRes;
+//}
+
+/*
 int PortHandler::checkPortStatus()
 {
 	#define STATUS_CHECK_TIMEOUT      500   // Milliseconds

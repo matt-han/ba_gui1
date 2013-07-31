@@ -33,6 +33,7 @@ public:
 
 	HANDLE openPort(string portNumber);
 	bool closePort();
+	long getBaudrates();
 
 	//void setParity(int i);
 	//void setProtocol(int i);
@@ -49,10 +50,11 @@ HANDLE hCom;
 protected:
 
 	
-
+	string sPort;
 	//Device-Control Block
 	DCB dcb;
-	
+	COMMPROP commProp;
+	DWORD dwMaxBaud;
 
 	bool protocol;
 
@@ -63,6 +65,7 @@ private:
 	DWORD fBinary;
 	DWORD _dwError;
 	Tools tool;
+
 
 
 
@@ -102,3 +105,27 @@ private:
 //  char  EvtChar;
 //  WORD  wReserved1;
 //} DCB, *LPDCB;
+
+
+
+// Change the DCB structure settings.
+//PortDCB.BaudRate = 9600;              // Current baud 
+//PortDCB.fBinary = TRUE;               // Binary mode; no EOF check 
+//PortDCB.fParity = TRUE;               // Enable parity checking 
+//PortDCB.fOutxCtsFlow = FALSE;         // No CTS output flow control 
+//PortDCB.fOutxDsrFlow = FALSE;         // No DSR output flow control 
+//PortDCB.fDtrControl = DTR_CONTROL_ENABLE; 
+//                                      // DTR flow control type 
+//PortDCB.fDsrSensitivity = FALSE;      // DSR sensitivity 
+//PortDCB.fTXContinueOnXoff = TRUE;     // XOFF continues Tx 
+//PortDCB.fOutX = FALSE;                // No XON/XOFF out flow control 
+//PortDCB.fInX = FALSE;                 // No XON/XOFF in flow control 
+//PortDCB.fErrorChar = FALSE;           // Disable error replacement 
+//PortDCB.fNull = FALSE;                // Disable null stripping 
+//PortDCB.fRtsControl = RTS_CONTROL_ENABLE; 
+//                                      // RTS flow control 
+//PortDCB.fAbortOnError = FALSE;        // Do not abort reads/writes on 
+//                                      // error
+//PortDCB.ByteSize = 8;                 // Number of bits/byte, 4-8 
+//PortDCB.Parity = NOPARITY;            // 0-4=no,odd,even,mark,space 
+//PortDCB.StopBits = ONESTOPBIT;        // 0,1,2 = 1, 1.5, 2

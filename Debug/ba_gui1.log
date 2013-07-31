@@ -1,12 +1,15 @@
-﻿Der Buildvorgang wurde am 30.07.2013 14:00:42 gestartet.
+﻿Der Buildvorgang wurde am 31.07.2013 15:31:54 gestartet.
      1>Projekt "C:\Users\m.hansertvivar\Documents\Visual Studio 2010\Projects\ba_gui1\ba_gui1\ba_gui1.vcxproj" auf Knoten "2", build Ziel(e).
      1>InitializeBuildStatus:
          "Debug\ba_gui1.unsuccessfulbuild" wird erstellt, da "AlwaysCreate" angegeben wurde.
        ClCompile:
-         c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /ZI /nologo /W4 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt main.cpp
+         c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /ZI /nologo /W4 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt PortHandler.cpp main.cpp
          main.cpp
-     1>c:\users\m.hansertvivar\documents\visual studio 2010\projects\ba_gui1\ba_gui1\main.cpp(42): warning C4244: '=': Konvertierung von 'int' in 'unsigned char', möglicher Datenverlust
+     1>c:\users\m.hansertvivar\documents\visual studio 2010\projects\ba_gui1\ba_gui1\main.cpp(49): warning C4244: '=': Konvertierung von 'int' in 'char', möglicher Datenverlust
      1>c:\users\m.hansertvivar\documents\visual studio 2010\projects\ba_gui1\ba_gui1\main.cpp(11): warning C4100: 'pCmdLine': Unreferenzierter formaler Parameter
+         PortHandler.cpp
+     1>c:\users\m.hansertvivar\documents\visual studio 2010\projects\ba_gui1\ba_gui1\porthandler.cpp(254): warning C4800: 'BOOL': Variable wird auf booleschen Wert ('True' oder 'False') gesetzt (Auswirkungen auf Leistungsverhalten möglich)
+         Code wird generiert...
        ManifestResourceCompile:
          Alle Ausgaben sind aktuell.
        Link:
@@ -33,4 +36,4 @@
 
 Das Erstellen war erfolgreich.
 
-Verstrichene Zeit 00:00:01.73
+Verstrichene Zeit 00:00:02.63

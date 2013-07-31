@@ -9,7 +9,7 @@ Com::Com(string sPort)
 	iExitCode = 0;
 
 	clog << "Opening port " << sPort <<endl;
-
+	this->sPort=sPort;
 	
 	//Win32 API does not support nonbinary mode transfers
 	fBinary = true;
@@ -106,7 +106,37 @@ bool Com::closePort()
 	else
 		return true;
 }
+//
+//
+//
+//Get available baud rate for opened port
+long Com::getBaudrates()
+{
+	if ( 0 != GetCommProperties(this->hCom, &commProp))
+	{
+		clog << "baud rate for " << sPort << endl;
+		dwMaxBaud = commProp.dwMaxBaud;
+		clog << "dwSettableBaud " << commProp.dwSettableBaud << endl;
+		//clog << "maxBaud " << dwMaxBaud << endl;
 
+		if (dwMaxBaud == BAUD_USER)
+		{
+			clog << "maxBaud BAUD_USER" << endl;
+			return ERROR_BAUDRATE;
+		}
+		else
+		{
+			clog << "maxBaud " << dwMaxBaud << endl;
+			return ERROR_SUCCESS;
+		}
+	}
+	else
+	{
+		iExitCode = GetLastError();
+		clog << "Error getting posible baud rates. System error: " << iExitCode << endl;
+		return ERROR_BAUDRATE;
+	}
+}
 
 //
 ////

@@ -22,6 +22,7 @@ public:
 	string printTime();
 	string parseTime(string s);
 	string delSpacesAndComents(string s);
+	void warte(int x);
 
 	//remove_if
 	template <class ForwardIterator, class UnaryPredicate>

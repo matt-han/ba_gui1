@@ -92,3 +92,13 @@ string Tools::delSpacesAndComents(string s)
 	
 	return s;
 }
+
+void Tools::warte(int x)
+{
+	for (int i = 0; i < x; i++)
+	{
+		clog << "." << flush;
+		Sleep(100);
+	}
+	clog << endl;
+}
