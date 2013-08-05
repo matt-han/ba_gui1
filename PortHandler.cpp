@@ -86,7 +86,7 @@ PortHandler::~PortHandler(void)
 //
 //
 //Read from opened port
-bool PortHandler::readData(char * lpBuf)
+bool PortHandler::readData(char * lpBuf, DWORD dwSize)
 {
 	DWORD dwRead;
 	DWORD dwRes;
@@ -108,7 +108,7 @@ bool PortHandler::readData(char * lpBuf)
 	if (!fWaitingOnRead)
 	{
 		// Issue read operation.
-		if (!ReadFile(hCom, lpBuf, sizeof(lpBuf), &dwRead, &osReader))
+		if (0 == ReadFile(hCom, lpBuf, dwSize, &dwRead, &osReader))
 		{
 			//if not true
 			if (GetLastError() != ERROR_IO_PENDING)     // read not delayed?
@@ -173,12 +173,14 @@ bool PortHandler::readData(char * lpBuf)
 //
 //
 //Write lpBuf to opened port
-bool PortHandler::writeData(char * lpBuf)
+bool PortHandler::writeData(char * lpBuf, DWORD dwSize)
 {
 	OVERLAPPED osWrite = {0};
 	DWORD dwWritten;
 	DWORD dwRes;
 	BOOL  fRes;
+
+	//DWORD dwTransfer = sizeof(&lpBuf);
 
 	// Create this write operation's OVERLAPPED structure hEvent.
 	osWrite.hEvent = CreateEvent(NULL, TRUE, FALSE, NULL);
@@ -187,7 +189,7 @@ bool PortHandler::writeData(char * lpBuf)
 		return FALSE;
 
    // Issue write
-	if (!WriteFile(hCom, lpBuf, sizeof(lpBuf), &dwWritten, &osWrite))
+	if (!WriteFile(hCom, lpBuf, dwSize, &dwWritten, &osWrite))
 	{
 		if (GetLastError() != ERROR_IO_PENDING)
 		{ 
@@ -207,7 +209,8 @@ bool PortHandler::writeData(char * lpBuf)
 						fRes = FALSE;
 					else
 					{
-						if (dwWritten != sizeof(lpBuf))
+						
+						if (dwWritten != dwSize)
 						{
 							// The write operation timed out. I now need to 
 							// decide if I want to abort or retry. If I retry, 
@@ -237,7 +240,7 @@ bool PortHandler::writeData(char * lpBuf)
 	{
 		// WriteFile completed immediately.
 
-		if (dwWritten != sizeof(lpBuf)) {
+		if (dwWritten != dwSize) {
 			// The write operation timed out. I now need to 
 			// decide if I want to abort or retry. If I retry, 
 			// I need to send only the bytes that weren't sent. 

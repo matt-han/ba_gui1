@@ -56,6 +56,7 @@
 #define ERR_PORT_OPEN	-3
 #define ERR_GET_DCB		-4
 #define ERROR_BAUDRATE -5
+
 #define ERROR_FILE_NOT_OPEN -13
 #define ERROR_EMPTY_FILE -14
 #define ERROR_CFG_HEADER -15

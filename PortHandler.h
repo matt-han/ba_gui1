@@ -16,8 +16,8 @@ public:
 	~PortHandler(void);
 
 	int iExitCode;
-	bool readData(char * lpBuf);
-	bool writeData(char * lpBuf);
+	bool readData(char * lpBuf, DWORD dwSize);
+	bool writeData(char * lpBuf, DWORD dwSize);
 	int checkPortStatus();
 
 	BOOL ReadFromCOMPort(unsigned char* c_Data);

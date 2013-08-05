@@ -9,6 +9,7 @@
 #include <string.h>
 #include <iostream>
 #include <vector>
+#include <bitset>
 
 using namespace std;
 
@@ -27,13 +28,16 @@ public:
 
 
 	vector<string> vPortList;
+	vector<string> vBaud;
+	vector<DWORD> dwvBaudRates;
 	//determine from registry or device manager
-	string sBaudrates[11];
+	string StandardBaudrates[19];
 	int iExitCode;
 
 	HANDLE openPort(string portNumber);
 	bool closePort();
-	long getBaudrates();
+	long getBaudrates(string sPort);
+	long parseBaudrates(DWORD dwBitMask);
 
 	//void setParity(int i);
 	//void setProtocol(int i);

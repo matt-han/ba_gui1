@@ -69,7 +69,7 @@ long FileManager::readConfigFile()
 				{
 					vComPorts.push_back(comPort());
 					index++;
-					if ( ERROR_SYNTAX == readPort())
+					if ( ERROR_SYNTAX == readPortConfig())
 						return ERROR_SYNTAX;
 				}
 				else
@@ -87,7 +87,7 @@ long FileManager::readConfigFile()
 
 }
 
-long FileManager::readPort()
+long FileManager::readPortConfig()
 {
 	while(!inputFile.eof())
 	{

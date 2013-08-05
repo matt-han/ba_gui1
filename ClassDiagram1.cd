@@ -8,30 +8,30 @@
     </TypeIdentifier>
   </Class>
   <Class Name="Com" Collapsed="true">
-    <Position X="3" Y="0.5" Width="1.5" />
+    <Position X="1.75" Y="3.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>QAAEAAIAAAAEgAQBAAEAAAAAIAUAQAAAAAEAAAAQAFA=</HashCode>
+      <HashCode>AAAEAAIAAAAEgIFAAABAAAAAIAUAQAAAAAAAFAAYAFA=</HashCode>
       <FileName>Com.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Interpreter" Collapsed="true">
-    <Position X="4.75" Y="0.5" Width="1.5" />
+    <Position X="3" Y="1.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>gQQChAAAIBAAAgAAAAAAAAIAAAABAAAIIAAAAAJAAAA=</HashCode>
       <FileName>Interpreter.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Logger" Collapsed="true">
-    <Position X="3" Y="1.5" Width="1.5" />
+    <Position X="6.25" Y="1.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAQAQIAAgIAAAEAAAECCAAAAABAAAKAAAAAAAAAAAA=</HashCode>
       <FileName>Logger.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Tools" Collapsed="true">
-    <Position X="4.75" Y="1.5" Width="1.5" />
+    <Position X="6.25" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAgAAAABAEAIAAAAAAAAAAAAAAAgAAAAQAAAAAAAAAA=</HashCode>
+      <HashCode>AAgAAAABAEAIAAAAAAAAAAAAIAAgAAAAQAAAAIAAAAA=</HashCode>
       <FileName>Tools.h</FileName>
     </TypeIdentifier>
   </Class>
@@ -40,6 +40,20 @@
     <TypeIdentifier>
       <HashCode>gQwCAIBAYAKAAgAQEAcEQAIAAABBAEJEIAAIAABAAAA=</HashCode>
       <FileName>Window.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FileManager" Collapsed="true">
+    <Position X="4" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQCAAAAEAAAAAAAkAECSAAAQADAAAAAAAAAEAABBAA=</HashCode>
+      <FileName>FileManager.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PortHandler" Collapsed="true">
+    <Position X="4" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAEABAAFAAAAAAAAACAIAABAAAAAAABABAIAAAA=</HashCode>
+      <FileName>PortHandler.h</FileName>
     </TypeIdentifier>
   </Class>
   <Font Name="Segoe UI" Size="9" />

@@ -314,9 +314,43 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 						portIndex = SendMessage(hwndCB_Ports, CB_GETCURSEL, 0, 0);
 						_sPort = comEnumerator.vPortList.at(portIndex);
 						SetWindowTextA(hDebug, _sPort.c_str() );
-						break;
-						//update baudrate
+						
+						//!!!!!!!!!!!!!!!!!!
+						//notify to get baudrate
+						//!!!!!!!!!!!!!!!!!!
+						error = comEnumerator.getBaudrates(_sPort);
+						if (ERROR_SUCCESS == error)
+						{
+							DWORD err;
+							string s;
 
+							for (vector<string>::iterator it = comEnumerator.vBaud.begin() ; it != comEnumerator.vBaud.end(); ++it)
+							{
+								s = *it;
+								err = SendMessageA(hwndCB_Baud, CB_ADDSTRING, 0, (LPARAM)s.c_str() );
+
+								if (err == CB_ERR)
+									clog << "error updating baud rates in combobox" << endl;
+								if ( err == CB_ERRSPACE)
+									clog << "not enough space " << endl;
+								
+								clog << "message sent"<<endl;
+
+							}
+
+
+							error = SendMessageA(hwndCB_Baud, CB_GETCOUNT, 0, 0);
+							if (error == 0)
+								clog << "error update combo box" << endl;
+						}
+						else
+						{
+							return error;
+						}
+						break;
+
+
+						//update baudrate
 					case ID_CB_COM_BAUD:
 						portIndex = SendMessage(hwndCB_Baud, CB_GETCURSEL, 0, 0);
 						//_sBaudrate = get from list in device manager
@@ -453,7 +487,9 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 						SetWindowTextW(hDebug, L"Start");
 						_sTransferFile = getTransferFile();
 						//interpreter->handleGui();
-
+						//!!!!!!!!!!!!!!!!!!
+						//notify
+						//!!!!!!!!!!!!!!!!!!
 						
 						break;
 
@@ -467,7 +503,7 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 					case ID_BT_LOAD:
 						SetWindowTextW(hDebug, L"load");
-						MessageBoxW(NULL, L"Loading file and starting to be done", 
+						MessageBoxW(NULL, L"Loading file and starting", 
 									  L"Message", MB_OK);
 						break;
 

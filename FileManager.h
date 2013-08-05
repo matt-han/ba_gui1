@@ -45,7 +45,7 @@ public:
 	void closeFile();
 	long readTransferFile();
 	long readConfigFile();
-	long readPort();
+	long readPortConfig();
 
 	
 	//open

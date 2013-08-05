@@ -16,9 +16,9 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdShow
 
     Logger log(true, port1);
 
-	char info[15];
-	char get_info[15];
-	char get_info2[15];
+	char info[111];
+	char get_info[150];
+	//char get_info2[15];
 
 	//string trans = "Hallo Welt";
 	//unsigned char c;
@@ -27,54 +27,45 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdShow
 	Window win;
 	Interpreter interpreter(&win);
 
-	Com com(port1);
-	Com com2(port2);
+	//Com com(port1);
+	//Com com2(port2);
 
-	PortHandler portHandler(com.hCom);
-	PortHandler portHandler2(com2.hCom);
+	//PortHandler portHandler(com.hCom);
+	//PortHandler portHandler2(com2.hCom);
 	
 
+	//if(com.iExitCode == 0 )//&& com2.iExitCode == 0)
+	//{
+		//com.getBaudrates();
 
-	clog <<"test test test!"<< endl;
-
-	if(com.iExitCode == 0 && com2.iExitCode == 0)
-	{
-		com.getBaudrates();
-		com2.getBaudrates();
+		//com2.getBaudrates();
 		
-		clog << "Port init ok" << endl;
+		/*clog << "Port init ok" << endl;
 
-		for (; z < 14; z++)
+		for (; z < 110; z++)
 		{
-			info[z] = 65 + z;
+			info[z] = 49 + z;
 			get_info[z] = 0;
-			get_info2[z] = 0;
 		}
-		info[14] = '\0';
+		info[110] = '\0';
 
-		if (TRUE == portHandler.writeData(info))
+		if (TRUE == portHandler.writeData(info, sizeof(info)) )
 		{
 			MessageBoxA(NULL, (LPCSTR)info, "COM 1 SENT", MB_OK);
 			
 			
+			if (TRUE == portHandler.readData(get_info, sizeof(get_info)) )
+			{
+				MessageBoxA(NULL, (LPCSTR)get_info, "COM1 ARRIVED", MB_OK);
+			}
+		}*/
+	//}
 
-
-
-			//portHandler.readData(get_info);
-			MessageBoxA(NULL, (LPCSTR)get_info, "COM1 ARRIVED", MB_OK);
-
-			//portHandler2.readData(get_info2);
-			//MessageBoxA(NULL, (LPCSTR)get_info2, "COM 3 ARRIVED", MB_OK);
-		}
-	}
-	if (com.closePort() == true)
-	{
-		clog << "port1 closed!"<<endl;
-	}
-	if (com2.closePort() == true)
-	{
-		clog << "port2 closed!"<<endl;
-	}
+	
+	//if (com2.closePort() == true)
+	//{
+	//	clog << "port2 closed!"<<endl;
+	//}
 	
 
 	win.sethInstance(hInstance);
@@ -98,6 +89,11 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdShow
 	//interpreter.handleGui();
 
 	log.closelog(true);
+
+	//if (com.closePort() == true)
+	//{
+	//	clog << "port1 closed!"<<endl;
+	//}
 
     return 0;
 }
