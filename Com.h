@@ -1,3 +1,11 @@
+/*
+ *	Class to handle COM port operations
+ *	Open
+ *	Close
+ *  Enumaerate ports
+ *  Get port baud rates
+ */
+
 #ifndef _COM_H
 #define _COM_H
 
@@ -22,58 +30,50 @@ public:
 	Com(void);
 	~Com(void);
 
-
-	//PortHandler portHandler;
-
-
+//------------------------------------------------------------------------------
+//Variables
 
 	vector<string> vPortList;
 	vector<string> vBaud;
 	vector<DWORD> dwvBaudRates;
-	//determine from registry or device manager
-	string StandardBaudrates[19];
+	string saDefaultBaudrates[19];
 	int iExitCode;
+	HANDLE hCom;
+
+//------------------------------------------------------------------------------
+//Methods
 
 	HANDLE openPort(string portNumber);
-	bool closePort();
-	long getBaudrates(string sPort);
-	long parseBaudrates(DWORD dwBitMask);
-
+	long closePort();
+	long getBaudrates(string sChosenPort);
+	long decodeBaudrates(DWORD dwBitMask);
+	DWORD translateBaudrate(string sBaud);
+	void enumeratePorts();
 	//void setParity(int i);
 	//void setProtocol(int i);
 	//void setStopBits(int i);
 	//void setTransfer(int i);
-	//
-
-	void enumeratePorts();
-
-HANDLE hCom;
-
-
 
 protected:
-
-	
+//------------------------------------------------------------------------------
+//Variables
 	string sPort;
-	//Device-Control Block
-	DCB dcb;
+	DCB dcb;			//Device-Control Block
 	COMMPROP commProp;
-	DWORD dwMaxBaud;
-
 	bool protocol;
-
 	bool transfer;
 
-
 private:
+//------------------------------------------------------------------------------
+//Variables
+	Tools tool;
 	DWORD fBinary;
 	DWORD _dwError;
-	Tools tool;
-
-
-
+	DWORD BaudRate;
+	
 
 };
+
 #endif
 
 //	DWORD	unsigned long

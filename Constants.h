@@ -1,13 +1,18 @@
+/*
+ *	Header file with GUI ID's, error constants and program version
+ */
+
 #ifndef _CONSTANTS_H
 #define _CONSTANTS_H
 
 
-
+//------------------------------------------------------------------------------
+//Version
 #define VERSION "1.0"
 
-
+//------------------------------------------------------------------------------
 //GUI Elements
-//===================
+
 /*ABREVIATIONS
 *	ID	-> Identification
 *	PAR	-> Parity
@@ -45,22 +50,26 @@
 #define ID_TM_AUTO		24
 #define ID_TM_WOBB		25
 #define ID_TM_FIXED		26
+#define ID_LB_TEXT		27
+#define ID_BT_TEXT		28
 
 #define ID_BUT			100
 
 
 
-
+//------------------------------------------------------------------------------
 //ERROR CODES
-//===================
-#define ERR_PORT_OPEN	-3
-#define ERR_GET_DCB		-4
-#define ERROR_BAUDRATE -5
 
+#define ERROR_PORT_OPEN		-3
+#define ERROR_CLOSE_PORT	-4
+#define ERROR_GET_DCB		-5		
+#define ERROR_BAUDRATE		-6
+#define ERROR_SET_TIMEOUTS	-7
+#define ERROR_LOG			-8
 #define ERROR_FILE_NOT_OPEN -13
-#define ERROR_EMPTY_FILE -14
-#define ERROR_CFG_HEADER -15
-#define ERROR_SYNTAX -16
+#define ERROR_EMPTY_FILE	-14
+#define ERROR_CFG_HEADER	-15
+#define ERROR_SYNTAX		-16
 
 
 

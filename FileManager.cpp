@@ -1,19 +1,31 @@
 #include "FileManager.h"
 
-
+//------------------------------------------------------------------------------
+//	Constructor
+//------------------------------------------------------------------------------
 FileManager::FileManager(void)
 {
 }
 
 
+//------------------------------------------------------------------------------
+//	Deconstructor
+//------------------------------------------------------------------------------
 FileManager::~FileManager(void)
 {
 }
 
 
+//------------------------------------------------------------------------------
+//	Opens a file given by the parameter
+//	Parameters:
+//	 IN:
+//		- string sFilePath -> file path to be opened
+//	Return: error code signaling if operation succeded or error
+//------------------------------------------------------------------------------
 long FileManager::openFile(string sFilePath)
 {
-	std::clog << "filepath: " << sFilePath << endl;
+	clog << "filepath: " << sFilePath << endl;
 	
 	path = sFilePath.c_str();
 	
@@ -25,6 +37,10 @@ long FileManager::openFile(string sFilePath)
 		return ERROR_FILE_NOT_OPEN;
 }
 
+
+//------------------------------------------------------------------------------
+//	Close the opened file by the object
+//------------------------------------------------------------------------------
 void FileManager::closeFile()
 {
 	if ( inputFile.is_open())
@@ -33,23 +49,33 @@ void FileManager::closeFile()
 	}
 }
 
+
+//------------------------------------------------------------------------------
+//	Reads the information/text that will be transmited by the COM port and saves
+//	each line in the vector vTranferFileLines
+//	Return: error code signaling if operation succeded or error
+//------------------------------------------------------------------------------
 long FileManager::readTransferFile()
 {
-	//getline(inputFile, templine);
 
-	while (!inputFile.eof())
-	{
-		getline(inputFile, templine);
-		vTranferFileLines.push_back(templine);
-	}
 	if (vTranferFileLines.empty())
 		return ERROR_EMPTY_FILE;
-
+	else
+	{
+		while (!inputFile.eof())
+		{
+			getline(inputFile, templine);
+			vTranferFileLines.push_back(templine);
+		}
+	}
 	return ERROR_SUCCESS;
-
-
 }
 
+
+//------------------------------------------------------------------------------
+//	Read configuration file for automated testing
+//	Return: error code signaling if operation succeded or error
+//------------------------------------------------------------------------------
 long FileManager::readConfigFile()
 {
 	index = -1;
@@ -87,6 +113,12 @@ long FileManager::readConfigFile()
 
 }
 
+
+//------------------------------------------------------------------------------
+//	Reads port configuration from opened configuration file. Saves the
+//	information in the corresponding vectors or variables
+//	Return: error code signaling if operation succeded or error
+//------------------------------------------------------------------------------
 long FileManager::readPortConfig()
 {
 	while(!inputFile.eof())
@@ -144,4 +176,5 @@ long FileManager::readPortConfig()
 			}
 		}//templine != ""
 	}//while
+	return ERROR_SUCCESS;
 }

@@ -1,3 +1,15 @@
+/*
+ *	Class with diferent methods to do repeting operations across the project
+ *  
+ *  Methods:
+ *		convertToString
+ *		printTime and parseTime
+ *		deleteSpacesandComents
+ *		wait
+ */
+
+
+
 #ifndef _TOOLS_H
 #define _TOOLS_H
 
@@ -16,6 +28,9 @@ class Tools
 public:
 	Tools(void);
 	~Tools(void);
+
+//------------------------------------------------------------------------------
+//Methods
 	string convertToString(TCHAR Array[]);
 	string convertToString(char * Array);
 	string convertToString(int number);
@@ -24,7 +39,9 @@ public:
 	string delSpacesAndComents(string s);
 	void warte(int x);
 
-	//remove_if
+//------------------------------------------------------------------------------
+//Template for vector operation "remove_if"
+
 	template <class ForwardIterator, class UnaryPredicate>
 	  ForwardIterator remove_if (ForwardIterator first, ForwardIterator last,
 								 UnaryPredicate pred)

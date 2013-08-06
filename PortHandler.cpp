@@ -1,91 +1,41 @@
 #include "PortHandler.h"
 
-
+//------------------------------------------------------------------------------
+//	Constructor
+//	Parameters:
+//	 IN:
+//		- HANDLE hCom -> opened COM port handle
+//------------------------------------------------------------------------------
 PortHandler::PortHandler(HANDLE hCom)
 {
 	this->hCom = hCom;
 }
 
+
+//------------------------------------------------------------------------------
+//Default constructor
+//------------------------------------------------------------------------------
 PortHandler::PortHandler(void)
 {
 }
 
 
+//------------------------------------------------------------------------------
+//Default deconstructor
+//------------------------------------------------------------------------------
 PortHandler::~PortHandler(void)
 {
 }
 
 
-//BOOL PortHandler::ReadFromCOMPort(unsigned char* c_Data)
-//{
-//    BOOL error;
-//
-//    DWORD numberOfBytesRead = 0;
-//    error = ReadFile(hCom,
-//                c_Data,
-//                (DWORD)10,                 // Number Of Bytes To Read,
-//                &numberOfBytesRead,
-//                &ovStruct);
-//
-//	if (error == 0)
-//	{
-//		error = GetLastError();
-//		clog << "System error reading from port: " << error << endl;
-//		return FALSE;
-//	}
-//    if(numberOfBytesRead == 0)
-//        return FALSE;
-//
-//    c_Data[numberOfBytesRead] = '\0' ;
-//    //SetDlgItemText(LBL_VIS_SLABEL, (LPCTSTR)c_Data);
-//
-//    return TRUE;
-//}
-//
-//BOOL PortHandler::WriteToCOMPort(unsigned char* c_Data)
-//{
-//    BOOL fSuccess;
-//	BOOL error;
-//    DWORD numberOfBytesWritten=0;
-//
-//    // send the bytes out on the wire
-//    if (INVALID_HANDLE_VALUE == hCom)
-//    {
-//        MessageBox(NULL,L"Error: Cannot send. Port closed!\n",L"ERROR", MB_OK);   // busy shutting down the app
-//        return FALSE;
-//    }
-//
-//	clog<<"================================="<<endl;
-//	clog << "hCom " << hCom << endl;
-//	clog << "c_Data " << c_Data << endl;
-//
-//    fSuccess = WriteFile(this->hCom,
-//                c_Data,
-//                sizeof(c_Data),                 //  Number Of Bytes To Write,
-//                &numberOfBytesWritten,
-//                &ovStruct);
-//
-//	
-//	clog << "numberOfBytesWritten " << numberOfBytesWritten << endl;
-//
-//    if(0 == fSuccess)
-//    {       
-//		error = GetLastError();
-//		clog << "System error writting to port: " << error << endl;
-//
-//		MessageBox(NULL, L"Error: Could not Write the data to RS232 port!",L"ERROR", MB_OK|MB_ICONEXCLAMATION);
-//        return FALSE;
-//    }
-//    return TRUE;
-//}
-
-
-
-
-//
-//
-//
-//Read from opened port
+//------------------------------------------------------------------------------
+//	Read from opened port
+//	Parameters:
+//	 IN:
+//		- char * lpBuf ->pointer to a buffer to save the read characters
+//		- DWORD dwSize -> amount of character to be read from port
+//	Return: error code signaling if operation succeded or error
+//------------------------------------------------------------------------------
 bool PortHandler::readData(char * lpBuf, DWORD dwSize)
 {
 	DWORD dwRead;
@@ -169,10 +119,14 @@ bool PortHandler::readData(char * lpBuf, DWORD dwSize)
 }
 
 
-//
-//
-//
-//Write lpBuf to opened port
+//------------------------------------------------------------------------------
+//	Wirte to opened port
+//	Parameters:
+//	 IN:
+//		- char * lpBuf -> pointer to a buffer with the characters to be written
+//		- DWORD dwSize -> amount of character to be written to the port
+//	Return: error code signaling if operation succeded or error
+//------------------------------------------------------------------------------
 bool PortHandler::writeData(char * lpBuf, DWORD dwSize)
 {
 	OVERLAPPED osWrite = {0};
@@ -258,6 +212,68 @@ bool PortHandler::writeData(char * lpBuf, DWORD dwSize)
 }
 
 
+//BOOL PortHandler::ReadFromCOMPort(unsigned char* c_Data)
+//{
+//    BOOL error;
+//
+//    DWORD numberOfBytesRead = 0;
+//    error = ReadFile(hCom,
+//                c_Data,
+//                (DWORD)10,                 // Number Of Bytes To Read,
+//                &numberOfBytesRead,
+//                &ovStruct);
+//
+//	if (error == 0)
+//	{
+//		error = GetLastError();
+//		clog << "System error reading from port: " << error << endl;
+//		return FALSE;
+//	}
+//    if(numberOfBytesRead == 0)
+//        return FALSE;
+//
+//    c_Data[numberOfBytesRead] = '\0' ;
+//    //SetDlgItemText(LBL_VIS_SLABEL, (LPCTSTR)c_Data);
+//
+//    return TRUE;
+//}
+//
+//BOOL PortHandler::WriteToCOMPort(unsigned char* c_Data)
+//{
+//    BOOL fSuccess;
+//	BOOL error;
+//    DWORD numberOfBytesWritten=0;
+//
+//    // send the bytes out on the wire
+//    if (INVALID_HANDLE_VALUE == hCom)
+//    {
+//        MessageBox(NULL,L"Error: Cannot send. Port closed!\n",L"ERROR", MB_OK);   // busy shutting down the app
+//        return FALSE;
+//    }
+//
+//	clog<<"================================="<<endl;
+//	clog << "hCom " << hCom << endl;
+//	clog << "c_Data " << c_Data << endl;
+//
+//    fSuccess = WriteFile(this->hCom,
+//                c_Data,
+//                sizeof(c_Data),                 //  Number Of Bytes To Write,
+//                &numberOfBytesWritten,
+//                &ovStruct);
+//
+//	
+//	clog << "numberOfBytesWritten " << numberOfBytesWritten << endl;
+//
+//    if(0 == fSuccess)
+//    {       
+//		error = GetLastError();
+//		clog << "System error writting to port: " << error << endl;
+//
+//		MessageBox(NULL, L"Error: Could not Write the data to RS232 port!",L"ERROR", MB_OK|MB_ICONEXCLAMATION);
+//        return FALSE;
+//    }
+//    return TRUE;
+//}
 
 //
 //

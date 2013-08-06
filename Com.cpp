@@ -1,7 +1,11 @@
 #include "Com.h"
 
-
-//Constructor for new object
+//------------------------------------------------------------------------------
+//	Constructor for new port
+//	Parameters:
+//	 IN:
+//		- string sPort	-> COM port in the system for the programm to open
+//------------------------------------------------------------------------------
 Com::Com(string sPort)
 {
 	
@@ -13,31 +17,42 @@ Com::Com(string sPort)
 	
 	//Win32 API does not support nonbinary mode transfers
 	fBinary = true;
-	
+
+	//Struct with COM port properties
 	DCB dcbOrg = {0};
+
 	//open port
 	hCom = openPort(sPort);
+
 	if (INVALID_HANDLE_VALUE == hCom)
 	{
 		_dwError = GetLastError();
-		clog << "Error opening Port " << sPort << ". Invalid Handle was returned. System Error : " << _dwError << endl;
-		iExitCode = ERR_PORT_OPEN;
+		clog << "Error opening Port " << sPort
+			 << ". Invalid Handle was returned. System Error : "
+			 << _dwError << endl;
+
+		iExitCode = ERROR_PORT_OPEN;
 	}
 	else	//get dcb config
 	{
 		//get original dcb
 		if (GetCommState(hCom, &dcbOrg) == 0)
 		{
-			MessageBoxW(NULL, L"Error getting Port default settings", L"ERROR", MB_OK);
+			MessageBoxW(NULL, L"Error getting Port default settings",
+							  L"ERROR", MB_OK);
+
 			_dwError = GetLastError();
-			clog << "Error getting Port default settings´. Error : " << _dwError << endl;
-			iExitCode = ERR_GET_DCB;
+			clog << "Error getting Port default settings´. Error : "
+				 << _dwError << endl;
+
+			iExitCode = ERROR_GET_DCB;
 		}
 		else
 		{
 			clog << "Port " << sPort << " settings successfully opened" << endl;
 		}
 
+		//Port timeout struct
 		COMMTIMEOUTS timeouts;
 
 		//// Specify time-out between charactor for receiving.
@@ -74,65 +89,83 @@ Com::Com(string sPort)
 		if (!SetCommTimeouts(hCom, &timeouts))
 		{
 			clog << "Error setting the timeouts" << endl;
+			iExitCode = ERROR_SET_TIMEOUTS;
 		}
 	}
 	
-	StandardBaudrates[0]  = "BAUD_075";
-	StandardBaudrates[1]  = "BAUD_110";
-	StandardBaudrates[2]  = "BAUD_134_5";
-	StandardBaudrates[3]  = "BAUD_150";
-	StandardBaudrates[4]  = "BAUD_300";
-	StandardBaudrates[5]  = "BAUD_600";
-	StandardBaudrates[6]  = "BAUD_1200";
-	StandardBaudrates[7]  = "BAUD_1800";
-	StandardBaudrates[8]  = "BAUD_2400";
-	StandardBaudrates[9]  = "BAUD_4800";
-	StandardBaudrates[10] = "BAUD_7200";
-	StandardBaudrates[11] = "BAUD_9600";
-	StandardBaudrates[12] = "BAUD_14400";
-	StandardBaudrates[13] = "BAUD_19200";
-	StandardBaudrates[14] = "BAUD_38400";
-	StandardBaudrates[15] = "BAUD_56K";
-	StandardBaudrates[16] = "BAUD_57600";
-	StandardBaudrates[17] = "BAUD_115200";
-	StandardBaudrates[18] = "BAUD_128K";
-	//dwStandardBaudrates[0] = ;
-	//dwStandardBaudrates[0] = ;
+	//string array for possible port baud rates
+	saDefaultBaudrates[0]  = "75";
+	saDefaultBaudrates[1]  = "110";
+	saDefaultBaudrates[2]  = "134.5";
+	saDefaultBaudrates[3]  = "150";
+	saDefaultBaudrates[4]  = "300";
+	saDefaultBaudrates[5]  = "600";
+	saDefaultBaudrates[6]  = "1200";
+	saDefaultBaudrates[7]  = "1800";
+	saDefaultBaudrates[8]  = "2400";
+	saDefaultBaudrates[9]  = "4800";
+	saDefaultBaudrates[10] = "7200";
+	saDefaultBaudrates[11] = "9600";
+	saDefaultBaudrates[12] = "14400";
+	saDefaultBaudrates[13] = "19200";
+	saDefaultBaudrates[14] = "38400";
+	saDefaultBaudrates[15] = "56000";
+	saDefaultBaudrates[16] = "57600";
+	saDefaultBaudrates[17] = "115200";
+	saDefaultBaudrates[18] = "128000";
+	//saDefaultBaudrates[0] = ;
+	//saDefaultBaudrates[0] = ;
 
    
 }
-//
-//
-//
+
+
+
+//------------------------------------------------------------------------------
+//Default constructor
+//------------------------------------------------------------------------------
 Com::Com(void)
 {
-	//StandardBaudrates[0]  = BAUD_075;
-	//StandardBaudrates[1]  = BAUD_110;
-	//StandardBaudrates[2]  = BAUD_134_5;
-	//StandardBaudrates[3]  = BAUD_150;
-	//StandardBaudrates[4]  = BAUD_300;
-	//StandardBaudrates[5]  = BAUD_600;
-	//StandardBaudrates[6]  = BAUD_1200;
-	//StandardBaudrates[7]  = BAUD_1800;
-	//StandardBaudrates[8]  = BAUD_2400;
-	//StandardBaudrates[9]  = BAUD_4800;
-	//StandardBaudrates[10] = BAUD_7200;
-	//StandardBaudrates[11] = BAUD_9600;
-	//StandardBaudrates[12] = BAUD_14400;
-	//StandardBaudrates[13] = BAUD_19200;
-	//StandardBaudrates[14] = BAUD_38400;
-	//StandardBaudrates[15] = BAUD_56K;
-	//StandardBaudrates[16] = BAUD_57600;
-	//StandardBaudrates[17] = BAUD_115200;
-	//StandardBaudrates[18] = BAUD_128K;
+	//string array for possible port baud rates
+	saDefaultBaudrates[0]  = "75";
+	saDefaultBaudrates[1]  = "110";
+	saDefaultBaudrates[2]  = "134.5";
+	saDefaultBaudrates[3]  = "150";
+	saDefaultBaudrates[4]  = "300";
+	saDefaultBaudrates[5]  = "600";
+	saDefaultBaudrates[6]  = "1200";
+	saDefaultBaudrates[7]  = "1800";
+	saDefaultBaudrates[8]  = "2400";
+	saDefaultBaudrates[9]  = "4800";
+	saDefaultBaudrates[10] = "7200";
+	saDefaultBaudrates[11] = "9600";
+	saDefaultBaudrates[12] = "14400";
+	saDefaultBaudrates[13] = "19200";
+	saDefaultBaudrates[14] = "38400";
+	saDefaultBaudrates[15] = "56000";
+	saDefaultBaudrates[16] = "57600";
+	saDefaultBaudrates[17] = "115200";
+	saDefaultBaudrates[18] = "128000";
 }
 
+
+
+//------------------------------------------------------------------------------
+//Default deconstructor
+//------------------------------------------------------------------------------
 Com::~Com(void)
 {
 }
-//
-//
+
+
+
+//------------------------------------------------------------------------------
 //Open a com port and returns its handle
+//Parameters:
+//  IN:
+//	- string portNumber	-> COM port in the system for the programm to open
+//Returns handle to opened port
+//------------------------------------------------------------------------------
 HANDLE Com::openPort(string portNumber)
 {
 	
@@ -147,26 +180,30 @@ HANDLE Com::openPort(string portNumber)
 
 	return hCom;
 }
-//
-//
-//
-//Close the opened com port
-bool Com::closePort()
+
+
+//------------------------------------------------------------------------------
+//	Close the opened com port
+//	Return: indicating if close was successful
+//------------------------------------------------------------------------------
+long Com::closePort()
 {
 	unsigned int close = CloseHandle(this->hCom);
 	if(close == 0)
 	{
 		DWORD _dwError = GetLastError();
 		clog << "Error closing COM port. Error : " << _dwError << endl;
-		return false;
+		return ERROR_CLOSE_PORT;
 	}
 	else
-		return true;
+		return ERROR_SUCCESS;
 }
-//
-//
-//
-//
+
+
+//------------------------------------------------------------------------------
+//	Enumerates available COM ports in the current system
+//	Fills the vPortList vector with the available ports
+//------------------------------------------------------------------------------
 void Com::enumeratePorts()
 {
 	//CUIntArray arrComPortNo; 
@@ -196,78 +233,163 @@ void Com::enumeratePorts()
         } 
     }
 }
-//
-//
-//
-//Get available baud rate for selected port
-long Com::getBaudrates(string sPort)
+
+
+//------------------------------------------------------------------------------
+//	Get available baud rate for selected port
+//	Parameter
+//	 IN:
+//		- string sChosenPort -> COM port which available baud rates will be
+//								listed
+//	Return: error code signaling if operation succeded or error
+//------------------------------------------------------------------------------
+long Com::getBaudrates(string sChosenPort)
 {
-	if (INVALID_HANDLE_VALUE != openPort(sPort) )
+	if (INVALID_HANDLE_VALUE != openPort(sChosenPort) )
 	{
 		if ( 0 != GetCommProperties(hCom, &commProp))
 		{
-			clog << "baud rate for " << sPort << endl;
+			clog << "Get baud rate for port " << sChosenPort << endl;
 
-			if (ERROR_SUCCESS == parseBaudrates(commProp.dwSettableBaud) )
+			_dwError = decodeBaudrates(commProp.dwSettableBaud);
+			if (ERROR_SUCCESS == _dwError)
 			{
-				closePort();
-				return ERROR_SUCCESS;
+				return closePort();
 			}
 			else
 			{
-				closePort();
-				return ERROR_BAUDRATE;
+				clog << "Error decoding baud rate" << endl;
+				
+				if (ERROR_SUCCESS == closePort())
+					return ERROR_BAUDRATE;
+				else
+				{
+					clog << "Error closing port " << sChosenPort << endl;
+					return ERROR_BAUDRATE;
+				}
 			}
 		}
 		else
 		{
 			iExitCode = GetLastError();
-			clog << "Error getting posible baud rates. System error: " << iExitCode << endl;
-			closePort();
-			return ERROR_BAUDRATE;
+			clog << "Error getting posible baud rates. System error: "
+				 << iExitCode << endl;
+			
+			if (ERROR_SUCCESS == closePort())
+					return ERROR_BAUDRATE;
+				else
+				{
+					clog << "Error closing port " << sChosenPort << endl;
+					return ERROR_BAUDRATE;
+				}
 		}
 	}
 	else
 	{
 		iExitCode = GetLastError();
-		clog << "Error opening port to get baud rates. System error: " << iExitCode << endl;
-		return ERR_PORT_OPEN;
+		clog << "Error opening port to get baud rates. System error: "
+			 << iExitCode << endl;
+		return ERROR_PORT_OPEN;
 	}
 }
+
+
+//------------------------------------------------------------------------------
+//	Decode available baud rates for opened port. Fills vector vBaud with
+//	available baud rates
 //
-//
-//
-//
-long Com::parseBaudrates(DWORD dwBitMask)
+//	Parameters:
+//	 IN:
+//		- DWORD dwBitMask -> bit mask containing the available baud rates
+//	Return: error code signaling 
+//------------------------------------------------------------------------------
+long Com::decodeBaudrates(DWORD dwBitMask)
 {
+	//bitmask with the possible baud rates
 	bitset<32> bitMask ((int)dwBitMask);
 	
-	for( int i = 0; i < 28; i++)
+	//ignore first bit -> 75 bps
+	//ignore last 4 bits -> BAUD_USER
+	for( int i = 1; i < 28; i++)
 	{
+		//if bit set
 		if (bitMask.test(i) == true)
 		{
-			//dwvBaudRates.push_back(dwStandardBaudrates[i]);
-			clog <<"rates " << StandardBaudrates[i] << endl;
-			//char buffer[32];
-			//sprintf(buffer, "%d", dwStandardBaudrates[i]);
-			vBaud.push_back(StandardBaudrates[i]);
+			//then the baud rate is available
+			vBaud.push_back(saDefaultBaudrates[i]);
 		}
-
 	}
 
-	if (dwvBaudRates.size() > 0)
+	if (vBaud.size() > 0)
 	{
-		clog << dwvBaudRates.size() << " baud rates available for port" << endl;
+		clog << vBaud.size() << " baud rates available for port" << endl;
 		return ERROR_SUCCESS;
 	}
 	else
 		return ERROR_BAUDRATE;
 }
 
+
+//------------------------------------------------------------------------------
+//	Translate the listed baud rates to system defined baud rates
+//	Parameters:
+//	 IN:
+//		- string sBaud -> baud rate selected by the user to be translated
 //
-////
-////
-////
+//	Return: error code signaling fail or correct baud rate
+//------------------------------------------------------------------------------
+DWORD Com::translateBaudrate(string sBaud)
+{
+	if(sBaud == "110")
+		return CBR_110;
+
+	else if(sBaud == "300")
+		return CBR_300;
+
+	else if(sBaud == "600")
+		return CBR_600;
+
+    else if(sBaud == "1200")
+		return CBR_1200;
+
+    else if(sBaud == "2400")
+		return CBR_2400;
+
+    else if(sBaud == "4800")
+		return CBR_4800;
+
+	else if(sBaud == "9600")
+		return CBR_9600;
+
+    else if(sBaud == "14400:")
+		return CBR_14400;
+
+    else if(sBaud == "19200")
+		return CBR_19200;
+
+    else if(sBaud == "38400")
+		return  CBR_38400;
+
+    else if(sBaud == "56000")
+		return CBR_56000;
+
+	else if(sBaud == "57600")
+		return CBR_57600;
+
+    else if(sBaud == "115200")
+		return CBR_115200;
+
+    else if(sBaud == "128000")
+		return CBR_128000;
+
+	else if(sBaud == "256000")
+		return  CBR_256000;
+	else
+		return ERROR_BAUDRATE;
+}
+//
+//
+//
 ////set port communication protocol
 //void Com::setProtocol(int i)
 //{
@@ -340,56 +462,3 @@ long Com::parseBaudrates(DWORD dwBitMask)
 ////
 ////
 ////
-
-
-/*
-switch(atoi(m_baudRate))
-  {
-  case 110:
-    configSerial_.BaudRate = CBR_110;
-    break;
-  case 300:
-    configSerial_.BaudRate = CBR_300;
-    break;
-  case 600:
-    configSerial_.BaudRate = CBR_600;
-    break;
-  case 1200:
-    configSerial_.BaudRate = CBR_1200;
-    break;
-  case 2400:
-    configSerial_.BaudRate = CBR_2400;
-    break;
-  case 4800:
-    configSerial_.BaudRate = CBR_4800;
-    break;
-  case 9600:
-    configSerial_.BaudRate = CBR_9600;
-    break;
-  case 14400:
-    configSerial_.BaudRate = CBR_14400;
-    break;
-  case 19200:
-    configSerial_.BaudRate = CBR_19200;
-    break;
-  case 38400:
-    configSerial_.BaudRate = CBR_38400;
-    break;
-  case 56000:
-    configSerial_.BaudRate = CBR_56000;
-    break;
-  case 57600:
-    configSerial_.BaudRate = CBR_57600;
-    break;
-  case 115200 :
-    configSerial_.BaudRate = CBR_115200;
-    break;
-  case 128000:
-    configSerial_.BaudRate = CBR_128000;
-    break;
-  case 256000:
-    configSerial_.BaudRate = CBR_256000;
-    break;
-  default:
-    break;
-  }*/

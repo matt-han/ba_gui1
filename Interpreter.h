@@ -1,3 +1,9 @@
+/*
+ *	Class to handle GUI inputs. Transmits information from the GUI to the
+ *	TestProperties class to start testing
+ */
+
+
 #ifndef _INTERPRETER_H
 #define _INTERPRETER_H
 
@@ -15,30 +21,32 @@ public:
 	Interpreter(Window *window);
 	Interpreter(void);
 	~Interpreter(void);
+//------------------------------------------------------------------------------
+//Variables
 
 	Window *window;
-
-	TCHAR * baudRate[6];
-
 	/*int getTestMode();
 	int getParity();
 	int getStopBits();
 	int getTransfer();
 	string getSelectedPort();
 	bool getLoggerState();*/
-
-	void handleGui();
+//------------------------------------------------------------------------------
+//Methods
+	void handleGui(int iInformationToTransfer);
 	void setBaudrateList();
 
 private:
+//------------------------------------------------------------------------------
+//Variables
+
 	int _iTestMode;
 	int _iParity;
 	int _iStopBits;
 	int _iTransfer;
 	int _iProtocol;
+	int _iInfoToTransfer;
 	DWORD _dwBaudrate;
-
-
 	string _sPort;
 	string _sTransferFile;
 	bool _bLoggerState;

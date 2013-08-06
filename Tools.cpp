@@ -1,52 +1,95 @@
 #include "Tools.h"
 
+
+//------------------------------------------------------------------------------
+//Default constructor
+//------------------------------------------------------------------------------
 Tools::Tools(void)
 {
 }
 
+
+//------------------------------------------------------------------------------
+//Default deconstructor
+//------------------------------------------------------------------------------
 Tools::~Tools(void)
 {
 }
 
-string Tools::convertToString(TCHAR Array[]){
+
+//------------------------------------------------------------------------------
+//	Convert a TCHAR array to a string
+//	Parameters:
+//	 IN:
+//		- TCHAR Array[] -> array to be converted to string
+//	Return: converted string
+//------------------------------------------------------------------------------
+string Tools::convertToString(TCHAR szArray[])
+{
 	stringstream ss;
 	int i = 0;
-	while ( Array[i] != '\0')
+	while ( szArray[i] != '\0')
 	{
-		ss << char(Array[i]);
+		ss << char(szArray[i]);
 		i++;
 	}
 	return ss.str();
 }
 
-string Tools::convertToString(char * Array){
+
+//------------------------------------------------------------------------------
+//	Convert a char array to a string
+//	Parameters:
+//	 IN:
+//		- char * pArray -> array to be converted to string
+//	Return: converted string
+//------------------------------------------------------------------------------
+string Tools::convertToString(char * pArray)
+{
 	stringstream ss;
-		ss << Array;
+		ss << pArray;
 	return ss.str();
 }
 
 
-string Tools::convertToString(int number){
+//------------------------------------------------------------------------------
+//	Convert a integer to a string
+//	Parameters:
+//	 IN:
+//		- int iNumber -> array to be converted to string
+//	Return: converted string
+//------------------------------------------------------------------------------
+string Tools::convertToString(int iNumber)
+{
 	stringstream ss;
-	ss << number;
+	ss << iNumber;
 	return ss.str();
 }
 
-//Gibt die Zeit und das Datum aus
-//+++++++++++++++++++++++++++++++
+
+//------------------------------------------------------------------------------
+//	Gets the system time 
+//	Return: string containing the system time
+//------------------------------------------------------------------------------
 string Tools::printTime()
 {
 	struct tm *localTime;
 	time_t Time;
-	//int sek;
 	
 	time(&Time);
 	localTime = localtime(&Time);
-	//clog << asctime(lokalZeit) << flush;
+	
 	return asctime(localTime);
-
 }
 
+
+//------------------------------------------------------------------------------
+//	Parse the system time
+//	Parameters:
+//	 IN:
+//		- string s -> string containing the system time
+//	Return: parsed string of the system time
+//------------------------------------------------------------------------------
 string Tools::parseTime(string s)
 {
 	unsigned int position1;
@@ -70,8 +113,7 @@ string Tools::parseTime(string s)
 		else
 			bpos2 = false;
 	}
-		
-
+	
 	//if (position != s.npos)
 	//	s.erase(position ,s.npos);
 	//
@@ -81,6 +123,13 @@ string Tools::parseTime(string s)
 }
 
 
+//------------------------------------------------------------------------------
+//	Deletes spaces and '#' from the given string
+//	Parameters:
+//	 IN:
+//		- string s -> string to be parsed
+//	Return: parsed string, without white spaces or '#'
+//------------------------------------------------------------------------------
 string Tools::delSpacesAndComents(string s)
 {
 	unsigned int position = s.find_first_of("#");
@@ -93,6 +142,13 @@ string Tools::delSpacesAndComents(string s)
 	return s;
 }
 
+
+//------------------------------------------------------------------------------
+//	Waits 'x' * 100 miliseconds
+//	Parameters:
+//	 IN:
+//		- int x -> specifies how often 100 ms will be waited
+//------------------------------------------------------------------------------
 void Tools::warte(int x)
 {
 	for (int i = 0; i < x; i++)

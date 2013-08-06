@@ -1,3 +1,10 @@
+/*
+ *	Header file with template for GUI. Example taken from:
+ *  http://msdn.microsoft.com/en-us/library/windows/desktop/
+ *  ff381400%28v=vs.85%29.aspx
+ */
+
+
 #ifndef _BASEWINDOW_H
 #define _BASEWINDOW_H
 
@@ -10,12 +17,6 @@
 
 
 #include <Windows.h>
-//#include <commctrl.h>
-//#include <commdlg.h>
-//#pragma comment(lib, "user32.lib")
-//#pragma comment(lib, "comctl32.lib")
-
-
 
 
 template <class DERIVED_TYPE> 
@@ -23,13 +24,14 @@ class BaseWindow
 {
 public:
 
-	//Windows default static message handler
+	//Windows default STATIC message handler
 	static LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
     {
         DERIVED_TYPE *pThis = NULL;
 
         if (uMsg == WM_NCCREATE)
         {
+			//extract pointer
             CREATESTRUCT* pCreate = (CREATESTRUCT*)lParam;
             pThis = (DERIVED_TYPE*)pCreate->lpCreateParams;
             SetWindowLongPtr(hwnd, GWLP_USERDATA, (LONG_PTR)pThis);
@@ -65,6 +67,7 @@ public:
         HMENU hMenu = 0
         )
     {
+		//Window properties
         WNDCLASS wc = {0};
 		
 		wc.lpszClassName = L"WN COM Test Tool";
@@ -77,6 +80,7 @@ public:
 
         RegisterClass(&wc);
 
+		//main window creation and handle
         m_hwnd = CreateWindowEx(
             dwExStyle, ClassName(), lpWindowName, dwStyle, x, y,
             nWidth, nHeight, hWndParent, hMenu, GetModuleHandle(NULL), this

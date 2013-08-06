@@ -1,39 +1,15 @@
-﻿Der Buildvorgang wurde am 05.08.2013 16:14:51 gestartet.
+﻿Der Buildvorgang wurde am 06.08.2013 13:36:20 gestartet.
      1>Projekt "C:\Users\m.hansertvivar\Documents\Visual Studio 2010\Projects\ba_gui1\ba_gui1\ba_gui1.vcxproj" auf Knoten "2", build Ziel(e).
      1>InitializeBuildStatus:
          Aktualisieren des Timestamps von "Debug\ba_gui1.unsuccessfulbuild".
        ClCompile:
-         c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /ZI /nologo /W4 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt Com.cpp
-         Com.cpp
-     1>c:\users\m.hansertvivar\documents\visual studio 2010\projects\ba_gui1\ba_gui1\com.cpp(179): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-                 c:\program files (x86)\microsoft visual studio 10.0\vc\include\stdio.h(371): Siehe Deklaration von 'sprintf'
-     1>c:\users\m.hansertvivar\documents\visual studio 2010\projects\ba_gui1\ba_gui1\com.cpp(181): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-                 c:\program files (x86)\microsoft visual studio 10.0\vc\include\stdio.h(371): Siehe Deklaration von 'sprintf'
-       ManifestResourceCompile:
-         Alle Ausgaben sind aktuell.
-       Link:
-         c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\m.hansertvivar\Documents\Visual Studio 2010\Projects\ba_gui1\Debug\ba_gui1.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"Debug\ba_gui1.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"C:\Users\m.hansertvivar\Documents\Visual Studio 2010\Projects\ba_gui1\Debug\ba_gui1.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\m.hansertvivar\Documents\Visual Studio 2010\Projects\ba_gui1\Debug\ba_gui1.lib" /MACHINE:X86 Debug\ba_gui1.exe.embed.manifest.res
-         Debug\Com.obj
-         Debug\FileManager.obj
-         Debug\Interpreter.obj
-         Debug\Logger.obj
-         Debug\main.obj
-         Debug\Observer.obj
-         Debug\PortHandler.obj
-         Debug\TestProperties.obj
-         Debug\Tools.obj
-         Debug\Window.obj
-       Manifest:
-         C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\mt.exe /nologo /verbose /out:"Debug\ba_gui1.exe.embed.manifest" /manifest Debug\ba_gui1.exe.intermediate.manifest
-         Alle Ausgaben sind aktuell.
-       LinkEmbedManifest:
-         Alle Ausgaben sind aktuell.
-         ba_gui1.vcxproj -> C:\Users\m.hansertvivar\Documents\Visual Studio 2010\Projects\ba_gui1\Debug\ba_gui1.exe
-       FinalizeBuildStatus:
-         Die Datei "Debug\ba_gui1.unsuccessfulbuild" wird gelöscht.
-         Aktualisieren des Timestamps von "Debug\ba_gui1.lastbuildstate".
-     1>Die Erstellung des Projekts "C:\Users\m.hansertvivar\Documents\Visual Studio 2010\Projects\ba_gui1\ba_gui1\ba_gui1.vcxproj" ist abgeschlossen, build Ziel(e).
+         c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /ZI /nologo /W4 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt TestProperties.cpp Window.cpp
+         Window.cpp
+         TestProperties.cpp
+     1>c:\users\m.hansertvivar\documents\visual studio 2010\projects\ba_gui1\ba_gui1\testproperties.cpp(4): error C2533: 'TestProperties::{ctor}': Ergebnistyp für Konstruktoren nicht zulässig
+         Code wird generiert...
+     1>Die Erstellung des Projekts "C:\Users\m.hansertvivar\Documents\Visual Studio 2010\Projects\ba_gui1\ba_gui1\ba_gui1.vcxproj" ist abgeschlossen, build Ziel(e) -- FEHLER.
 
-Das Erstellen war erfolgreich.
+Fehler beim Erstellen
 
-Verstrichene Zeit 00:00:01.65
+Verstrichene Zeit 00:00:01.12

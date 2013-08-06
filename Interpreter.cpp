@@ -1,6 +1,11 @@
 #include "Interpreter.h"
 
-
+//------------------------------------------------------------------------------
+//	Constructor for GUI interpreter
+//	Parameters:
+//	 IN:
+//		- Window *window	-> pointer to created GUI
+//----------------------------------------------------------------------------
 Interpreter::Interpreter(Window *window)
 {
 	this->window = window;
@@ -10,25 +15,25 @@ Interpreter::Interpreter(Window *window)
 	_iStopBits = -1;
 	_iTransfer = -1;
 	_iProtocol = -1;
+	_dwBaudrate = 0;
 
 	_sPort = "";
 	_sTransferFile = "";
-
-
-	baudRate[0] = L"1000";
-	baudRate[1] = L"2000";
-	baudRate[2] = L"3000";
-	baudRate[3] = L"35000";
-	baudRate[4] = L"100000";
-	baudRate[5] = L"400000";
-
 	
 }
 
+
+//------------------------------------------------------------------------------
+//Default constructor
+//------------------------------------------------------------------------------
 Interpreter::Interpreter(void)
 {
 }
 
+
+//------------------------------------------------------------------------------
+//Default deconstructor
+//------------------------------------------------------------------------------
 Interpreter::~Interpreter(void)
 {
 }
@@ -49,13 +54,27 @@ Interpreter::~Interpreter(void)
 //	return window->_bLoggerState;
 //}
 
-//Parameter ünerprüfen!!!!!
-void Interpreter::handleGui()
+//------------------------------------------------------------------------------
+//	Gets the GUI settings and saves them in local variables. Starts the tester
+//	object to begin the test(s)
+//	Parameters:
+//	 IN:
+//		- int iInformationToTransfer -> description for using default transfer
+//					text, user text or user text file
+//------------------------------------------------------------------------------
+void Interpreter::handleGui(int iInformationToTransfer)
 {
-	//Always get test mode, port and logger
+	//iInformationToTransfer
+	//0 for default
+	//1 for file
+	//2 for string
+	
+	//Always get test mode, port, logger and which information to transfer
 	_iTestMode	  = window->getTestMode();
 	_sPort		  = window->getSelectedPort();
 	_bLoggerState = window->getLoggerState();
+
+	_iInfoToTransfer = iInformationToTransfer;
 	
 	//when windows closes then is handle null
 	//action executed with start button, change to
@@ -69,32 +88,34 @@ void Interpreter::handleGui()
 		switch (_iTestMode)
 		{
 			//Automatic test
+			//needs only port and logger settings
 			case 0:
 				break;
+
 			//Wobbeln
+			//needs only port and logger settings
 			case 1:
 				break;
+
 			//Fixed test
+			//get all GUI settings
 			case 2:
 				_iParity   = window->getParity();
 				_iStopBits = window->getStopBits();
 				_iTransfer = window->getTransfer();
 				_iProtocol = window->getProtocol();
+				_dwBaudrate = window->getPortBaudRate();
 				break;
-				//TO DO
-			//protocol
+			
+			//Port was selected but no test mode
 			default:
 				MessageBoxW(NULL,L"Please select a Test Mode", L"Error", MB_OK);
 				break;
-			
-			//TO DO
-			//protocol
+
 		}//switch
 	}
 	else
 	{
 		MessageBoxW(NULL,L"Please select the port to be tested", L"Error", MB_OK);
 	}
-
-
 }

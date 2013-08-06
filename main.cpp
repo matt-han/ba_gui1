@@ -28,6 +28,12 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdShow
 	Interpreter interpreter(&win);
 
 	//Com com(port1);
+	//if com.iExitCode == ERROR_PORT_OPEN
+	//	error opening te given port!!!!!!!!!!!!!!!!!
+	//else if com.iExitCode == ERROR_GET_DCB
+	//	error getting dcb!!!!!!!!!!!!!!!!!
+
+
 	//Com com2(port2);
 
 	//PortHandler portHandler(com.hCom);
@@ -95,5 +101,5 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdShow
 	//	clog << "port1 closed!"<<endl;
 	//}
 
-    return 0;
+    return ERROR_SUCCESS;
 }

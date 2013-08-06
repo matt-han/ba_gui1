@@ -1,3 +1,11 @@
+/*
+ *	Opens, reads and closes cfg/ini files for automated tests
+ *	Opens, reads/writes and closes text files to transfer trough the designated
+ *	COM port
+ */
+
+
+
 #ifndef _FILEMANAGER_H
 #define _FILEMANAGER_H
 
@@ -15,9 +23,29 @@ using namespace std;
 
 class FileManager
 {
-private:
-	Tools tools;
+public:
+	FileManager(void);
+	~FileManager(void);
+//------------------------------------------------------------------------------
+//Methods
+	long openFile(string sFilePath);
+	void closeFile();
+	long readTransferFile();
+	long readConfigFile();
+	long readPortConfig();
 
+private:
+//------------------------------------------------------------------------------
+//Variables	
+	Tools tools;
+	int index;
+	const char * path;
+	ifstream inputFile;
+	string templine;
+	string substr;
+	vector<string> vTranferFileLines;
+	vector<comPort> vComPorts;
+	
 	struct comPort{
 		string sPortname;
 		string sTestmode;
@@ -28,29 +56,7 @@ private:
 		bool bLogger;
 	};
 
-	int index;
-	const char * path;
-	ifstream inputFile;
-	string templine;
-	string substr;
-	vector<string> vTranferFileLines;
-	vector<comPort> vComPorts;
-
-
-public:
-	FileManager(void);
-	~FileManager(void);
-
-	long openFile(string sFilePath);
-	void closeFile();
-	long readTransferFile();
-	long readConfigFile();
-	long readPortConfig();
-
 	
-	//open
-	//read & save
-	//close
 };
 
 #endif
