@@ -30,8 +30,9 @@ public:
 
 //------------------------------------------------------------------------------
 //Methods
-	bool readData(char * lpBuf, DWORD dwSize);
-	bool writeData(char * lpBuf, DWORD dwSize);
+
+	bool readData(char *lpBuf, DWORD dwSize);
+	bool writeData(const char *lpBuf, DWORD dwSize);
 	int checkPortStatus();
 	BOOL ReadFromCOMPort(unsigned char* c_Data);
 	BOOL WriteToCOMPort(unsigned char* c_Data);

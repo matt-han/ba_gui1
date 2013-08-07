@@ -47,7 +47,7 @@ public:
 	long closePort();
 	long getBaudrates(string sChosenPort);
 	long decodeBaudrates(DWORD dwBitMask);
-	DWORD translateBaudrate(string sBaud);
+	int translateBaudrate(string sBaud);
 	void enumeratePorts();
 	//void setParity(int i);
 	//void setProtocol(int i);

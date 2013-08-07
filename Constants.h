@@ -70,7 +70,7 @@
 #define ERROR_EMPTY_FILE	-14
 #define ERROR_CFG_HEADER	-15
 #define ERROR_SYNTAX		-16
-
+#define ERROR_PARSE			-17
 
 
 

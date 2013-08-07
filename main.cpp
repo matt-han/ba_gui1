@@ -1,5 +1,6 @@
 
 #include "Interpreter.h"
+#include "IniFileHandler.h"
 #include "Window.h"
 #include "Com.h"
 #include "Logger.h"
@@ -13,25 +14,40 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdShow
 	int z = 0;
 	string port1 = "COM1";
 	string port2 = "COM3";
-
+	string recieved;
+	string trans = "Hallo Welt";
     Logger log(true, port1);
 
-	char info[111];
-	char get_info[150];
-	//char get_info2[15];
-
-	//string trans = "Hallo Welt";
-	//unsigned char c;
+	char info[100];
+	char get_info[100];
 
 
+	
 	Window win;
 	Interpreter interpreter(&win);
 
+	IniFileHandler file;
+	//file.writeINIfile( port1,"COM2", 9600, 0, 1, 0, 2, 0, "");
+	//file.writeINIfile("COM2","COM2", 9600, 0, 1, 0, 2, 1, "");
+	//file.writeINIfile( port2,"COM2", 9600, 0, 1, 0, 2, 2, "");
+
+	//file.writeINIfile("COM11","COM2", 9600, 1, 1, 0, 2, 0, "");
+	//file.writeINIfile("COM22","COM2", 9600, 1, 1, 0, 2, 1, "");
+	//file.writeINIfile("COM33","COM2", 9600, 1, 1, 0, 2, 2, "");
+
+	//file.writeINIfile("COM4","COM2", 9600, 2, 1, 0, 2, 0, "");
+	//file.writeINIfile("COM5","COM2", 9600, 2, 1, 0, 2, 1, "");
+	//file.writeINIfile("COM6","COM2", 9600, 2, 1, 0, 2, 2, "");
+
+	file.readINIFile("C:\\Users\\m.hansertvivar\\AppData\\Local\\Temp\\WN_ComPortTestFile.txt");
+
 	//Com com(port1);
-	//if com.iExitCode == ERROR_PORT_OPEN
-	//	error opening te given port!!!!!!!!!!!!!!!!!
-	//else if com.iExitCode == ERROR_GET_DCB
-	//	error getting dcb!!!!!!!!!!!!!!!!!
+	//if (com.iExitCode == ERROR_PORT_OPEN)
+	//{
+	//	clog << "error opening port " << port1 << endl;
+	//}
+	//else if (com.iExitCode == ERROR_GET_DCB)
+	//clog << "error getting dcb" << endl;
 
 
 	//Com com2(port2);
@@ -40,34 +56,36 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdShow
 	//PortHandler portHandler2(com2.hCom);
 	
 
-	//if(com.iExitCode == 0 )//&& com2.iExitCode == 0)
+	//if(com.iExitCode == ERROR_SUCCESS )//&& com2.iExitCode == 0)
 	//{
-		//com.getBaudrates();
+	//	clog << "Port init ok" << endl;
 
-		//com2.getBaudrates();
-		
-		/*clog << "Port init ok" << endl;
+	//	SecureZeroMemory(info, sizeof(info));
+	//	SecureZeroMemory(get_info, sizeof(get_info));
 
-		for (; z < 110; z++)
-		{
-			info[z] = 49 + z;
-			get_info[z] = 0;
-		}
-		info[110] = '\0';
+	//	for (; z < 99; z++)
+	//	{
+	//		info[z] = 49 + z;
+	//		get_info[z] = 0;
+	//	}
 
-		if (TRUE == portHandler.writeData(info, sizeof(info)) )
-		{
-			MessageBoxA(NULL, (LPCSTR)info, "COM 1 SENT", MB_OK);
-			
-			
-			if (TRUE == portHandler.readData(get_info, sizeof(get_info)) )
-			{
-				MessageBoxA(NULL, (LPCSTR)get_info, "COM1 ARRIVED", MB_OK);
-			}
-		}*/
+	//	if (TRUE == portHandler.writeData(info, sizeof(info)) )
+	//	{
+	//		MessageBoxA(NULL, (LPCSTR)info, "COM 1 SENT", MB_OK);
+	//		
+	//		
+	//		if (TRUE == portHandler.readData(get_info, sizeof(get_info)) )
+	//		{
+	//			MessageBoxA(NULL, (LPCSTR)get_info, "COM1 ARRIVED", MB_OK);
+	//		}
+	//	}
 	//}
 
-	
+	//if (com.closePort() == ERROR_SUCCESS)
+	//{
+	//	clog << "port1 closed!"<<endl;
+	//}
+
 	//if (com2.closePort() == true)
 	//{
 	//	clog << "port2 closed!"<<endl;
@@ -96,10 +114,6 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdShow
 
 	log.closelog(true);
 
-	//if (com.closePort() == true)
-	//{
-	//	clog << "port1 closed!"<<endl;
-	//}
 
     return ERROR_SUCCESS;
 }

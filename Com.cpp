@@ -178,7 +178,7 @@ HANDLE Com::openPort(string portNumber)
             FILE_FLAG_OVERLAPPED,        
             NULL);                      // always NULL for a general purpose COM port  
 
-	return hCom;
+		return hCom;
 }
 
 
@@ -338,7 +338,7 @@ long Com::decodeBaudrates(DWORD dwBitMask)
 //
 //	Return: error code signaling fail or correct baud rate
 //------------------------------------------------------------------------------
-DWORD Com::translateBaudrate(string sBaud)
+int Com::translateBaudrate(string sBaud)
 {
 	if(sBaud == "110")
 		return CBR_110;

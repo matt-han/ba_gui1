@@ -27,9 +27,6 @@
     <ClCompile Include="main.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="TestProperties.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="Tools.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
@@ -39,10 +36,13 @@
     <ClCompile Include="PortHandler.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="FileManager.cpp">
+    <ClCompile Include="Observer.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Observer.cpp">
+    <ClCompile Include="TransferFileHandler.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="IniFileHandler.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
   </ItemGroup>
@@ -74,10 +74,13 @@
     <ClInclude Include="PortHandler.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="FileManager.h">
+    <ClInclude Include="Observer.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Observer.h">
+    <ClInclude Include="TransferFileHandler.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="IniFileHandler.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>

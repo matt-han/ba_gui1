@@ -61,7 +61,7 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 							(HMENU) ID_GB_TESTMODE,
 							NULL, NULL);
 
-			CreateWindowW(L"button", L"Auto",
+			CreateWindowW(L"button", L"Automatic",
 							WS_GROUP | WS_CHILD |
 							WS_VISIBLE | BS_AUTORADIOBUTTON,
 							POS_X + 130, POS_Y - 105, 100, 30,
@@ -421,7 +421,7 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 //------------------------------------------------------------------------------
 //Test Mode
 					case ID_TM_AUTO:
-						SetWindowTextW(hDebug,L"auto");
+						SetWindowTextW(hDebug,L"automatic");
 						_iTestMode = 0;
 						break;
 				
@@ -490,17 +490,17 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 //Transfer
 					case ID_MOD_SINGLE:
 						SetWindowTextW(hDebug, L"Single");
-					
+						_iTransfer = 0;
 						break;
 
 					case ID_MOD_DOUBLE:
 						SetWindowTextW(hDebug, L"Double");
-					
+						_iTransfer = 1;
 						break;
 				
 					case ID_MOD_MS:
 						SetWindowTextW(hDebug, L"Master Slave");
-					
+						_iTransfer = 2;
 						break;
 
 //------------------------------------------------------------------------------

@@ -127,7 +127,7 @@ bool PortHandler::readData(char * lpBuf, DWORD dwSize)
 //		- DWORD dwSize -> amount of character to be written to the port
 //	Return: error code signaling if operation succeded or error
 //------------------------------------------------------------------------------
-bool PortHandler::writeData(char * lpBuf, DWORD dwSize)
+bool PortHandler::writeData(const char * lpBuf, DWORD dwSize)
 {
 	OVERLAPPED osWrite = {0};
 	DWORD dwWritten;
