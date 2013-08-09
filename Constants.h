@@ -66,6 +66,7 @@
 #define ERROR_BAUDRATE		-6
 #define ERROR_SET_TIMEOUTS	-7
 #define ERROR_LOG			-8
+#define ERROR_INI			-9
 #define ERROR_FILE_NOT_OPEN -13
 #define ERROR_EMPTY_FILE	-14
 #define ERROR_CFG_HEADER	-15

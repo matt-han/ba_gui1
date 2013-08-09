@@ -386,7 +386,7 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
            }
 
 //==============================================================================
-//radio buttons status		
+// buttons status		
 
 			if (HIWORD(wParam) == BN_CLICKED)
 			{
@@ -564,111 +564,99 @@ void Window::sethInstance(HINSTANCE hInst)
 
 
 //------------------------------------------------------------------------------
-//	Get the user selected test mode
-//	Return: user selected test mode
+//	Sends the user selected test mode
 //------------------------------------------------------------------------------
-int Window::getTestMode()
+void Window::sendTestMode()
 {
-	return this->_iTestMode;
+	interpreter.setTestMode(_iTestMode);
 }
 
 
 //------------------------------------------------------------------------------
-//	Get the user selected parity setting
-//	Return: user selected parity setting
+//	Sends the user selected parity setting
 //------------------------------------------------------------------------------
-int Window::getParity()
+void Window::sendParity()
 {
-	return this->_iParity;
+	interpreter.setParity(_iParity);
+}
+
+//------------------------------------------------------------------------------
+//	Sends the user selected stopbit setting
+//------------------------------------------------------------------------------
+void Window::sendStopBits()
+{
+	interpreter.setStopBits(_iStopBits);
 }
 
 
 //------------------------------------------------------------------------------
-//	Get the user selected stopbit setting
-//	Return: user selected stopbit setting
+//	Sends the user selected transfer setting
 //------------------------------------------------------------------------------
-int Window::getStopBits()
+void Window::sendTransfer()
 {
-	return this->_iStopBits;
+	interpreter.setTransfer(_iTransfer);
 }
 
 
 //------------------------------------------------------------------------------
-//	Get the user selected transfer setting
-//	Return: user selected transfer setting
+//	Sends the user selected protocol setting
 //------------------------------------------------------------------------------
-int Window::getTransfer()
+void Window::sendProtocol()
 {
-	return this->_iTransfer;
+	interpreter.setProtocol(_iProtocol);
 }
 
 
 //------------------------------------------------------------------------------
-//	Get the user selected protocol setting
-//	Return: user selected protocol setting
+//	Sends the user selected port
 //------------------------------------------------------------------------------
-int Window::getProtocol()
+void Window::sendSelectedPort()
 {
-	return this->_iProtocol;
+	interpreter.setSelectedPort(_sPort);
 }
 
 
 //------------------------------------------------------------------------------
-//	Get the user selected port
-//	Return: user selected port
+//	Sends the user selected baud rate
 //------------------------------------------------------------------------------
-string Window::getSelectedPort()
+void Window::sendPortBaudRate()
 {
-	return this->_sPort;
+	interpreter.setPortBaudRate(_dwBaudrate);
 }
 
 
 //------------------------------------------------------------------------------
-//	Get the user selected baud rate
-//	Return: user selected baud rate
+//	Sends the user selected transfer file for testing
 //------------------------------------------------------------------------------
-DWORD Window::getPortBaudRate()
+void Window::sendTransferFile()
 {
-	return this->_dwBaudrate;
+	interpreter.setTransferFile(this->getTransferFile());
 }
 
 
 //------------------------------------------------------------------------------
-//	Get the user selected transfer file for testing
-//	Return: user selected transfer file for testing
+//	Sends the user input string for testing
 //------------------------------------------------------------------------------
-string Window::getTransferFile()
+void Window::sendTextToSend()
 {
-	setTransferFile();
-	return _sTransferFilePath;
-
+	interpreter.setTextToSend(_szTextToSend);
 }
 
 
 //------------------------------------------------------------------------------
-//	Get the user input string for testing
-//	Return: user input string for testing
+//	Sends the state of the log setting
 //------------------------------------------------------------------------------
-string Window::getTextToSend()
+void Window::sendLoggerState()
 {
-	return this->_szTextToSend;
-}
-
-
-//------------------------------------------------------------------------------
-//	Get the state of the log setting
-//	Return: log state
-//------------------------------------------------------------------------------
-bool Window::getLoggerState()
-{
-	return this->_bLoggerState;
+	interpreter.setLoggerState(_bLoggerState);	
 }
 
 
 //------------------------------------------------------------------------------
 //	Set the path for the test file to be used
+//	Return: string with the file path
 //------------------------------------------------------------------------------
-void Window::setTransferFile()
+string Window::getTransferFile()
 {
 	int iLen = GetWindowTextLengthW(hwnd_lbLoad);
 	char* pstrText;
@@ -678,6 +666,7 @@ void Window::setTransferFile()
 	{
 		error = GetLastError();
 		clog << "Error allocating memory. Error : " << error << endl;
+		return "-1";
 	}
 
 	if (0 == GetWindowTextA(hwnd_lbLoad, pstrText, iLen) )
@@ -685,14 +674,15 @@ void Window::setTransferFile()
 		error = GetLastError();
 		clog << "Error getting path for transfer file. Error: " <<
 				error << endl;
+		return "-1";
 	}
 
 	_sTransferFilePath = tools.convertToString(pstrText);
 
 	free(pstrText);
 	pstrText = NULL;
-
-
+	
+	return _sTransferFilePath;
 }
 //
 //

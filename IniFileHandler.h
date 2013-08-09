@@ -28,16 +28,29 @@ public:
 //Methods
 
 	long readINIFile(string sFilePath);
-	long readPortConfig(string sPort,  string sFilePath, int iPort);
-	long readPortSettings(string sPort,  string sFilePath, int iPort);
+	long readPortConfig(string sPort,  string sFilePath, int index);
+	
+	
+	long readTransferMode(string sPort, string sFilePath, int index);
+	long readSlave(string sPort, string sFilePath, int index);
+	
+	long readSettings(string sPort, string sFilePath, int index);
+	long readParity(string sPort, string sFilePath, int index);
+	long readProtocol(string sPort, string sFilePath, int index);
+	long readStopbits(string sPort, string sFilePath, int index);
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+	long readBaudRate(string sPort, string sFilePath, int index);
+
 
 
 	void writeINIfile(string sMasterPort, string sSlavePort, int iBaud,
-						int iTestMode, int iParity, int iProtocol,
-						int iStopbits, int iTransfer, string sPath);
+					  int iTestMode, int iParity, int iProtocol,
+					  int iStopbits, int iTransfer, string sPath);
 
-	void writeINItransferSettings(string sMasterPort,
-								string sSlavePort, int iTransfer, string sPath);
+	void writeINItransferSettings(string sMasterPort, string sSlavePort,
+								  int iTransfer, string sPath);
 	
 
 
@@ -67,6 +80,7 @@ private:
 		}
 	};
 
+	DWORD error;
 	DWORD dwExists;
 	comPort comPortStruct;
 	Tools tools;
@@ -91,6 +105,8 @@ private:
 	int parseProtocol(string);
 	int parseStopbits(string);
 	int parseTransfer(string);
+	string parsePort(string);
+
 };
 
 #endif

@@ -9,17 +9,22 @@
 #include "BaseWindow.h"
 #include "Com.h"
 #include "Tools.h"
+#include "Interpreter.h"
+
 
 using namespace std;
 
+
+class Interpreter;
 class Com;
-//use templace class BaseWindow
+//use template class BaseWindow
 class Window : public BaseWindow<Window>
 {
 
 public:
 //------------------------------------------------------------------------------
 //Variables
+	Interpreter interpreter;
 	Com comEnumerator;
 	Tools tools;
 
@@ -29,19 +34,21 @@ public:
 //Methods
 	
 	//get
-	int getTestMode();
-	int getParity();
-	int getStopBits();
-	int getTransfer();
-	int getProtocol();
-	string getSelectedPort();
-	DWORD getPortBaudRate();
 	string getTransferFile();
-	string getTextToSend();
-	bool getLoggerState();
-	
-	//set
-	void setTransferFile();
+
+
+	//send variables to interpreter
+	void sendTestMode();
+	void sendParity();
+	void sendStopBits();
+	void sendTransfer();
+	void sendProtocol();
+	void sendSelectedPort();
+	void sendPortBaudRate();
+	void sendTransferFile();
+	void sendTextToSend();
+	void sendLoggerState();
+
 	void sethInstance(HINSTANCE hInst);
 	
     PCWSTR  ClassName() const { return L"WN COM Test Tool"; }

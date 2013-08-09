@@ -24,9 +24,11 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdShow
 
 	
 	Window win;
-	Interpreter interpreter(&win);
 
-	IniFileHandler file;
+	//Interpreter interpreter(&win);
+
+	//IniFileHandler file;
+	//------------------------------------------------------------------------------
 	//file.writeINIfile( port1,"COM2", 9600, 0, 1, 0, 2, 0, "");
 	//file.writeINIfile("COM2","COM2", 9600, 0, 1, 0, 2, 1, "");
 	//file.writeINIfile( port2,"COM2", 9600, 0, 1, 0, 2, 2, "");
@@ -39,7 +41,11 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdShow
 	//file.writeINIfile("COM5","COM2", 9600, 2, 1, 0, 2, 1, "");
 	//file.writeINIfile("COM6","COM2", 9600, 2, 1, 0, 2, 2, "");
 
-	file.readINIFile("C:\\Users\\m.hansertvivar\\AppData\\Local\\Temp\\WN_ComPortTestFile.txt");
+	//------------------------------------------------------------------------------
+	//------------------------------------------------------------------------------
+	//file.readINIFile("C:\\Users\\m.hansertvivar\\AppData\\Local\\Temp\\WN_ComPortTestFile.txt");
+	//------------------------------------------------------------------------------
+	//------------------------------------------------------------------------------
 
 	//Com com(port1);
 	//if (com.iExitCode == ERROR_PORT_OPEN)
@@ -99,6 +105,13 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdShow
         return 0;
     }
 
+
+
+
+
+//------------------------------------------------------------------------------
+//	Message Loop
+//------------------------------------------------------------------------------
     ShowWindow(win.window(), nCmdShow);
 
     // Run the message loop.
@@ -109,7 +122,8 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdShow
         TranslateMessage(&msg);
         DispatchMessage(&msg);
     }
-
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 	//interpreter.handleGui();
 
 	log.closelog(true);
