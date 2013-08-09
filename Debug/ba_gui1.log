@@ -1,24 +1,17 @@
-﻿Der Buildvorgang wurde am 09.08.2013 15:24:32 gestartet.
+﻿Der Buildvorgang wurde am 09.08.2013 16:18:57 gestartet.
      1>Projekt "C:\Users\m.hansertvivar\Documents\Visual Studio 2010\Projects\ba_gui1\ba_gui1\ba_gui1.vcxproj" auf Knoten "2", build Ziel(e).
      1>InitializeBuildStatus:
          "Debug\ba_gui1.unsuccessfulbuild" wird erstellt, da "AlwaysCreate" angegeben wurde.
        ClCompile:
-         c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /ZI /nologo /W4 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt IniFileHandler.cpp main.cpp
+         c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /ZI /nologo /W4 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt IniFileHandler.cpp
          IniFileHandler.cpp
-     1>c:\users\m.hansertvivar\documents\visual studio 2010\projects\ba_gui1\ba_gui1\inifilehandler.cpp(162): warning C4996: 'getenv': This function or variable may be unsafe. Consider using _dupenv_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+     1>c:\users\m.hansertvivar\documents\visual studio 2010\projects\ba_gui1\ba_gui1\inifilehandler.cpp(211): warning C4996: 'getenv': This function or variable may be unsafe. Consider using _dupenv_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
                  c:\program files (x86)\microsoft visual studio 10.0\vc\include\stdlib.h(433): Siehe Deklaration von 'getenv'
-         Code wird generiert...
-     1>c:\users\m.hansertvivar\documents\visual studio 2010\projects\ba_gui1\ba_gui1\inifilehandler.cpp(582): warning C4715: "IniFileHandler::readTransferMode": Nicht alle Steuerelementpfade geben einen Wert zurück.
-     1>c:\users\m.hansertvivar\documents\visual studio 2010\projects\ba_gui1\ba_gui1\inifilehandler.cpp(666): warning C4715: "IniFileHandler::readParity": Nicht alle Steuerelementpfade geben einen Wert zurück.
-     1>c:\users\m.hansertvivar\documents\visual studio 2010\projects\ba_gui1\ba_gui1\inifilehandler.cpp(697): warning C4715: "IniFileHandler::readProtocol": Nicht alle Steuerelementpfade geben einen Wert zurück.
-     1>c:\users\m.hansertvivar\documents\visual studio 2010\projects\ba_gui1\ba_gui1\inifilehandler.cpp(730): warning C4715: "IniFileHandler::readStopbits": Nicht alle Steuerelementpfade geben einen Wert zurück.
-         Kompilieren...
-         main.cpp
-     1>c:\users\m.hansertvivar\documents\visual studio 2010\projects\ba_gui1\ba_gui1\main.cpp(12): warning C4100: 'pCmdLine': Unreferenzierter formaler Parameter
-     1>c:\users\m.hansertvivar\documents\visual studio 2010\projects\ba_gui1\ba_gui1\main.cpp(22): warning C4101: 'get_info': Unreferenzierte lokale Variable
-     1>c:\users\m.hansertvivar\documents\visual studio 2010\projects\ba_gui1\ba_gui1\main.cpp(14): warning C4189: 'z': Lokale Variable ist initialisiert aber nicht referenziert
-     1>c:\users\m.hansertvivar\documents\visual studio 2010\projects\ba_gui1\ba_gui1\main.cpp(21): warning C4101: 'info': Unreferenzierte lokale Variable
-         Code wird generiert...
+     1>c:\users\m.hansertvivar\documents\visual studio 2010\projects\ba_gui1\ba_gui1\inifilehandler.cpp(631): warning C4715: "IniFileHandler::readTransferMode": Nicht alle Steuerelementpfade geben einen Wert zurück.
+     1>c:\users\m.hansertvivar\documents\visual studio 2010\projects\ba_gui1\ba_gui1\inifilehandler.cpp(714): warning C4715: "IniFileHandler::readParity": Nicht alle Steuerelementpfade geben einen Wert zurück.
+     1>c:\users\m.hansertvivar\documents\visual studio 2010\projects\ba_gui1\ba_gui1\inifilehandler.cpp(743): warning C4715: "IniFileHandler::readProtocol": Nicht alle Steuerelementpfade geben einen Wert zurück.
+     1>c:\users\m.hansertvivar\documents\visual studio 2010\projects\ba_gui1\ba_gui1\inifilehandler.cpp(774): warning C4715: "IniFileHandler::readStopbits": Nicht alle Steuerelementpfade geben einen Wert zurück.
+     1>c:\users\m.hansertvivar\documents\visual studio 2010\projects\ba_gui1\ba_gui1\inifilehandler.cpp(807): warning C4715: "IniFileHandler::readBaudRate": Nicht alle Steuerelementpfade geben einen Wert zurück.
        ManifestResourceCompile:
          Alle Ausgaben sind aktuell.
        Link:
@@ -46,4 +39,4 @@
 
 Das Erstellen war erfolgreich.
 
-Verstrichene Zeit 00:00:02.58
+Verstrichene Zeit 00:00:01.49

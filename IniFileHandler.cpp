@@ -83,6 +83,7 @@ long IniFileHandler::readPortConfig(string sPort, string sFilePath, int index)
 		switch(iTemp)
 		{
 			//automatic
+			//------------------------------------------------------------------
 			case 0:	
 				//if transfer mode equals double or masterSlave then read
 				//the slave port
@@ -92,10 +93,16 @@ long IniFileHandler::readPortConfig(string sPort, string sFilePath, int index)
 					if (error != ERROR_SUCCESS)
 						return error;
 				}
+				//else do nothing
 				break;
+			//------------------------------------------------------------------
+			
 
 			//wobble
+			//------------------------------------------------------------------
 			case 1:
+				//if transfer mode equals double or masterSlave then read
+				//the slave port
 				if (vComPorts.at(index).iTransfer != 0)
 				{
 					error = readSlave(sPort, sFilePath.c_str(), index);
@@ -108,20 +115,62 @@ long IniFileHandler::readPortConfig(string sPort, string sFilePath, int index)
 							return error;
 					}
 				}
+				else	//if transfer mode equals single, then no slave port
+				{
+					error = readSettings(sPort, sFilePath.c_str(), index);
+					if (error != ERROR_SUCCESS)
+						return error;
+				}
 				break;
+			//------------------------------------------------------------------
+
 
 			//fixed
+			//------------------------------------------------------------------
 			case 2:
-
+				//if transfer mode equals double or masterSlave then read
+				//the slave port
+				if (vComPorts.at(index).iTransfer != 0)
+				{
+					error = readSlave(sPort, sFilePath.c_str(), index);
+					
+					if (error != ERROR_SUCCESS)
+						return error;
+					else
+					{	//read the baud rate
+						error = readBaudRate(sPort, sFilePath.c_str(), index);
+						
+						if (error != ERROR_SUCCESS)
+							return error;
+						else
+						{	//read the other settings
+							error = readSettings(sPort, sFilePath.c_str(), index);
+							if (error != ERROR_SUCCESS)
+								return error;
+						}
+					}
+				}
+				else	//if transfer mode equals single, then no slave port
+				{		//read the baud rate
+					error = readBaudRate(sPort, sFilePath.c_str(), index);
+					
+					if (error != ERROR_SUCCESS)
+						return error;
+					else	//read the other settings
+					{
+						error = readSettings(sPort, sFilePath.c_str(), index);
+						
+						if (error != ERROR_SUCCESS)
+							return error;
+					}
+				}
 				break;
+			//------------------------------------------------------------------
 
-		}
-	}
+		}//switch
+	}//if
 	else
 		return error;
-
-
-	vComPorts.at(index).iBaud = parseBaud("9600");
 
 	return ERROR_SUCCESS;
 	
@@ -638,8 +687,7 @@ long IniFileHandler::readSettings(string sPort, string sFilePath, int index)
 long IniFileHandler::readParity(string sPort, string sFilePath, int index)
 {
 	int iTemp = -1;
-	//Get port parity
-	//--------------------------------------------------------------------------
+
 	dwExists = GetPrivateProfileStringA(sPort.c_str(), "Parity",
 											 NULL, szValue, sizeof(szValue),
 											 sFilePath.c_str());
@@ -667,9 +715,7 @@ long IniFileHandler::readParity(string sPort, string sFilePath, int index)
 long IniFileHandler::readProtocol(string sPort, string sFilePath, int index)
 {
 	int iTemp = -1;
-	
-	//get port protocol
-	//------------------------------------------------------------------
+
 	dwExists = GetPrivateProfileStringA(sPort.c_str(), "Protocol",
 										NULL, szValue, sizeof(szValue),
 										sFilePath.c_str());
@@ -699,9 +745,7 @@ long IniFileHandler::readProtocol(string sPort, string sFilePath, int index)
 long IniFileHandler::readStopbits(string sPort, string sFilePath, int index)
 {
 	int iTemp = -1;
-	
-	//Get port stopbits
-	//----------------------------------------------------------
+
 	dwExists =GetPrivateProfileStringA(sPort.c_str(),"Stopbits",
 												NULL, szValue,
 												sizeof(szValue),
@@ -727,4 +771,37 @@ long IniFileHandler::readStopbits(string sPort, string sFilePath, int index)
 		return ERROR_INI;
 	}
 
+}
+
+
+long IniFileHandler::readBaudRate(string sPort, string sFilePath, int index)
+{
+	int iTemp = 0;
+	
+	//Get port stopbits
+	//----------------------------------------------------------
+	dwExists =GetPrivateProfileStringA(sPort.c_str(),"BaudRate",
+												NULL, szValue,
+												sizeof(szValue),
+												sFilePath.c_str());
+	if (dwExists != 0)
+	{
+		iTemp = parseBaud(szValue);
+		if (iTemp != ERROR_PARSE)
+		{
+			vComPorts.at(index).iBaud = iTemp;
+		}
+		else
+		{
+			clog << "Error in INI file. Incorrect baud rate for "
+				 << "port " << sPort << endl;
+			return ERROR_INI;
+		}
+	}
+	else	//error in ini file
+	{
+		clog << "Error in INI file. No baud rate definied for "
+				<< sPort << " port" << endl;
+		return ERROR_INI;
+	}
 }
