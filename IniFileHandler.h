@@ -51,30 +51,30 @@ public:
 private:
 //------------------------------------------------------------------------------
 //Variables
-	struct comPort
-	{
-		string sMasterPort;
-		string sSlavePort;
-		int iTransfer;
-		int iBaud;
-		int iTestMode;
-		int iParity;
-		int iProtocol;
-		int iStopbits;
-		
-		//constructor
-		comPort(void)
-		{
-			sMasterPort	= "";
-			sSlavePort	= "";
-			iBaud		= DEFAULT_VALUE;
-			iTestMode	= DEFAULT_VALUE;
-			iParity		= DEFAULT_VALUE;
-			iProtocol	= DEFAULT_VALUE;
-			iStopbits	= DEFAULT_VALUE;
-			iTransfer	= DEFAULT_VALUE;
-		}
-	};//struct
+	//struct comPort
+	//{
+	//	string sMasterPort;
+	//	string sSlavePort;
+	//	int iTransfer;
+	//	int iBaud;
+	//	int iTestMode;
+	//	int iParity;
+	//	int iProtocol;
+	//	int iStopbits;
+	//	
+	//	//constructor
+	//	comPort(void)
+	//	{
+	//		sMasterPort	= "";
+	//		sSlavePort	= "";
+	//		iBaud		= DEFAULT_VALUE;
+	//		iTestMode	= DEFAULT_VALUE;
+	//		iParity		= DEFAULT_VALUE;
+	//		iProtocol	= DEFAULT_VALUE;
+	//		iStopbits	= DEFAULT_VALUE;
+	//		iTransfer	= DEFAULT_VALUE;
+	//	}
+	//};//struct
 
 	DWORD error;
 	DWORD dwExists;

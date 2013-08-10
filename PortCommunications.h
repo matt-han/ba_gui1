@@ -2,8 +2,9 @@
  *	Class to handle input and output operations in a opened COM port
  */
 
-#ifndef _PORTHANDLER_H
-#define _PORTHANDLER_H
+#ifndef _PORTCOMMUNICATIONS_H
+#define _PORTCOMMUNICATIONS_H
+
 
 #include "Com.h"
 #include "Tools.h"
@@ -16,13 +17,13 @@
 
 
 
-class PortHandler
+class PortCommunications
 {
 
 public:
-	PortHandler(HANDLE hCom);
-	PortHandler(void);
-	~PortHandler(void);
+	PortCommunications(HANDLE hCom);
+	PortCommunications(void);
+	~PortCommunications(void);
 //------------------------------------------------------------------------------
 //Variables
 	int iExitCode;

@@ -5,10 +5,13 @@
 #ifndef _CONSTANTS_H
 #define _CONSTANTS_H
 
+#include <string>
+using namespace std;
 
 //------------------------------------------------------------------------------
 //Version
 #define VERSION "1.0"
+
 
 //------------------------------------------------------------------------------
 //GUI Elements
@@ -74,5 +77,34 @@
 #define ERROR_PARSE			-17
 
 #define DEFAULT_VALUE		-100
+
+
+//------------------------------------------------------------------------------
+//Variables
+	struct comPort
+	{
+		string sMasterPort;
+		string sSlavePort;
+		int iTransfer;
+		int iBaud;
+		int iTestMode;
+		int iParity;
+		int iProtocol;
+		int iStopbits;
+		
+		//constructor
+		comPort(void)
+		{
+			sMasterPort	= "";
+			sSlavePort	= "";
+			iBaud		= DEFAULT_VALUE;
+			iTestMode	= DEFAULT_VALUE;
+			iParity		= DEFAULT_VALUE;
+			iProtocol	= DEFAULT_VALUE;
+			iStopbits	= DEFAULT_VALUE;
+			iTransfer	= DEFAULT_VALUE;
+		}
+	};//struct
+
 
 #endif

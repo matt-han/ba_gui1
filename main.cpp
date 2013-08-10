@@ -6,7 +6,7 @@
 #include "Logger.h"
 #include <windows.h>
 
-#include "PortHandler.h"
+#include "PortCommunications.h"
 
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdShow)
@@ -25,7 +25,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdShow
 	
 	Window win;
 
-	IniFileHandler file;
+	//IniFileHandler file;
 	////------------------------------------------------------------------------------
 	//file.writeINIfile( port1,"COM2", 9600, 0, 1, 0, 2, 0, "");
 	//file.writeINIfile("COM2","COM2", 9600, 0, 1, 0, 2, 1, "");
@@ -42,7 +42,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdShow
 	//------------------------------------------------------------------------------
 	//------------------------------------------------------------------------------
 	//file.readINIFile("C:\\Users\\m.hansertvivar\\AppData\\Local\\Temp\\WN_ComPortTestFile.ini");
-	file.readINIFile("C:\\Users\\Benjamin\\AppData\\Local\\Temp\\WN_ComPortTestFile.ini");
+	//file.readINIFile("C:\\Users\\Benjamin\\AppData\\Local\\Temp\\WN_ComPortTestFile.ini");
 	//------------------------------------------------------------------------------
 	//------------------------------------------------------------------------------
 
@@ -57,8 +57,8 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdShow
 
 	//Com com2(port2);
 
-	//PortHandler portHandler(com.hCom);
-	//PortHandler portHandler2(com2.hCom);
+	//PortCommunications PortComm(com.hCom);
+	//PortCommunications PortComm2(com2.hCom);
 	
 
 	//if(com.iExitCode == ERROR_SUCCESS )//&& com2.iExitCode == 0)
@@ -74,12 +74,12 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdShow
 	//		get_info[z] = 0;
 	//	}
 
-	//	if (TRUE == portHandler.writeData(info, sizeof(info)) )
+	//	if (TRUE == PortComm.writeData(info, sizeof(info)) )
 	//	{
 	//		MessageBoxA(NULL, (LPCSTR)info, "COM 1 SENT", MB_OK);
 	//		
 	//		
-	//		if (TRUE == portHandler.readData(get_info, sizeof(get_info)) )
+	//		if (TRUE == PortComm.readData(get_info, sizeof(get_info)) )
 	//		{
 	//			MessageBoxA(NULL, (LPCSTR)get_info, "COM1 ARRIVED", MB_OK);
 	//		}

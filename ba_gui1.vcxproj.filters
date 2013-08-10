@@ -33,16 +33,13 @@
     <ClCompile Include="Window.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="PortHandler.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Observer.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="TransferFileHandler.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="IniFileHandler.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="PortCommunications.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
   </ItemGroup>
@@ -71,17 +68,17 @@
     <ClInclude Include="Window.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="PortHandler.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Observer.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="TransferFileHandler.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="IniFileHandler.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
+    <ClInclude Include="PortCommunications.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram1.cd" />
   </ItemGroup>
 </Project>

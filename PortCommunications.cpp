@@ -1,4 +1,4 @@
-#include "PortHandler.h"
+#include "PortCommunications.h"
 
 //------------------------------------------------------------------------------
 //	Constructor
@@ -6,7 +6,7 @@
 //	 IN:
 //		- HANDLE hCom -> opened COM port handle
 //------------------------------------------------------------------------------
-PortHandler::PortHandler(HANDLE hCom)
+PortCommunications::PortCommunications(HANDLE hCom)
 {
 	this->hCom = hCom;
 }
@@ -15,7 +15,7 @@ PortHandler::PortHandler(HANDLE hCom)
 //------------------------------------------------------------------------------
 //Default constructor
 //------------------------------------------------------------------------------
-PortHandler::PortHandler(void)
+PortCommunications::PortCommunications(void)
 {
 }
 
@@ -23,7 +23,7 @@ PortHandler::PortHandler(void)
 //------------------------------------------------------------------------------
 //Default deconstructor
 //------------------------------------------------------------------------------
-PortHandler::~PortHandler(void)
+PortCommunications::~PortCommunications(void)
 {
 }
 
@@ -36,7 +36,7 @@ PortHandler::~PortHandler(void)
 //		- DWORD dwSize -> amount of character to be read from port
 //	Return: error code signaling if operation succeded or error
 //------------------------------------------------------------------------------
-bool PortHandler::readData(char * lpBuf, DWORD dwSize)
+bool PortCommunications::readData(char * lpBuf, DWORD dwSize)
 {
 	DWORD dwRead;
 	DWORD dwRes;
@@ -127,7 +127,7 @@ bool PortHandler::readData(char * lpBuf, DWORD dwSize)
 //		- DWORD dwSize -> amount of character to be written to the port
 //	Return: error code signaling if operation succeded or error
 //------------------------------------------------------------------------------
-bool PortHandler::writeData(const char * lpBuf, DWORD dwSize)
+bool PortCommunications::writeData(const char * lpBuf, DWORD dwSize)
 {
 	OVERLAPPED osWrite = {0};
 	DWORD dwWritten;
@@ -212,7 +212,7 @@ bool PortHandler::writeData(const char * lpBuf, DWORD dwSize)
 }
 
 
-//BOOL PortHandler::ReadFromCOMPort(unsigned char* c_Data)
+//BOOL PortCommunications::ReadFromCOMPort(unsigned char* c_Data)
 //{
 //    BOOL error;
 //
@@ -238,7 +238,7 @@ bool PortHandler::writeData(const char * lpBuf, DWORD dwSize)
 //    return TRUE;
 //}
 //
-//BOOL PortHandler::WriteToCOMPort(unsigned char* c_Data)
+//BOOL PortCommunications::WriteToCOMPort(unsigned char* c_Data)
 //{
 //    BOOL fSuccess;
 //	BOOL error;
@@ -319,7 +319,7 @@ bool PortHandler::writeData(const char * lpBuf, DWORD dwSize)
 //}
 
 /*
-int PortHandler::checkPortStatus()
+int PortCommunications::checkPortStatus()
 {
 	#define STATUS_CHECK_TIMEOUT      500   // Milliseconds
 
