@@ -5,6 +5,7 @@
 //------------------------------------------------------------------------------
 IniFileHandler::IniFileHandler(void)
 {
+	error = 0;
 }
 
 
@@ -15,175 +16,9 @@ IniFileHandler::~IniFileHandler(void)
 {
 }
 
-
-
-
-//------------------------------------------------------------------------------
-//------------------------------------------------------------------------------
-//------------------------------------------------------------------------------
-//------------------------------------------------------------------------------
-//------------------------------------------------------------------------------
-//	Read configuration file for automated testing
-
-
-
-//	Return: error code signaling if operation succeded or error
-//------------------------------------------------------------------------------
-long IniFileHandler::readINIFile(string sFilePath)
-{
-	string sPort;
-	string sTemp;
-	int iPort = 0;
-
-	//try to find test settings for all possible system ports
-	for(int iCom = 1; iCom < 10; iCom++)//256
-	{
-		sPort = "COM";
-		sTemp = tools.convertToString(iCom);
-		sPort.append(sTemp);
-
-		dwExists = GetPrivateProfileStringA(sPort.c_str(), "TestMode", NULL,
-											szValue, sizeof(szValue),
-											sFilePath.c_str());
-
-		if (0 != dwExists)
-		{
-			vComPorts.push_back(comPort());
-			readPortConfig(sPort, sFilePath, iPort);
-			iPort++;
-		}
-
-	}
-	//if any read the 
-	return ERROR_SUCCESS;
-	//else Errooooor
-}
-
-
-//------------------------------------------------------------------------------
-//	Reads port configuration from opened configuration file. Saves the
-//	information in the corresponding vectors or variables
-
-
-
-
-//	Return: error code signaling if operation succeded or error
-//------------------------------------------------------------------------------
-long IniFileHandler::readPortConfig(string sPort, string sFilePath, int index)
-{
-	string sTemp = "";
-	int iTemp = parseTestMode(szValue);
-	vComPorts.at(index).iTestMode = iTemp;
-
-	//always read transfer mode
-	//all ports have a transfer mode
-	error = readTransferMode(sPort, sFilePath, index);
-	if (error == ERROR_SUCCESS)
-	{
-		switch(iTemp)
-		{
-			//automatic
-			//------------------------------------------------------------------
-			case 0:	
-				//if transfer mode equals double or masterSlave then read
-				//the slave port
-				if (vComPorts.at(index).iTransfer != 0)
-				{
-					error = readSlave(sPort, sFilePath.c_str(), index);
-					if (error != ERROR_SUCCESS)
-						return error;
-				}
-				//else do nothing
-				break;
-			//------------------------------------------------------------------
-			
-
-			//wobble
-			//------------------------------------------------------------------
-			case 1:
-				//if transfer mode equals double or masterSlave then read
-				//the slave port
-				if (vComPorts.at(index).iTransfer != 0)
-				{
-					error = readSlave(sPort, sFilePath.c_str(), index);
-					if (error != ERROR_SUCCESS)
-						return error;
-					else
-					{
-						error = readSettings(sPort, sFilePath.c_str(), index);
-						if (error != ERROR_SUCCESS)
-							return error;
-					}
-				}
-				else	//if transfer mode equals single, then no slave port
-				{
-					error = readSettings(sPort, sFilePath.c_str(), index);
-					if (error != ERROR_SUCCESS)
-						return error;
-				}
-				break;
-			//------------------------------------------------------------------
-
-
-			//fixed
-			//------------------------------------------------------------------
-			case 2:
-				//if transfer mode equals double or masterSlave then read
-				//the slave port
-				if (vComPorts.at(index).iTransfer != 0)
-				{
-					error = readSlave(sPort, sFilePath.c_str(), index);
-					
-					if (error != ERROR_SUCCESS)
-						return error;
-					else
-					{	//read the baud rate
-						error = readBaudRate(sPort, sFilePath.c_str(), index);
-						
-						if (error != ERROR_SUCCESS)
-							return error;
-						else
-						{	//read the other settings
-							error = readSettings(sPort, sFilePath.c_str(), index);
-							if (error != ERROR_SUCCESS)
-								return error;
-						}
-					}
-				}
-				else	//if transfer mode equals single, then no slave port
-				{		//read the baud rate
-					error = readBaudRate(sPort, sFilePath.c_str(), index);
-					
-					if (error != ERROR_SUCCESS)
-						return error;
-					else	//read the other settings
-					{
-						error = readSettings(sPort, sFilePath.c_str(), index);
-						
-						if (error != ERROR_SUCCESS)
-							return error;
-					}
-				}
-				break;
-			//------------------------------------------------------------------
-
-		}//switch
-	}//if
-	else
-		return error;
-
-	return ERROR_SUCCESS;
-	
-}
-
-
-//------------------------------------------------------------------------------
-//------------------------------------------------------------------------------
-//------------------------------------------------------------------------------
-//------------------------------------------------------------------------------
-
-
-
+//##############################################################################
+//	WRITE METHODS
+//##############################################################################
 //------------------------------------------------------------------------------
 //	Writes the configuration the user picked in the GUI into a ini file to be
 //	used again for testing
@@ -325,7 +160,448 @@ void IniFileHandler::writeINItransferSettings(string sMasterPort,
 	}
 }
 
+//##############################################################################
+//	READ METHODS
+//##############################################################################
+//	Read configuration file for automated testing
+//	Parameters:
+//	 IN:
+//		- string sFilePath -> INI file path
+//	Return: error code signaling if operation succeded or error
+//------------------------------------------------------------------------------
+long IniFileHandler::readINIFile(string sFilePath)
+{
+	string sPort;
+	string sTemp;
+	int iPort = 0;
 
+	//try to find test settings for all possible system ports
+	for(int iCom = 1; iCom < 10; iCom++)//256
+	{
+		sPort = "COM";
+		sTemp = tools.convertToString(iCom);
+		sPort.append(sTemp);
+
+		dwExists = GetPrivateProfileStringA(sPort.c_str(), "TestMode", NULL,
+											szValue, sizeof(szValue),
+											sFilePath.c_str());
+
+		if (0 != dwExists)
+		{
+			vComPorts.push_back(comPort());
+			vComPorts.at(iPort).sMasterPort = sPort;
+
+			error = readPortConfig(sPort, sFilePath, iPort);
+			if (error != ERROR_SUCCESS)
+			{
+				clog << "Error reading port " << sPort << " from INI file."
+					 << "Error " << error << endl;
+			}
+			iPort++;
+		}
+		error = 0;
+	}
+	//if any read the 
+	return ERROR_SUCCESS;
+	//else Errooooor
+}
+
+
+//------------------------------------------------------------------------------
+//	Reads port configuration from opened configuration file. Saves the
+//	information in the corresponding vectors
+//	Parameters:
+//	 IN:
+//		- string sPort -> COM port in the system to use for transfer
+//		- string sFilePath -> INI file path
+//		- int index -> index of the COM port for the vector
+//	Return: if success or error in INI file
+//------------------------------------------------------------------------------
+long IniFileHandler::readPortConfig(string sPort, string sFilePath, int index)
+{
+	string sTemp = "";
+	int iTemp = parseTestMode(szValue);
+	vComPorts.at(index).iTestMode = iTemp;
+
+	//always read transfer mode
+	//all ports have a transfer mode
+	error = readTransferMode(sPort, sFilePath, index);
+	if (error == ERROR_SUCCESS)
+	{
+		switch(iTemp)
+		{
+			//automatic
+			//------------------------------------------------------------------
+			case 0:	
+				//if transfer mode equals double or masterSlave then read
+				//the slave port
+				if (vComPorts.at(index).iTransfer != 0)
+				{
+					error = readSlave(sPort, sFilePath.c_str(), index);
+					if (error != ERROR_SUCCESS)
+						return error;
+				}
+				//else do nothing
+				break;
+			//------------------------------------------------------------------
+			
+
+			//wobble
+			//------------------------------------------------------------------
+			case 1:
+				//if transfer mode equals double or masterSlave then read
+				//the slave port
+				if (vComPorts.at(index).iTransfer != 0)
+				{
+					error = readSlave(sPort, sFilePath.c_str(), index);
+					if (error != ERROR_SUCCESS)
+						return error;
+					else
+					{
+						error = readSettings(sPort, sFilePath.c_str(), index);
+						if (error != ERROR_SUCCESS)
+							return error;
+					}
+				}
+				else	//if transfer mode equals single, then no slave port
+				{
+					error = readSettings(sPort, sFilePath.c_str(), index);
+					if (error != ERROR_SUCCESS)
+						return error;
+				}
+				break;
+			//------------------------------------------------------------------
+
+
+			//fixed
+			//------------------------------------------------------------------
+			case 2:
+				//if transfer mode equals double or masterSlave then read
+				//the slave port
+				if (vComPorts.at(index).iTransfer != 0)
+				{
+					error = readSlave(sPort, sFilePath.c_str(), index);
+					
+					if (error != ERROR_SUCCESS)
+						return error;
+					else
+					{	//read the baud rate
+						error = readBaudRate(sPort, sFilePath.c_str(), index);
+						
+						if (error != ERROR_SUCCESS)
+							return error;
+						else
+						{	//read the other settings
+							error = readSettings(sPort, sFilePath.c_str(), index);
+							if (error != ERROR_SUCCESS)
+								return error;
+						}
+					}
+				}
+				else	//if transfer mode equals single, then no slave port
+				{		//read the baud rate
+					error = readBaudRate(sPort, sFilePath.c_str(), index);
+					
+					if (error != ERROR_SUCCESS)
+						return error;
+					else	//read the other settings
+					{
+						error = readSettings(sPort, sFilePath.c_str(), index);
+						
+						if (error != ERROR_SUCCESS)
+							return error;
+					}
+				}
+				break;
+			//------------------------------------------------------------------
+
+		}//switch
+	}//if
+	else
+		return error;
+
+	return ERROR_SUCCESS;
+	
+}
+
+//------------------------------------------------------------------------------
+//	Reads the transfer mode setting from the INI file
+//	Parameters:
+//	 IN:
+//		- string sPort -> COM port in the system to use for transfer
+//		- string sFilePath -> INI file path
+//		- int index -> index of the COM port for the vector
+//	Return: if success or error in INI file
+//------------------------------------------------------------------------------
+long IniFileHandler::readTransferMode(string sPort, string sFilePath, int index)
+{
+	int iTemp = -1;
+	dwExists = GetPrivateProfileStringA(sPort.c_str(), "TransferMode",
+											 NULL, szValue, sizeof(szValue),
+											 sFilePath.c_str());
+	if (dwExists != 0)
+	{
+		iTemp = parseTransfer(szValue);
+		if (iTemp != ERROR_PARSE)
+		{
+			vComPorts.at(index).iTransfer = iTemp;
+		}//error_parse
+		else
+		{
+			clog << "Error in INI file. Incorrect transfer mode for "
+				 << "port " << sPort << endl;
+			return ERROR_INI;
+		}
+	}
+	else	//error in ini file
+	{
+		clog << "Error in INI file. No transfer mode definied for "
+				<< sPort << " port" << endl;
+		return ERROR_INI;
+	}
+	return ERROR_SUCCESS;
+}
+
+
+//------------------------------------------------------------------------------
+//	Reads the slave port from the INI file
+//	Parameters:
+//	 IN:
+//		- string sPort -> COM port in the system to use for transfer
+//		- string sFilePath -> INI file path
+//		- int index -> index of the COM port for the vector
+//	Return: if success or error in INI file
+//------------------------------------------------------------------------------
+long IniFileHandler::readSlave(string sPort, string sFilePath, int index)
+{
+	string sTemp = "";
+	dwExists = GetPrivateProfileStringA(sPort.c_str(),
+												"SlavePort",
+												 NULL, szValue, sizeof(szValue),
+												 sFilePath.c_str());
+	if (dwExists != 0)
+	{
+		sTemp = parsePort(szValue);
+
+		if(sTemp == "")
+		{
+			clog << "Error in INI file. Incorrect slave "
+					<< "port for " << sPort << endl;
+			return ERROR_INI;
+		}
+		else
+			vComPorts.at(index).sSlavePort = szValue;
+	}
+	else
+	{
+		clog << "Error in INI file. No slave port given for"
+				<< " port " << sPort << endl;
+		return ERROR_INI;
+	}
+	return ERROR_SUCCESS;
+}
+
+
+//------------------------------------------------------------------------------
+//	Reads the parity, protocol and stopbits settings from the INI file
+//	Parameters:
+//	 IN:
+//		- string sPort -> COM port in the system to use for transfer
+//		- string sFilePath -> INI file path
+//		- int index -> index of the COM port for the vector
+//	Return: if success or error in INI file
+//------------------------------------------------------------------------------
+long IniFileHandler::readSettings(string sPort, string sFilePath, int index)
+{
+	error = readParity(sPort, sFilePath, index);
+	if (error == ERROR_SUCCESS)
+	{
+		error = readProtocol(sPort, sFilePath, index);
+		if (error == ERROR_SUCCESS)
+		{
+			error = readStopbits(sPort, sFilePath, index);
+			if (error != ERROR_SUCCESS)
+			{
+				return error;
+			}
+		}
+		else
+			return error;
+	}
+	else
+		return error;
+
+	return ERROR_SUCCESS;
+}
+
+
+//------------------------------------------------------------------------------
+//	Reads the parity setting from the INI file
+//	Parameters:
+//	 IN:
+//		- string sPort -> COM port in the system to use for transfer
+//		- string sFilePath -> INI file path
+//		- int index -> index of the COM port for the vector
+//	Return: if success or error in INI file
+//------------------------------------------------------------------------------
+long IniFileHandler::readParity(string sPort, string sFilePath, int index)
+{
+	int iTemp = -1;
+
+	dwExists = GetPrivateProfileStringA(sPort.c_str(), "Parity",
+											 NULL, szValue, sizeof(szValue),
+											 sFilePath.c_str());
+	if (dwExists != 0)
+	{
+		iTemp = parseParity(szValue);
+		if (iTemp != ERROR_PARSE)
+		{
+			vComPorts.at(index).iParity = iTemp;
+		}	
+		else
+		{
+			clog << "Error in INI file. Incorrect parity for "
+				<< "port " << sPort << endl;
+			return ERROR_INI;
+		}
+	}
+	else	//error in ini file
+	{
+		clog << "Error in INI file. No parity definied for "
+				<< sPort << " port" << endl;
+		return ERROR_INI;
+	}
+	return ERROR_SUCCESS;
+}
+
+
+//------------------------------------------------------------------------------
+//	Reads the protocol setting from the INI file
+//	Parameters:
+//	 IN:
+//		- string sPort -> COM port in the system to use for transfer
+//		- string sFilePath -> INI file path
+//		- int index -> index of the COM port for the vector
+//	Return: if success or error in INI file
+//------------------------------------------------------------------------------
+long IniFileHandler::readProtocol(string sPort, string sFilePath, int index)
+{
+	int iTemp = -1;
+
+	dwExists = GetPrivateProfileStringA(sPort.c_str(), "Protocol",
+										NULL, szValue, sizeof(szValue),
+										sFilePath.c_str());
+	if (dwExists != 0)
+	{
+		iTemp = parseProtocol(szValue);
+		if (iTemp != ERROR_PARSE)
+		{
+			vComPorts.at(index).iProtocol = iTemp;
+		}//error_parse
+		else
+		{
+			clog << "Error in INI file. Incorrect protocol for "
+				 << "port " << sPort << endl;
+			return ERROR_INI;
+		}
+	}
+	else	//error in ini file
+	{
+		clog << "Error in INI file. No protocol definied for "
+				<< sPort << " port" << endl;
+		return ERROR_INI;
+	}
+	return ERROR_SUCCESS;
+}
+
+
+//------------------------------------------------------------------------------
+//	Reads the stopbits setting from the INI file
+//	Parameters:
+//	 IN:
+//		- string sPort -> COM port in the system to use for transfer
+//		- string sFilePath -> INI file path
+//		- int index -> index of the COM port for the vector
+//	Return: if success or error in INI file
+//------------------------------------------------------------------------------
+long IniFileHandler::readStopbits(string sPort, string sFilePath, int index)
+{
+	int iTemp = -1;
+
+	dwExists =GetPrivateProfileStringA(sPort.c_str(),"Stopbits",
+												NULL, szValue,
+												sizeof(szValue),
+												sFilePath.c_str());
+	if (dwExists != 0)
+	{
+		iTemp = parseStopbits(szValue);
+		if (iTemp != ERROR_PARSE)
+		{
+			vComPorts.at(index).iStopbits = iTemp;
+		}
+		else
+		{
+			clog << "Error in INI file. Incorrect stopbits for "
+				 << "port " << sPort << endl;
+			return ERROR_INI;
+		}
+	}
+	else	//error in ini file
+	{
+		clog << "Error in INI file. No Stopbits definied for "
+				<< sPort << " port" << endl;
+		return ERROR_INI;
+	}
+	return ERROR_SUCCESS;
+}
+
+
+//------------------------------------------------------------------------------
+//	Reads the baud rate setting from the INI file
+//	Parameters:
+//	 IN:
+//		- string sPort -> COM port in the system to use for transfer
+//		- string sFilePath -> INI file path
+//		- int index -> index of the COM port for the vector
+//	Return: if success or error in INI file
+//------------------------------------------------------------------------------
+long IniFileHandler::readBaudRate(string sPort, string sFilePath, int index)
+{
+	int iTemp = 0;
+	
+	//Get port stopbits
+	//----------------------------------------------------------
+	dwExists =GetPrivateProfileStringA(sPort.c_str(),"BaudRate",
+												NULL, szValue,
+												sizeof(szValue),
+												sFilePath.c_str());
+	if (dwExists != 0)
+	{
+		iTemp = parseBaud(szValue);
+		if (iTemp != ERROR_PARSE)
+		{
+			vComPorts.at(index).iBaud = iTemp;
+		}
+		else
+		{
+			clog << "Error in INI file. Incorrect baud rate for "
+				 << "port " << sPort << endl;
+			return ERROR_INI;
+		}
+	}
+	else	//error in ini file
+	{
+		clog << "Error in INI file. No baud rate definied for "
+				<< sPort << " port" << endl;
+		return ERROR_INI;
+	}
+	return ERROR_SUCCESS;
+}
+
+
+//##############################################################################
+//	PARSE METHODS
+//##############################################################################
 //------------------------------------------------------------------------------
 //	Parse GUI parameters to a string
 //	Parameters:
@@ -574,12 +850,13 @@ int IniFileHandler::parseTransfer(string sTransfer)
 //------------------------------------------------------------------------------
 string IniFileHandler::parsePort(string sSlavePort)
 {
-	string sTemp = sSlavePort.substr(0, sSlavePort.find_first_of("M"));
+	//first 3 characters are COM
+	string sTemp = sSlavePort.substr(0, 3);
 
 	if(sTemp == "COM")
 	{
-		sTemp = sSlavePort.substr(sSlavePort.find_first_of("M"),
-								  sSlavePort.npos - 2);
+		sTemp = sSlavePort.substr(sSlavePort.find_first_of("M") + 1,
+								  sSlavePort.npos);
 		int iTemp = atoi(sTemp.c_str());
 
 		if ( iTemp > 0 && iTemp < 256)
@@ -598,210 +875,5 @@ string IniFileHandler::parsePort(string sSlavePort)
 		clog << "Error in SlavePort. Please name the port \"COM\" and a number."
 			 << "For example \"COM99\"" << endl;
 		return "";
-	}
-}
-
-
-long IniFileHandler::readTransferMode(string sPort, string sFilePath, int index)
-{
-	int iTemp = -1;
-	dwExists = GetPrivateProfileStringA(sPort.c_str(), "TransferMode",
-											 NULL, szValue, sizeof(szValue),
-											 sFilePath.c_str());
-	if (dwExists != 0)
-	{
-		iTemp = parseTransfer(szValue);
-		if (iTemp != ERROR_PARSE)
-		{
-			vComPorts.at(index).iTransfer = iTemp;
-		}//error_parse
-		else
-		{
-			clog << "Error in INI file. Incorrect transfer mode for "
-				<< "port " << sPort << endl;
-			return ERROR_INI;
-		}
-	}
-	else	//error in ini file
-	{
-		clog << "Error in INI file. No transfer mode definied for "
-				<< sPort << " port" << endl;
-		return ERROR_INI;
-	}
-}
-
-long IniFileHandler::readSlave(string sPort, string sFilePath, int index)
-{
-	string sTemp = "";
-	dwExists = GetPrivateProfileStringA(sPort.c_str(),
-												"SlavePort",
-												 NULL, szValue, sizeof(szValue),
-												 sFilePath.c_str());
-	if (dwExists != 0)
-	{
-		sTemp = parsePort(szValue);
-
-		if(sTemp == "")
-		{
-			clog << "Error in INI file. Incorrect slave "
-					<< "port for " << sPort << endl;
-			return ERROR_INI;
-		}
-		else
-			vComPorts.at(index).sSlavePort = sTemp;
-	}
-	else
-	{
-		clog << "Error in INI file. No slave port given for"
-				<< " port " << sPort << endl;
-		return ERROR_INI;
-	}
-	return ERROR_SUCCESS;
-}
-
-
-long IniFileHandler::readSettings(string sPort, string sFilePath, int index)
-{
-	error = readParity(sPort, sFilePath, index);
-	if (error == ERROR_SUCCESS)
-	{
-		error = readProtocol(sPort, sFilePath, index);
-		if (error == ERROR_SUCCESS)
-		{
-			error = readProtocol(sPort, sFilePath, index);
-			if (error != ERROR_SUCCESS)
-			{
-				return error;
-			}
-		}
-		else
-			return error;
-	}
-	else
-		return error;
-
-	return ERROR_SUCCESS;
-}
-
-
-long IniFileHandler::readParity(string sPort, string sFilePath, int index)
-{
-	int iTemp = -1;
-
-	dwExists = GetPrivateProfileStringA(sPort.c_str(), "Parity",
-											 NULL, szValue, sizeof(szValue),
-											 sFilePath.c_str());
-	if (dwExists != 0)
-	{
-		iTemp = parseParity(szValue);
-		if (iTemp != ERROR_PARSE)
-		{
-			vComPorts.at(index).iParity = iTemp;
-		}	
-		else
-		{
-			clog << "Error in INI file. Incorrect parity for "
-				<< "port " << sPort << endl;
-			return ERROR_INI;
-		}
-	}
-	else	//error in ini file
-	{
-		clog << "Error in INI file. No parity definied for "
-				<< sPort << " port" << endl;
-		return ERROR_INI;
-	}
-}
-long IniFileHandler::readProtocol(string sPort, string sFilePath, int index)
-{
-	int iTemp = -1;
-
-	dwExists = GetPrivateProfileStringA(sPort.c_str(), "Protocol",
-										NULL, szValue, sizeof(szValue),
-										sFilePath.c_str());
-	if (dwExists != 0)
-	{
-		iTemp = parseProtocol(szValue);
-		if (iTemp != ERROR_PARSE)
-		{
-			vComPorts.at(index).iProtocol = iTemp;
-		}//error_parse
-		else
-		{
-			clog << "Error in INI file. Incorrect protocol for "
-				 << "port " << sPort << endl;
-			return ERROR_INI;
-		}
-	}
-	else	//error in ini file
-	{
-		clog << "Error in INI file. No protocol definied for "
-				<< sPort << " port" << endl;
-		return ERROR_INI;
-	}
-	
-}
-
-long IniFileHandler::readStopbits(string sPort, string sFilePath, int index)
-{
-	int iTemp = -1;
-
-	dwExists =GetPrivateProfileStringA(sPort.c_str(),"Stopbits",
-												NULL, szValue,
-												sizeof(szValue),
-												sFilePath.c_str());
-	if (dwExists != 0)
-	{
-		iTemp = parseParity(szValue);
-		if (iTemp != ERROR_PARSE)
-		{
-			vComPorts.at(index).iStopbits = iTemp;
-		}
-		else
-		{
-			clog << "Error in INI file. Incorrect stopbits for "
-				 << "port " << sPort << endl;
-			return ERROR_INI;
-		}
-	}
-	else	//error in ini file
-	{
-		clog << "Error in INI file. No Stopbits definied for "
-				<< sPort << " port" << endl;
-		return ERROR_INI;
-	}
-
-}
-
-
-long IniFileHandler::readBaudRate(string sPort, string sFilePath, int index)
-{
-	int iTemp = 0;
-	
-	//Get port stopbits
-	//----------------------------------------------------------
-	dwExists =GetPrivateProfileStringA(sPort.c_str(),"BaudRate",
-												NULL, szValue,
-												sizeof(szValue),
-												sFilePath.c_str());
-	if (dwExists != 0)
-	{
-		iTemp = parseBaud(szValue);
-		if (iTemp != ERROR_PARSE)
-		{
-			vComPorts.at(index).iBaud = iTemp;
-		}
-		else
-		{
-			clog << "Error in INI file. Incorrect baud rate for "
-				 << "port " << sPort << endl;
-			return ERROR_INI;
-		}
-	}
-	else	//error in ini file
-	{
-		clog << "Error in INI file. No baud rate definied for "
-				<< sPort << " port" << endl;
-		return ERROR_INI;
 	}
 }

@@ -73,6 +73,6 @@
 #define ERROR_SYNTAX		-16
 #define ERROR_PARSE			-17
 
-
+#define DEFAULT_VALUE		-100
 
 #endif

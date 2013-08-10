@@ -25,10 +25,8 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdShow
 	
 	Window win;
 
-	//Interpreter interpreter(&win);
-
-	//IniFileHandler file;
-	//------------------------------------------------------------------------------
+	IniFileHandler file;
+	////------------------------------------------------------------------------------
 	//file.writeINIfile( port1,"COM2", 9600, 0, 1, 0, 2, 0, "");
 	//file.writeINIfile("COM2","COM2", 9600, 0, 1, 0, 2, 1, "");
 	//file.writeINIfile( port2,"COM2", 9600, 0, 1, 0, 2, 2, "");
@@ -43,7 +41,8 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdShow
 
 	//------------------------------------------------------------------------------
 	//------------------------------------------------------------------------------
-	//file.readINIFile("C:\\Users\\m.hansertvivar\\AppData\\Local\\Temp\\WN_ComPortTestFile.txt");
+	//file.readINIFile("C:\\Users\\m.hansertvivar\\AppData\\Local\\Temp\\WN_ComPortTestFile.ini");
+	file.readINIFile("C:\\Users\\Benjamin\\AppData\\Local\\Temp\\WN_ComPortTestFile.ini");
 	//------------------------------------------------------------------------------
 	//------------------------------------------------------------------------------
 

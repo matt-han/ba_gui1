@@ -27,24 +27,18 @@ public:
 //------------------------------------------------------------------------------
 //Methods
 
+	//read methods
 	long readINIFile(string sFilePath);
 	long readPortConfig(string sPort,  string sFilePath, int index);
-	
-	
 	long readTransferMode(string sPort, string sFilePath, int index);
 	long readSlave(string sPort, string sFilePath, int index);
-	
 	long readSettings(string sPort, string sFilePath, int index);
 	long readParity(string sPort, string sFilePath, int index);
 	long readProtocol(string sPort, string sFilePath, int index);
 	long readStopbits(string sPort, string sFilePath, int index);
-
-//------------------------------------------------------------------------------
-//------------------------------------------------------------------------------
 	long readBaudRate(string sPort, string sFilePath, int index);
 
-
-
+	//write methods
 	void writeINIfile(string sMasterPort, string sSlavePort, int iBaud,
 					  int iTestMode, int iParity, int iProtocol,
 					  int iStopbits, int iTransfer, string sPath);
@@ -57,28 +51,30 @@ public:
 private:
 //------------------------------------------------------------------------------
 //Variables
-	struct comPort{
+	struct comPort
+	{
 		string sMasterPort;
 		string sSlavePort;
+		int iTransfer;
 		int iBaud;
 		int iTestMode;
 		int iParity;
 		int iProtocol;
 		int iStopbits;
-		int iTransfer;
-
+		
+		//constructor
 		comPort(void)
 		{
 			sMasterPort	= "";
 			sSlavePort	= "";
-			iBaud		= 0;
-			iTestMode	= -1;
-			iParity		= -1;
-			iProtocol	= -1;
-			iStopbits	= -1;
-			iTransfer	= -1;
+			iBaud		= DEFAULT_VALUE;
+			iTestMode	= DEFAULT_VALUE;
+			iParity		= DEFAULT_VALUE;
+			iProtocol	= DEFAULT_VALUE;
+			iStopbits	= DEFAULT_VALUE;
+			iTransfer	= DEFAULT_VALUE;
 		}
-	};
+	};//struct
 
 	DWORD error;
 	DWORD dwExists;

@@ -1,21 +1,19 @@
-﻿Der Buildvorgang wurde am 09.08.2013 16:18:57 gestartet.
-     1>Projekt "C:\Users\m.hansertvivar\Documents\Visual Studio 2010\Projects\ba_gui1\ba_gui1\ba_gui1.vcxproj" auf Knoten "2", build Ziel(e).
+﻿Der Buildvorgang wurde am 10.08.2013 13:44:21 gestartet.
+     1>Projekt "C:\Users\Benjamin\Documents\GitHub\ba_gui1\ba_gui1.vcxproj" auf Knoten "2", build Ziel(e).
      1>InitializeBuildStatus:
          "Debug\ba_gui1.unsuccessfulbuild" wird erstellt, da "AlwaysCreate" angegeben wurde.
        ClCompile:
-         c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /ZI /nologo /W4 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt IniFileHandler.cpp
+         C:\Program Files\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /ZI /nologo /W4 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt IniFileHandler.cpp main.cpp
          IniFileHandler.cpp
-     1>c:\users\m.hansertvivar\documents\visual studio 2010\projects\ba_gui1\ba_gui1\inifilehandler.cpp(211): warning C4996: 'getenv': This function or variable may be unsafe. Consider using _dupenv_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-                 c:\program files (x86)\microsoft visual studio 10.0\vc\include\stdlib.h(433): Siehe Deklaration von 'getenv'
-     1>c:\users\m.hansertvivar\documents\visual studio 2010\projects\ba_gui1\ba_gui1\inifilehandler.cpp(631): warning C4715: "IniFileHandler::readTransferMode": Nicht alle Steuerelementpfade geben einen Wert zurück.
-     1>c:\users\m.hansertvivar\documents\visual studio 2010\projects\ba_gui1\ba_gui1\inifilehandler.cpp(714): warning C4715: "IniFileHandler::readParity": Nicht alle Steuerelementpfade geben einen Wert zurück.
-     1>c:\users\m.hansertvivar\documents\visual studio 2010\projects\ba_gui1\ba_gui1\inifilehandler.cpp(743): warning C4715: "IniFileHandler::readProtocol": Nicht alle Steuerelementpfade geben einen Wert zurück.
-     1>c:\users\m.hansertvivar\documents\visual studio 2010\projects\ba_gui1\ba_gui1\inifilehandler.cpp(774): warning C4715: "IniFileHandler::readStopbits": Nicht alle Steuerelementpfade geben einen Wert zurück.
-     1>c:\users\m.hansertvivar\documents\visual studio 2010\projects\ba_gui1\ba_gui1\inifilehandler.cpp(807): warning C4715: "IniFileHandler::readBaudRate": Nicht alle Steuerelementpfade geben einen Wert zurück.
+     1>c:\users\benjamin\documents\github\ba_gui1\inifilehandler.cpp(46): warning C4996: 'getenv': This function or variable may be unsafe. Consider using _dupenv_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\program files\microsoft visual studio 10.0\vc\include\stdlib.h(433): Siehe Deklaration von 'getenv'
+         Code wird generiert...
+         Überspringen... (keine relevanten Änderungen gefunden)
+         main.cpp
        ManifestResourceCompile:
          Alle Ausgaben sind aktuell.
        Link:
-         c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\m.hansertvivar\Documents\Visual Studio 2010\Projects\ba_gui1\Debug\ba_gui1.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"Debug\ba_gui1.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"C:\Users\m.hansertvivar\Documents\Visual Studio 2010\Projects\ba_gui1\Debug\ba_gui1.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\m.hansertvivar\Documents\Visual Studio 2010\Projects\ba_gui1\Debug\ba_gui1.lib" /MACHINE:X86 Debug\ba_gui1.exe.embed.manifest.res
+         C:\Program Files\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Benjamin\Documents\GitHub\ba_gui1\Debug\ba_gui1.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"Debug\ba_gui1.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"C:\Users\Benjamin\Documents\GitHub\ba_gui1\Debug\ba_gui1.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Benjamin\Documents\GitHub\ba_gui1\Debug\ba_gui1.lib" /MACHINE:X86 Debug\ba_gui1.exe.embed.manifest.res
          Debug\Com.obj
          Debug\IniFileHandler.obj
          Debug\Interpreter.obj
@@ -27,16 +25,16 @@
          Debug\TransferFileHandler.obj
          Debug\Window.obj
        Manifest:
-         C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\mt.exe /nologo /verbose /out:"Debug\ba_gui1.exe.embed.manifest" /manifest Debug\ba_gui1.exe.intermediate.manifest
+         C:\Program Files\Microsoft SDKs\Windows\v7.0A\bin\mt.exe /nologo /verbose /out:"Debug\ba_gui1.exe.embed.manifest" /manifest Debug\ba_gui1.exe.intermediate.manifest
          Alle Ausgaben sind aktuell.
        LinkEmbedManifest:
          Alle Ausgaben sind aktuell.
-         ba_gui1.vcxproj -> C:\Users\m.hansertvivar\Documents\Visual Studio 2010\Projects\ba_gui1\Debug\ba_gui1.exe
+         ba_gui1.vcxproj -> C:\Users\Benjamin\Documents\GitHub\ba_gui1\Debug\ba_gui1.exe
        FinalizeBuildStatus:
          Die Datei "Debug\ba_gui1.unsuccessfulbuild" wird gelöscht.
          Aktualisieren des Timestamps von "Debug\ba_gui1.lastbuildstate".
-     1>Die Erstellung des Projekts "C:\Users\m.hansertvivar\Documents\Visual Studio 2010\Projects\ba_gui1\ba_gui1\ba_gui1.vcxproj" ist abgeschlossen, build Ziel(e).
+     1>Die Erstellung des Projekts "C:\Users\Benjamin\Documents\GitHub\ba_gui1\ba_gui1.vcxproj" ist abgeschlossen, build Ziel(e).
 
 Das Erstellen war erfolgreich.
 
-Verstrichene Zeit 00:00:01.49
+Verstrichene Zeit 00:00:03.40
