@@ -1,42 +1,19 @@
 #include "Interpreter.h"
 
 //------------------------------------------------------------------------------
-//	Constructor for GUI interpreter
-//	Parameters:
-//	 IN:
-//		- Window *window	-> pointer to created GUI
-//----------------------------------------------------------------------------
-//Interpreter::Interpreter(Window *window)
-//{
-//	//Window * window = &window;
-//	this->window = window;
-//
-//	_iTestMode = -1;
-//	_iParity   = -1;
-//	_iStopBits = -1;
-//	_iTransfer = -1;
-//	_iProtocol = -1;
-//	_dwBaudrate = 0;
-//
-//	_sPort = "";
-//	_sTransferFile = "";
-//	
-//}
-
-
-//------------------------------------------------------------------------------
 //Default constructor
 //------------------------------------------------------------------------------
 Interpreter::Interpreter(void)
 {
-	_iTestMode = -1;
-	_iParity   = -1;
-	_iStopBits = -1;
-	_iTransfer = -1;
-	_iProtocol = -1;
-	_dwBaudrate = 0;
+	_iTestMode = DEFAULT_VALUE;
+	_iParity   = DEFAULT_VALUE;
+	_iStopBits = DEFAULT_VALUE;
+	_iTransfer = DEFAULT_VALUE;
+	_iProtocol = DEFAULT_VALUE;
+	_dwBaudrate = DEFAULT_VALUE;
 
-	_sPort = "";
+	_sMasPort = "";
+	_sSlaPort = "";
 	_sTransferFile = "";
 	_sTextToSend = "";
 }
@@ -116,9 +93,20 @@ void Interpreter::setProtocol(int iProtocol)
 //	 IN:
 //		-string sPort -> user GUI input
 //------------------------------------------------------------------------------
-void Interpreter::setSelectedPort(string sPort)
+void Interpreter::setSelectedMasterPort(string sPort)
 {
-	this->_sPort = sPort;
+	this->_sMasPort = sPort;
+}
+
+//------------------------------------------------------------------------------
+//	Saves the user port input in _sPort
+//	Parameters:
+//	 IN:
+//		-string sPort -> user GUI input
+//------------------------------------------------------------------------------
+void Interpreter::setSelectedSlavePort(string sPort)
+{
+	this->_sSlaPort = sPort;
 }
 
 
@@ -178,13 +166,13 @@ void Interpreter::setTextToSend(string sTextToSend)
 //		- int iInformationToTransfer -> description for using default transfer
 //					text, user text or user text file
 //------------------------------------------------------------------------------
-void Interpreter::handleGui(int iInformationToTransfer)
+void Interpreter::handleGui()
 {
 	//iInformationToTransfer
 	//0 for default
 	//1 for file
 	//2 for string
-	_iInfoToTransfer = iInformationToTransfer;
+	//_iInfoToTransfer = iTransferText;
 
 	//Always get test mode, port, logger and which information to transfer
 	//_iTestMode	  = window->getTestMode();
@@ -200,7 +188,7 @@ void Interpreter::handleGui(int iInformationToTransfer)
 
 
 
-	if( _sPort != "")
+	if( _sMasPort != "")
 	{
 		switch (_iTestMode)
 		{

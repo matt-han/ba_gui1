@@ -43,11 +43,14 @@ public:
 	void sendStopBits();
 	void sendTransfer();
 	void sendProtocol();
-	void sendSelectedPort();
+	void sendSelectedMasterPort();
+	void sendSelectedSlavePort();
 	void sendPortBaudRate();
 	void sendTransferFile();
 	void sendTextToSend();
 	void sendLoggerState();
+
+	void sendTestSettings(int iTransferText);
 
 	void sethInstance(HINSTANCE hInst);
 	
@@ -70,14 +73,16 @@ private:
 	int _iProtocol;
 	
 	bool _bLoggerState;
-	string _sPort;
+	string _sMasPort;
+	string _sSlaPort;
 	string _sTransferFilePath;
 	string _sTempBaud;
 	char _szTextToSend[31];
 	DWORD _dwBaudrate;
 
 	//Window handles
-	HWND hwndCB_Ports;
+	HWND hwndCB_MasPorts;
+	HWND hwndCB_SlvPorts;
 	HWND hDebug;
 	HWND hwndCB_Baud;
 	HWND hwnd_lbLoad;

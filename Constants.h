@@ -55,6 +55,7 @@ using namespace std;
 #define ID_TM_FIXED		26
 #define ID_LB_TEXT		27
 #define ID_BT_TEXT		28
+#define ID_CB_SLV_PORT  29
 
 #define ID_BUT			100
 

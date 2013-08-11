@@ -26,7 +26,6 @@ public:
 //------------------------------------------------------------------------------
 //Variables
 
-
 //------------------------------------------------------------------------------
 //Methods	
 	void setTestMode(int);
@@ -34,13 +33,14 @@ public:
 	void setStopBits(int);
 	void setTransfer(int);
 	void setProtocol(int);
-	void setSelectedPort(string);
+	void setSelectedMasterPort(string);
+	void setSelectedSlavePort(string);
 	void setPortBaudRate(DWORD);
 	void setLoggerState(bool);
 	void setTransferFile(string);
 	void setTextToSend(string);
 
-	void handleGui(int iInformationToTransfer);
+	void handleGui();
 	void setBaudrateList();
 
 private:
@@ -54,7 +54,8 @@ private:
 	int _iProtocol;
 	int _iInfoToTransfer;
 	DWORD _dwBaudrate;
-	string _sPort;
+	string _sMasPort;
+	string _sSlaPort;
 	string _sTransferFile;
 	string _sTextToSend;
 	bool _bLoggerState;

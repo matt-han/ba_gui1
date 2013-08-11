@@ -2,14 +2,14 @@
  *	Class to handle COM port operations
  *	Open
  *	Close
- *  Enumaerate ports
+ *  Enumerate ports
  *  Get port baud rates
  */
 
 #ifndef _COM_H
 #define _COM_H
 
-//#include "PortHandler.h"
+#include "PortCommunications.h"
 #include "Constants.h"
 #include "Tools.h"
 

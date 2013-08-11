@@ -47,16 +47,16 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 //Logger
 			CreateWindowW(L"button", L"Logger",
 			  WS_VISIBLE | WS_CHILD | BS_CHECKBOX,
-			  POS_X, POS_Y + 410, 185, 35, m_hwnd, (HMENU) ID_LOGGER, 
+			  POS_X, POS_Y + 230, 185, 35, m_hwnd, (HMENU) ID_LOGGER, 
 			  NULL, NULL);
-
+			
 			CheckDlgButton(m_hwnd, ID_LOGGER, BST_CHECKED);
 
 //==============================================================================
 //Test mode
 			CreateWindowW(L"button", L"Test Mode",
 							WS_CHILD | WS_VISIBLE | BS_GROUPBOX,
-							POS_X + 120, POS_Y - 130, 120, 110,
+							POS_X + 120, POS_Y - 170, 120, 110,
 							m_hwnd, 
 							(HMENU) ID_GB_TESTMODE,
 							NULL, NULL);
@@ -64,21 +64,21 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 			CreateWindowW(L"button", L"Automatic",
 							WS_GROUP | WS_CHILD |
 							WS_VISIBLE | BS_AUTORADIOBUTTON,
-							POS_X + 130, POS_Y - 105, 100, 30,
+							POS_X + 130, POS_Y - 155, 100, 30,
 							m_hwnd,
 							(HMENU)ID_TM_AUTO,
 							NULL, NULL);
 
 			CreateWindowW(L"button", L"Wobble",
 							WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON,
-							POS_X + 130, POS_Y - 80, 100, 30,
+							POS_X + 130, POS_Y - 125, 100, 30,
 							m_hwnd,
 							(HMENU)ID_TM_WOBB,
 							NULL, NULL);
 
 			CreateWindowW(L"button", L"Fixed",
 							WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON,
-							POS_X + 130, POS_Y - 55, 100, 30,
+							POS_X + 130, POS_Y - 95, 100, 30,
 							m_hwnd,
 							(HMENU)ID_TM_FIXED,
 							NULL, NULL);
@@ -204,26 +204,32 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 //==============================================================================
 //Labels
 //------------------------------------------------------------------------------		
-//COM Port
-			CreateWindowW(L"static", L"COM Port:", 
+//Master Port
+			CreateWindowW(L"static", L"Master Port:", 
                   WS_CHILD | WS_VISIBLE,
-                  POS_X, POS_Y - 130, 90, 15, m_hwnd, NULL, NULL, NULL);
+                  POS_X, POS_Y - 170, 90, 15, m_hwnd, NULL, NULL, NULL);
 //------------------------------------------------------------------------------
 //Baudrate
 			CreateWindowW(L"static", L"Baudrate:", 
                   WS_CHILD | WS_VISIBLE,
-                  POS_X, POS_Y - 80, 90, 15, m_hwnd, NULL, NULL, NULL);
+                  POS_X, POS_Y - 120, 90, 15, m_hwnd, NULL, NULL, NULL);
+
+//------------------------------------------------------------------------------		
+//Slave Port
+			CreateWindowW(L"static", L"Slave Port:", 
+                  WS_CHILD | WS_VISIBLE,
+                  POS_X, POS_Y - 70, 90, 15, m_hwnd, NULL, NULL, NULL);
 
 //------------------------------------------------------------------------------
 //Load file
 			CreateWindowW(L"static", L"Load file to be transfered:",
 				WS_CHILD | WS_VISIBLE,
-                  POS_X, POS_Y + 240, 190, 15, m_hwnd, NULL, NULL, NULL);
+                  POS_X, POS_Y + 265, 190, 15, m_hwnd, NULL, NULL, NULL);
 
 //load edit for file transfer path
 			hwnd_lbLoad = CreateWindowW(L"Edit", NULL,
 				WS_CHILD | WS_VISIBLE | WS_BORDER,
-				POS_X, POS_Y + 260, 240, 20, m_hwnd, (HMENU)ID_LB_LOAD,
+				POS_X, POS_Y + 285, 240, 20, m_hwnd, (HMENU)ID_LB_LOAD,
 				NULL, NULL);
 			SendMessage(hwnd_lbLoad, EM_SETLIMITTEXT, 256, 0);
 			SetWindowText(hwnd_lbLoad, L"Please type complete file path...");
@@ -232,12 +238,12 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 //Send text
 			CreateWindowW(L"static", L"Send text:",
 				WS_CHILD | WS_VISIBLE,
-                  POS_X, POS_Y + 325, 190, 15, m_hwnd, NULL, NULL, NULL);
+                  POS_X, POS_Y + 340, 190, 15, m_hwnd, NULL, NULL, NULL);
 
 //load edit for file transfer path
 			hwnd_lbText = CreateWindowW(L"Edit", NULL,
 				WS_CHILD | WS_VISIBLE | WS_BORDER,
-				POS_X, POS_Y + 345, 240, 20, m_hwnd, (HMENU)ID_LB_TEXT,
+				POS_X, POS_Y + 360, 240, 20, m_hwnd, (HMENU)ID_LB_TEXT,
 				NULL, NULL);
 
 			SetWindowText(hwnd_lbText, L"...abc...");
@@ -252,19 +258,27 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 //==============================================================================
 //Combo boxes
 
-			//COM PORTS
-			hwndCB_Ports = CreateWindowW(L"combobox", NULL,
+			//Master port
+			hwndCB_MasPorts = CreateWindowW(L"combobox", NULL,
 				WS_CHILD | WS_VISIBLE | CBS_DROPDOWN | WS_VSCROLL,
-                POS_X, POS_Y - 110, 90, 120, m_hwnd, (HMENU)ID_CB_COM_PORT,
+                POS_X, POS_Y - 150, 90, 120, m_hwnd, (HMENU)ID_CB_COM_PORT,
 				NULL, NULL);
+
 
 			//BAUDRATE
 			hwndCB_Baud = CreateWindowW(L"combobox", NULL, 
                 WS_CHILD | WS_VISIBLE | CBS_DROPDOWN | WS_VSCROLL,
-                POS_X, POS_Y - 60, 90, 120, m_hwnd, (HMENU)ID_CB_COM_BAUD,
+                POS_X, POS_Y - 100, 90, 120, m_hwnd, (HMENU)ID_CB_COM_BAUD,
 				NULL, NULL);
 
-			//Fill COM port combo box
+			//Slave port
+			hwndCB_SlvPorts = CreateWindowW(L"combobox", NULL, 
+                WS_CHILD | WS_VISIBLE | CBS_DROPDOWN | WS_VSCROLL,
+                POS_X, POS_Y - 50, 90, 120, m_hwnd, (HMENU)ID_CB_SLV_PORT,
+				NULL, NULL);
+			
+
+			//Fill master and slave port combo boxes
 			//baudrate stays empty until user selects a port
 			comEnumerator.enumeratePorts();
 
@@ -272,32 +286,30 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 				 it != comEnumerator.vPortList.end(); ++it)
 			{
 				string s = *it;
-				SendMessageA(hwndCB_Ports, CB_ADDSTRING, 0, (LPARAM) s.c_str());
+				SendMessageA(hwndCB_MasPorts, CB_ADDSTRING, 0, (LPARAM) s.c_str());
+				SendMessageA(hwndCB_SlvPorts, CB_ADDSTRING, 0, (LPARAM) s.c_str());
 			}
-
-
 //==============================================================================
 //Buttons
 			hwnd_btnLoad = CreateWindowW(L"button", L"Load file and start",
 				WS_CHILD | WS_VISIBLE,
-				POS_X, POS_Y + 290, 150, 20, m_hwnd, (HMENU)ID_BT_LOAD,
+				POS_X, POS_Y + 308, 150, 20, m_hwnd, (HMENU)ID_BT_LOAD,
 				NULL, NULL);
 
 			hwnd_btnText = CreateWindowW(L"button", L"Load text and start",
 				WS_CHILD | WS_VISIBLE,
-				POS_X, POS_Y + 375, 150, 20, m_hwnd, (HMENU)ID_BT_TEXT,
+				POS_X, POS_Y + 383, 150, 20, m_hwnd, (HMENU)ID_BT_TEXT,
 				NULL, NULL);
 
 			hwnd_Start = CreateWindowW(L"button", L"Start",
 				WS_CHILD | WS_VISIBLE,
-				POS_X+20, POS_Y + 450, 70, 30, m_hwnd, (HMENU)ID_BT_START,
+				POS_X+20, POS_Y + 420, 70, 30, m_hwnd, (HMENU)ID_BT_START,
 				NULL, NULL);
 
 			hwnd_Close = CreateWindowW(L"button", L"Close",
 				WS_CHILD | WS_VISIBLE,
-				POS_X + 140, POS_Y + 450, 70, 30, m_hwnd, (HMENU)ID_BT_CLOSE,
+				POS_X + 140, POS_Y + 420, 70, 30, m_hwnd, (HMENU)ID_BT_CLOSE,
 				NULL, NULL);
-
 
 
 			//CreateMyTooltip(m_hwnd);
@@ -321,15 +333,15 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 				{
 					
 //------------------------------------------------------------------------------
-//COM port
+//Master port
 					case ID_CB_COM_PORT:
-						portIndex = SendMessage(hwndCB_Ports,
+						portIndex = SendMessage(hwndCB_MasPorts,
 												CB_GETCURSEL, 0, 0);
-						_sPort = comEnumerator.vPortList.at(portIndex);
-						SetWindowTextA(hDebug, _sPort.c_str() );
+						_sMasPort = comEnumerator.vPortList.at(portIndex);
+						SetWindowTextA(hDebug, _sMasPort.c_str() );
 						
 						//Get baud rate for chosen COM port
-						error = comEnumerator.getBaudrates(_sPort);
+						error = comEnumerator.getBaudrates(_sMasPort);
 						if (ERROR_SUCCESS == error)
 						{
 							string s;
@@ -381,6 +393,13 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 						SetWindowTextA(hDebug, _sTempBaud.c_str() );
 						break;
+
+
+					case ID_CB_SLV_PORT:
+						portIndex = SendMessage(hwndCB_SlvPorts,
+												CB_GETCURSEL, 0, 0);
+						_sSlaPort = comEnumerator.vPortList.at(portIndex);
+						SetWindowTextA(hDebug, _sSlaPort.c_str() );
 				}
 
            }
@@ -507,10 +526,8 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 //Buttons
 					case ID_BT_START:
 						SetWindowTextW(hDebug, L"Start");
-						//interpreter->handleGui(0);
-						//!!!!!!!!!!!!!!!!!!
-						//notify
-						//!!!!!!!!!!!!!!!!!!
+						
+						sendTestSettings(0);
 						
 						break;
 
@@ -524,14 +541,12 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 					case ID_BT_LOAD:
 						SetWindowTextW(hDebug, L"load");
-						MessageBoxW(NULL, L"Loading file and starting", 
-									  L"Message", MB_OK);
+						sendTestSettings(1);
 						break;
 
 					case ID_BT_TEXT:
 						SetWindowTextW(hDebug, L"load");
-						GetWindowTextA(hwnd_lbText, _szTextToSend, 30);
-						clog << "Text to send : " << _szTextToSend << endl;
+						sendTestSettings(2);
 
 				}//switch
 			}//if
@@ -608,13 +623,21 @@ void Window::sendProtocol()
 
 
 //------------------------------------------------------------------------------
-//	Sends the user selected port
+//	Sends the user selected master port
 //------------------------------------------------------------------------------
-void Window::sendSelectedPort()
+void Window::sendSelectedMasterPort()
 {
-	interpreter.setSelectedPort(_sPort);
+	interpreter.setSelectedMasterPort(_sMasPort);
 }
 
+
+//------------------------------------------------------------------------------
+//	Sends the user selected slave port
+//------------------------------------------------------------------------------
+void Window::sendSelectedSlavePort()
+{
+	interpreter.setSelectedSlavePort(_sSlaPort);
+}
 
 //------------------------------------------------------------------------------
 //	Sends the user selected baud rate
@@ -639,6 +662,8 @@ void Window::sendTransferFile()
 //------------------------------------------------------------------------------
 void Window::sendTextToSend()
 {
+	GetWindowTextA(hwnd_lbText, _szTextToSend, 30);
+	clog << "Text to send : " << _szTextToSend << endl;
 	interpreter.setTextToSend(_szTextToSend);
 }
 
@@ -649,6 +674,40 @@ void Window::sendTextToSend()
 void Window::sendLoggerState()
 {
 	interpreter.setLoggerState(_bLoggerState);	
+}
+
+//------------------------------------------------------------------------------
+//	Sends the GUI input settings to the interpreter
+//------------------------------------------------------------------------------
+void Window::sendTestSettings(int iTransferText)
+{
+	switch(iTransferText)
+	{
+		//1 for file
+		case 1:
+			sendTransferFile();
+			break;
+			
+		//2 for string
+		case 2:
+			sendTextToSend();
+			break;
+
+		default:
+			break;
+
+	}
+	sendTestMode();
+	sendParity();
+	sendStopBits();
+	sendTransfer();
+	sendProtocol();
+	sendSelectedMasterPort();
+	sendSelectedSlavePort();
+	sendPortBaudRate();
+	sendLoggerState();
+
+	interpreter.handleGui();
 }
 
 

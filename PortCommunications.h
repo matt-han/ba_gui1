@@ -6,7 +6,7 @@
 #define _PORTCOMMUNICATIONS_H
 
 
-#include "Com.h"
+
 #include "Tools.h"
 #include <Windows.h>
 
@@ -42,7 +42,7 @@ public:
 private:
 //------------------------------------------------------------------------------
 //Variables
-	Com _com;
+
 	HANDLE hCom;
 	Tools tools;
 	//char * _lpBuf;

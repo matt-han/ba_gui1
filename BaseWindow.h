@@ -12,7 +12,7 @@
 #define WINDOW_Y 150
 #define WIN_HEIGHT 600
 #define WIN_WIDTH 700
-#define POS_Y 150
+#define POS_Y 180
 #define POS_X 20
 
 

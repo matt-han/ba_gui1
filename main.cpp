@@ -20,8 +20,6 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdShow
 
 	char info[100];
 	char get_info[100];
-
-
 	
 	Window win;
 
