@@ -7,7 +7,10 @@
 #ifndef _INTERPRETER_H
 #define _INTERPRETER_H
 
+#include "Com.h"
+#include "TestManager.h"
 #include "Constants.h"
+#include "Tools.h"
 
 #include <Windows.h>
 #include <string>
@@ -25,7 +28,8 @@ public:
 	~Interpreter(void);
 //------------------------------------------------------------------------------
 //Variables
-
+	Com comEnumerator;
+	Tools tools;
 //------------------------------------------------------------------------------
 //Methods	
 	void setTestMode(int);
@@ -35,17 +39,21 @@ public:
 	void setProtocol(int);
 	void setSelectedMasterPort(string);
 	void setSelectedSlavePort(string);
-	void setPortBaudRate(DWORD);
+	void setPortBaudRate(int);
 	void setLoggerState(bool);
 	void setTransferFile(string);
 	void setTextToSend(string);
-
+	void setDefaultValues();
 	void handleGui();
 	void setBaudrateList();
+
+	long checkInputConfigData();
 
 private:
 //------------------------------------------------------------------------------
 //Variables
+
+	TestManager testManager;
 
 	int _iTestMode;
 	int _iParity;
@@ -53,12 +61,14 @@ private:
 	int _iTransfer;
 	int _iProtocol;
 	int _iInfoToTransfer;
-	DWORD _dwBaudrate;
+	int _iBaudrate;
 	string _sMasPort;
 	string _sSlaPort;
-	string _sTransferFile;
+	string _sFilePath;
 	string _sTextToSend;
 	bool _bLoggerState;
+
+
 };
 
 #endif

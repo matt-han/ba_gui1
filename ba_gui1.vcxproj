@@ -89,28 +89,36 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AutomaticTest.cpp" />
     <ClCompile Include="Com.cpp" />
+    <ClCompile Include="FixedTest.cpp" />
     <ClCompile Include="IniFileHandler.cpp" />
     <ClCompile Include="Interpreter.cpp" />
     <ClCompile Include="Logger.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="PortCommunications.cpp" />
+    <ClCompile Include="TestManager.cpp" />
     <ClCompile Include="Tools.cpp" />
     <ClCompile Include="TransferFileHandler.cpp" />
     <ClCompile Include="Window.cpp" />
+    <ClCompile Include="WobbleTest.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AutomaticTest.h" />
     <ClInclude Include="BaseWindow.h" />
     <ClInclude Include="Com.h" />
     <ClInclude Include="Constants.h" />
+    <ClInclude Include="FixedTest.h" />
     <ClInclude Include="IniFileHandler.h" />
     <ClInclude Include="Interpreter.h" />
     <ClInclude Include="Logger.h" />
     <ClInclude Include="PortCommunications.h" />
+    <ClInclude Include="TestManager.h" />
     <ClInclude Include="TestProperties.h" />
     <ClInclude Include="Tools.h" />
     <ClInclude Include="TransferFileHandler.h" />
     <ClInclude Include="Window.h" />
+    <ClInclude Include="WobbleTest.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram1.cd" />

@@ -19,7 +19,7 @@ Com::Com(string sPort)
 	fBinary = true;
 
 	//Struct with COM port properties
-	DCB dcbOrg = {0};
+	//DCB dcbOrg = {0};
 
 	//open port
 	hCom = openPort(sPort);
@@ -35,62 +35,13 @@ Com::Com(string sPort)
 	}
 	else	//get dcb config
 	{
-		//get original dcb
-		if (GetCommState(hCom, &dcbOrg) == 0)
-		{
-			MessageBoxW(NULL, L"Error getting Port default settings",
-							  L"ERROR", MB_OK);
-
-			_dwError = GetLastError();
-			clog << "Error getting Port default settings´. Error : "
-				 << _dwError << endl;
-
-			iExitCode = ERROR_GET_DCB;
-		}
-		else
+		if ( ERROR_SUCCESS != getDCB())
 		{
 			clog << "Port " << sPort << " settings successfully opened" << endl;
+			iExitCode = ERROR_GET_DCB;
 		}
 
-		//Port timeout struct
-		COMMTIMEOUTS timeouts;
-
-		//// Specify time-out between charactor for receiving.
-		//timeouts.ReadIntervalTimeout = 20;
-		//// Specify value that is multiplied 
-		//// by the requested number of bytes to be read. 
-		//timeouts.ReadTotalTimeoutMultiplier = 10;
-		//// Specify value is added to the product of the 
-		//// ReadTotalTimeoutMultiplier member
-		//timeouts.ReadTotalTimeoutConstant = 100;
-		//// Specify value that is multiplied 
-		//// by the requested number of bytes to be sent.
-		//timeouts.WriteTotalTimeoutMultiplier = 10;
-		//// Specify value is added to the product of the 
-		//// WriteTotalTimeoutMultiplier member
-		//timeouts.WriteTotalTimeoutConstant = 100;
-
-		// Specify time-out between charactor for receiving.
-		timeouts.ReadIntervalTimeout = MAXDWORD;
-		// Specify value that is multiplied 
-		// by the requested number of bytes to be read. 
-		timeouts.ReadTotalTimeoutMultiplier = 0;
-		// Specify value is added to the product of the 
-		// ReadTotalTimeoutMultiplier member
-		timeouts.ReadTotalTimeoutConstant = 0;
-		// Specify value that is multiplied 
-		// by the requested number of bytes to be sent.
-		timeouts.WriteTotalTimeoutMultiplier = 0;
-		// Specify value is added to the product of the 
-		// WriteTotalTimeoutMultiplier member
-		timeouts.WriteTotalTimeoutConstant = 0;
-
-		//set the parameter to the open port
-		if (!SetCommTimeouts(hCom, &timeouts))
-		{
-			clog << "Error setting the timeouts" << endl;
-			iExitCode = ERROR_SET_TIMEOUTS;
-		}
+		iExitCode = setTimeOuts();
 	}
 	
 	//string array for possible port baud rates
@@ -386,6 +337,89 @@ int Com::translateBaudrate(string sBaud)
 		return  CBR_256000;
 	else
 		return ERROR_BAUDRATE;
+}
+
+
+long Com::setTimeOuts()
+{
+	//// Specify time-out between charactor for receiving.
+		//timeouts.ReadIntervalTimeout = 20;
+		//// Specify value that is multiplied 
+		//// by the requested number of bytes to be read. 
+		//timeouts.ReadTotalTimeoutMultiplier = 10;
+		//// Specify value is added to the product of the 
+		//// ReadTotalTimeoutMultiplier member
+		//timeouts.ReadTotalTimeoutConstant = 100;
+		//// Specify value that is multiplied 
+		//// by the requested number of bytes to be sent.
+		//timeouts.WriteTotalTimeoutMultiplier = 10;
+		//// Specify value is added to the product of the 
+		//// WriteTotalTimeoutMultiplier member
+		//timeouts.WriteTotalTimeoutConstant = 100;
+
+		// Specify time-out between charactor for receiving.
+		timeouts.ReadIntervalTimeout = MAXDWORD;
+		// Specify value that is multiplied 
+		// by the requested number of bytes to be read. 
+		timeouts.ReadTotalTimeoutMultiplier = 0;
+		// Specify value is added to the product of the 
+		// ReadTotalTimeoutMultiplier member
+		timeouts.ReadTotalTimeoutConstant = 0;
+		// Specify value that is multiplied 
+		// by the requested number of bytes to be sent.
+		timeouts.WriteTotalTimeoutMultiplier = 0;
+		// Specify value is added to the product of the 
+		// WriteTotalTimeoutMultiplier member
+		timeouts.WriteTotalTimeoutConstant = 0;
+
+
+
+		//set the parameter to the open port
+		if (!SetCommTimeouts(hCom, &timeouts))
+		{
+			clog << "Error setting the timeouts" << endl;
+			return ERROR_SET_TIMEOUTS;
+		}
+		return ERROR_SUCCESS;
+}
+
+
+long Com::getDCB()
+{
+	//get original dcb
+		if (GetCommState(hCom, &dcb) == 0)
+		{
+			MessageBoxW(NULL, L"Error getting Port default settings",
+							  L"ERROR", MB_OK);
+
+			_dwError = GetLastError();
+			clog << "Error getting Port default settings´. Error : "
+				 << _dwError << endl;
+
+			return ERROR_GET_DCB;
+		}
+		else
+			return ERROR_SUCCESS;
+}
+
+
+long Com::setDCB()
+{
+	//get original dcb
+		if (SetCommState(hCom, &dcb) == 0)
+		{
+			_dwError = GetLastError();
+			
+			MessageBoxW(NULL, L"Error setting Port dcb. For more details check "
+							  L"the log file", L"ERROR", MB_OK);
+
+			clog << "Error setting " << sPort << " dcb. Error : "
+				 << _dwError << endl;
+
+			return ERROR_SET_DCB;
+		}
+		else
+			return ERROR_SUCCESS;
 }
 //
 //

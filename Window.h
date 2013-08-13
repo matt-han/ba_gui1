@@ -7,8 +7,6 @@
 
 #include "Constants.h"
 #include "BaseWindow.h"
-#include "Com.h"
-#include "Tools.h"
 #include "Interpreter.h"
 
 
@@ -16,7 +14,7 @@ using namespace std;
 
 
 class Interpreter;
-class Com;
+//class Com;
 //use template class BaseWindow
 class Window : public BaseWindow<Window>
 {
@@ -25,8 +23,6 @@ public:
 //------------------------------------------------------------------------------
 //Variables
 	Interpreter interpreter;
-	Com comEnumerator;
-	Tools tools;
 
 	DWORD error;
 
@@ -53,6 +49,8 @@ public:
 	void sendTestSettings(int iTransferText);
 
 	void sethInstance(HINSTANCE hInst);
+
+	string getFilePath();
 	
     PCWSTR  ClassName() const { return L"WN COM Test Tool"; }
     
@@ -71,14 +69,14 @@ private:
 	int _iStopBits;
 	int _iTransfer;
 	int _iProtocol;
-	
+	int _iBaudrate;
 	bool _bLoggerState;
 	string _sMasPort;
 	string _sSlaPort;
 	string _sTransferFilePath;
 	string _sTempBaud;
 	char _szTextToSend[31];
-	DWORD _dwBaudrate;
+	
 
 	//Window handles
 	HWND hwndCB_MasPorts;

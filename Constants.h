@@ -71,6 +71,9 @@ using namespace std;
 #define ERROR_SET_TIMEOUTS	-7
 #define ERROR_LOG			-8
 #define ERROR_INI			-9
+#define ERROR_SET_DCB		-10
+#define ERROR_INPUT	-11
+//#define ERROR_INPUT_	-12
 #define ERROR_FILE_NOT_OPEN -13
 #define ERROR_EMPTY_FILE	-14
 #define ERROR_CFG_HEADER	-15
@@ -82,28 +85,34 @@ using namespace std;
 
 //------------------------------------------------------------------------------
 //Variables
-	struct comPort
+	struct TestStruct
 	{
 		string sMasterPort;
 		string sSlavePort;
+		string sTextToTransfer;
+		string sFilePath;
 		int iTransfer;
 		int iBaud;
 		int iTestMode;
 		int iParity;
 		int iProtocol;
 		int iStopbits;
+		bool bLoggerState;
 		
 		//constructor
-		comPort(void)
+		TestStruct(void)
 		{
-			sMasterPort	= "";
-			sSlavePort	= "";
-			iBaud		= DEFAULT_VALUE;
-			iTestMode	= DEFAULT_VALUE;
-			iParity		= DEFAULT_VALUE;
-			iProtocol	= DEFAULT_VALUE;
-			iStopbits	= DEFAULT_VALUE;
-			iTransfer	= DEFAULT_VALUE;
+			sMasterPort		= "";
+			sSlavePort		= "";
+			sTextToTransfer = "";
+			sFilePath		= "";
+			iBaud			= DEFAULT_VALUE;
+			iTestMode		= DEFAULT_VALUE;
+			iParity			= DEFAULT_VALUE;
+			iProtocol		= DEFAULT_VALUE;
+			iStopbits		= DEFAULT_VALUE;
+			iTransfer		= DEFAULT_VALUE;
+			bLoggerState	= true;
 		}
 	};//struct
 

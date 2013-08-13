@@ -1,5 +1,6 @@
 #include "Interpreter.h"
 
+
 //------------------------------------------------------------------------------
 //Default constructor
 //------------------------------------------------------------------------------
@@ -10,11 +11,13 @@ Interpreter::Interpreter(void)
 	_iStopBits = DEFAULT_VALUE;
 	_iTransfer = DEFAULT_VALUE;
 	_iProtocol = DEFAULT_VALUE;
-	_dwBaudrate = DEFAULT_VALUE;
+	_iBaudrate = DEFAULT_VALUE;
+
+	_bLoggerState = true;
 
 	_sMasPort = "";
 	_sSlaPort = "";
-	_sTransferFile = "";
+	_sFilePath = "";
 	_sTextToSend = "";
 }
 
@@ -111,14 +114,14 @@ void Interpreter::setSelectedSlavePort(string sPort)
 
 
 //------------------------------------------------------------------------------
-//	Saves the user baud rate input in _dwBaudrate
+//	Saves the user baud rate input in _iBaudrate
 //	Parameters:
 //	 IN:
-//		- DWORD dwBaudRate -> user GUI input
+//		- int iBaudRate -> user GUI input
 //------------------------------------------------------------------------------
-void Interpreter::setPortBaudRate(DWORD dwBaudRate)
+void Interpreter::setPortBaudRate(int iBaudRate)
 {
-	this->_dwBaudrate = dwBaudRate;
+	this->_iBaudrate = iBaudRate;
 }
 
 
@@ -135,14 +138,14 @@ void Interpreter::setLoggerState(bool bLoggerState)
 
 
 //------------------------------------------------------------------------------
-//	Saves the user transfer file path input in _sTransferFile
+//	Saves the user transfer file path input in _sFilePath
 //	Parameters:
 //	 IN:
 //		- string sTransferFile -> user GUI input
 //------------------------------------------------------------------------------
 void Interpreter::setTransferFile(string sTransferFile)
 {
-	this->_sTransferFile = sTransferFile;
+	this->_sFilePath = sTransferFile;
 }
 
 
@@ -159,6 +162,27 @@ void Interpreter::setTextToSend(string sTextToSend)
 
 
 //------------------------------------------------------------------------------
+//	Set the variables to the default values
+//------------------------------------------------------------------------------
+void Interpreter::setDefaultValues()
+{
+	_iTestMode  = DEFAULT_VALUE;
+	_iParity    = DEFAULT_VALUE;
+	_iStopBits  = DEFAULT_VALUE;
+	_iTransfer  = DEFAULT_VALUE;
+	_iProtocol  = DEFAULT_VALUE;
+	_iBaudrate = DEFAULT_VALUE;
+
+	_bLoggerState = true;
+
+	_sMasPort      = "";
+	_sSlaPort      = "";
+	_sFilePath = "";
+	_sTextToSend   = "";
+}
+
+
+//------------------------------------------------------------------------------
 //	Gets the GUI settings and saves them in local variables. Starts the tester
 //	object to begin the test(s)
 //	Parameters:
@@ -168,60 +192,251 @@ void Interpreter::setTextToSend(string sTextToSend)
 //------------------------------------------------------------------------------
 void Interpreter::handleGui()
 {
+	bool bErr = false;
 	//iInformationToTransfer
 	//0 for default
 	//1 for file
 	//2 for string
 	//_iInfoToTransfer = iTransferText;
 
-	//Always get test mode, port, logger and which information to transfer
-	//_iTestMode	  = window->getTestMode();
-	//_sPort		  = window->getSelectedPort();
-	//_bLoggerState = window->getLoggerState();
-
-	
-	
-	//when windows closes then is handle null
-	//action executed with start button, change to
-	//here when observer pattern inplemented
-	//_sTransferFile = window->getTransferFile();
-
-
-
 	if( _sMasPort != "")
 	{
-		switch (_iTestMode)
+		testManager.testStruct.sMasterPort = _sMasPort;
+
+		//if no test mode was selected -> error
+		if (_iTestMode == DEFAULT_VALUE)
 		{
-			//Automatic test
-			//needs only port and logger settings
-			case 0:
-				break;
+			MessageBoxW(NULL,L"Please select a test mode",
+				L"Error", MB_OK);
+			setDefaultValues();
+		}
+		else
+		{
+			testManager.testStruct.iTestMode = _iTestMode;
 
-			//Wobbeln
-			//needs only port and logger settings
-			case 1:
-				break;
+			//if no transfer mode was selected -> error
+			if (_iTransfer == DEFAULT_VALUE)
+			{
+				MessageBoxW(NULL,L"Please select a transfer mode",
+					L"Error", MB_OK);
+				setDefaultValues();
+			}
+			else
+			{
+				//save the transfer mode
+				testManager.testStruct.iTransfer = _iTransfer;
 
-			//Fixed test
-			//get all GUI settings
-			case 2:
-				//CALL TESTPORPERTIES?????????????????????
-				//_iParity   = window->getParity();
-				//_iStopBits = window->getStopBits();
-				//_iTransfer = window->getTransfer();
-				//_iProtocol = window->getProtocol();
-				//_dwBaudrate = window->getPortBaudRate();
-				break;
+				switch (_iTestMode)
+				{
+					//Automatic test
+					//needs transfer mode, master/slave port and logger settings
+					//----------------------------------------------------------
+					case 0:
+
+						//if needed get the slave port
+						if(_iTransfer == 1 || _iTransfer == 2)
+						{
+							//if no slave port was selected -> error
+							if (_sSlaPort == "")
+							{
+								MessageBoxW(NULL,L"Please select a slave port",
+									L"Error", MB_OK);
+								setDefaultValues();
+								break;
+							}
+							else
+								testManager.testStruct.sSlavePort = _sSlaPort;
+						}
+						else if (_iTransfer == 0)
+						{
+							break;
+						}
+						else
+						{
+							MessageBoxW(NULL,L"Please select a transfer mode",
+										L"Error", MB_OK);
+							setDefaultValues();
+							break;
+						}
+						break;
+					//----------------------------------------------------------
+
+
+					//Wobbeln
+					//needs, master/slave port and logger settings
+					//----------------------------------------------------------
+					case 1:
+						//if needed get the slave port
+						if(_iTransfer == 1 || _iTransfer == 2)
+						{
+							//if no slave port was selected -> error
+							if (_sSlaPort == "")
+							{
+								MessageBoxW(NULL,L"Please select a slave port",
+									L"Error", MB_OK);
+								setDefaultValues();
+								break;
+							}
+							else
+								testManager.testStruct.sSlavePort = _sSlaPort;
+
+							//check parity, protocol and stopbits
+							if(ERROR_INPUT == checkInputConfigData())
+							{
+								setDefaultValues();
+								break;
+							}
+						}
+						else if (_iTransfer == 0)
+						{
+							//check parity, protocol and stopbits
+							if(ERROR_INPUT == checkInputConfigData())
+							{
+								setDefaultValues();
+								break;
+							}
+						}
+						else
+						{
+							MessageBoxW(NULL,L"Please select a transfer mode",
+										L"Error", MB_OK);
+							setDefaultValues();
+							break;
+						}
+
+					
+						break;
+					//----------------------------------------------------------
+
+
+					//Fixed test
+					//get all GUI settings
+					//----------------------------------------------------------
+					case 2:
+						//wenn double or master slave
+						//if needed get the slave port
+						if(_iTransfer == 1 || _iTransfer == 2)
+						{
+							//if no slave port was selected -> error
+							if (_sSlaPort == "")
+							{
+								MessageBoxW(NULL,L"Please select a slave port",
+									L"Error", MB_OK);
+								setDefaultValues();
+								bErr = true;
+								break;
+							}
+							else
+								testManager.testStruct.sSlavePort = _sSlaPort;
+						}
+					
+						if (_iTransfer >= 0 && _iTransfer <= 2)
+						{
+							//check parity, protocol and stopbits
+							if(ERROR_INPUT == checkInputConfigData())
+							{
+								setDefaultValues();
+								bErr = true;
+								break;
+							}
+				
+							//check baudrate
+							if (_iBaudrate == DEFAULT_VALUE)
+							{
+								MessageBoxW(NULL,L"Please select a baud rate",
+									L"Error", MB_OK);
+								setDefaultValues();
+								bErr = true;
+								break;
+							}
+							else
+								testManager.testStruct.iBaud = _iBaudrate;
+						}
+						else
+						{
+							MessageBoxW(NULL,L"Please select a transfer mode",
+										L"Error", MB_OK);
+							setDefaultValues();
+							bErr = true;
+							break;
+						}
+						break;
+					//----------------------------------------------------------
 			
-			//Port was selected but no test mode
-			default:
-				MessageBoxW(NULL,L"Please select a Test Mode", L"Error", MB_OK);
-				break;
 
-		}//switch
+					//Port was selected but no test mode
+					//----------------------------------------------------------
+					default:
+						MessageBoxW(NULL,L"Please select a Test Mode",
+							L"Error", MB_OK);
+						setDefaultValues();
+						bErr = true;
+						break;
+					//----------------------------------------------------------
+
+				}//switch
+
+				//save the logger state, file path and textToSend
+				testManager.testStruct.bLoggerState = _bLoggerState;
+				testManager.testStruct.sFilePath = _sFilePath;
+				testManager.testStruct.sTextToTransfer = _sTextToSend;
+
+				//--------------------------------------------------------------
+				//--------------------------------------------------------------
+				//start the manager to start testing
+				//checkj structure to avoid asking for bErr
+				if(bErr == false)
+				testManager.startManager();
+				//--------------------------------------------------------------
+				//--------------------------------------------------------------
+
+			}//if transfer mode
+		}
 	}
 	else
 	{
-		MessageBoxW(NULL,L"Please select the port to be tested", L"Error", MB_OK);
+		MessageBoxW(NULL,L"Please select the port to be tested",
+					L"Error", MB_OK);
+		//Delete other values to avoid errors in new copy process
+		setDefaultValues();
 	}
+
+
+}
+
+//------------------------------------------------------------------------------
+//	Checks the parity, protocol and stopbits in the GUI to save them in the
+//	test manager
+//------------------------------------------------------------------------------
+long Interpreter::checkInputConfigData()
+{
+	if(_iParity == DEFAULT_VALUE)
+	{
+		MessageBoxW(NULL,L"Please select the parity",
+			L"Error", MB_OK);
+		return ERROR_INPUT;
+	}
+	else
+		testManager.testStruct.iParity = _iParity;
+
+
+	if(_iProtocol == DEFAULT_VALUE)
+	{
+		MessageBoxW(NULL,L"Please select the protocol",
+			L"Error", MB_OK);
+		return ERROR_INPUT;
+	}
+	else
+		testManager.testStruct.iProtocol = _iProtocol;
+
+	if(_iStopBits == DEFAULT_VALUE)
+	{
+		MessageBoxW(NULL,L"Please select the stopbits",
+			L"Error", MB_OK);
+		return ERROR_INPUT;
+	}
+	else
+		testManager.testStruct.iStopbits = _iStopBits;
+
+	return ERROR_SUCCESS;
 }

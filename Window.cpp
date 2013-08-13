@@ -43,6 +43,20 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		case WM_CREATE:
 
+			//set all values to default
+			_iTestMode = DEFAULT_VALUE;
+			_iParity   = DEFAULT_VALUE;
+			_iStopBits = DEFAULT_VALUE;
+			_iTransfer = DEFAULT_VALUE;
+			_iProtocol = DEFAULT_VALUE;
+			_iBaudrate = DEFAULT_VALUE;
+
+			_bLoggerState		= true;
+			_sMasPort			="";
+			_sSlaPort			="";
+			_sTransferFilePath	="";
+			_sTempBaud			="";
+
 //==============================================================================
 //Logger
 			CreateWindowW(L"button", L"Logger",
@@ -280,10 +294,11 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 			//Fill master and slave port combo boxes
 			//baudrate stays empty until user selects a port
-			comEnumerator.enumeratePorts();
+			interpreter.comEnumerator.enumeratePorts();
 
-			for (vector<string>::iterator it = comEnumerator.vPortList.begin() ;
-				 it != comEnumerator.vPortList.end(); ++it)
+			for (vector<string>::iterator it =
+				interpreter.comEnumerator.vPortList.begin() ;
+				 it != interpreter.comEnumerator.vPortList.end(); ++it)
 			{
 				string s = *it;
 				SendMessageA(hwndCB_MasPorts, CB_ADDSTRING, 0, (LPARAM) s.c_str());
@@ -337,18 +352,19 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 					case ID_CB_COM_PORT:
 						portIndex = SendMessage(hwndCB_MasPorts,
 												CB_GETCURSEL, 0, 0);
-						_sMasPort = comEnumerator.vPortList.at(portIndex);
+						_sMasPort = interpreter.comEnumerator.vPortList.at(portIndex);
 						SetWindowTextA(hDebug, _sMasPort.c_str() );
 						
 						//Get baud rate for chosen COM port
-						error = comEnumerator.getBaudrates(_sMasPort);
+						error = interpreter.comEnumerator.getBaudrates(_sMasPort);
 						if (ERROR_SUCCESS == error)
 						{
 							string s;
 
 							for (vector<string>::iterator it =
-								comEnumerator.vBaud.begin() ;
-								it != comEnumerator.vBaud.end(); ++it)
+								interpreter.comEnumerator.vBaud.begin() ;
+								it != interpreter.comEnumerator.vBaud.end();
+								++it)
 							{
 								s = *it;
 								error = SendMessageA(hwndCB_Baud, CB_ADDSTRING,
@@ -386,19 +402,22 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 						portIndex = SendMessage(hwndCB_Baud,
 												CB_GETCURSEL, 0, 0);
 						//get the baud rate string
-						_sTempBaud = comEnumerator.vBaud.at(portIndex);
+						_sTempBaud = interpreter.comEnumerator.vBaud.at
+									 (portIndex);
 						//translate it to the system constant
-						_dwBaudrate = comEnumerator.translateBaudrate(
-																	_sTempBaud);
+						_iBaudrate = interpreter.comEnumerator.
+									  translateBaudrate(_sTempBaud);
 
 						SetWindowTextA(hDebug, _sTempBaud.c_str() );
 						break;
 
-
+//------------------------------------------------------------------------------
+//Slave port
 					case ID_CB_SLV_PORT:
 						portIndex = SendMessage(hwndCB_SlvPorts,
 												CB_GETCURSEL, 0, 0);
-						_sSlaPort = comEnumerator.vPortList.at(portIndex);
+						_sSlaPort = interpreter.comEnumerator.vPortList.at
+									(portIndex);
 						SetWindowTextA(hDebug, _sSlaPort.c_str() );
 				}
 
@@ -541,6 +560,7 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 					case ID_BT_LOAD:
 						SetWindowTextW(hDebug, L"load");
+						_sTransferFilePath = getFilePath();
 						sendTestSettings(1);
 						break;
 
@@ -644,7 +664,7 @@ void Window::sendSelectedSlavePort()
 //------------------------------------------------------------------------------
 void Window::sendPortBaudRate()
 {
-	interpreter.setPortBaudRate(_dwBaudrate);
+	interpreter.setPortBaudRate(_iBaudrate);
 }
 
 
@@ -653,7 +673,8 @@ void Window::sendPortBaudRate()
 //------------------------------------------------------------------------------
 void Window::sendTransferFile()
 {
-	interpreter.setTransferFile(this->getTransferFile());
+	//interpreter.setTransferFile(this->getTransferFile());
+	interpreter.setTransferFile(this->_sTransferFilePath);
 }
 
 
@@ -681,6 +702,10 @@ void Window::sendLoggerState()
 //------------------------------------------------------------------------------
 void Window::sendTestSettings(int iTransferText)
 {
+	//iTransferText
+	//0 for default
+	//1 for file
+	//2 for string
 	switch(iTransferText)
 	{
 		//1 for file
@@ -697,6 +722,8 @@ void Window::sendTestSettings(int iTransferText)
 			break;
 
 	}
+	//send all input information to the interpreter to be decoded
+	//interpreter calls the TestManager and sets the test up
 	sendTestMode();
 	sendParity();
 	sendStopBits();
@@ -736,15 +763,65 @@ string Window::getTransferFile()
 		return "-1";
 	}
 
-	_sTransferFilePath = tools.convertToString(pstrText);
+	_sTransferFilePath = interpreter.tools.convertToString(pstrText);
 
 	free(pstrText);
 	pstrText = NULL;
 	
 	return _sTransferFilePath;
 }
+
+
+//------------------------------------------------------------------------------
+//	Open file winapi dialog box
+//  http://msdn.microsoft.com/en-us/library/ms646829%28v=vs.85%29.aspx#open_file
+//	Return: file path as string
+//------------------------------------------------------------------------------
+string Window::getFilePath()
+{
+
+	OPENFILENAMEA ofn;       // common dialog box structure
+	char szFile[260];       // buffer for file name
+	//HWND hwnd;              // owner window
+	//HANDLE hf;              // file handle
+
+	// Initialize OPENFILENAME
+	ZeroMemory(&ofn, sizeof(ofn));
+	ofn.lStructSize = sizeof(ofn);
+	ofn.hwndOwner = m_hwnd;
+	ofn.lpstrFile = szFile;
+
+	// Set lpstrFile[0] to '\0' so that GetOpenFileName does not 
+	// use the contents of szFile to initialize itself.
+	ofn.lpstrFile[0] = '\0';
+	ofn.nMaxFile = sizeof(szFile);
+	ofn.lpstrFilter = "All\0*.*\0Text\0*.TXT\0";
+	ofn.nFilterIndex = 1;
+	ofn.lpstrFileTitle = NULL;
+	ofn.nMaxFileTitle = 0;
+	ofn.lpstrInitialDir = NULL;
+	ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
+
+	// Display the Open dialog box. 
+
+	if (GetOpenFileNameA(&ofn)==TRUE)
+	{
+
+	}
+	//lpstrFile contains filepath
+		
+//		hf = CreateFileA(ofn.lpstrFile, 
+//						GENERIC_READ,
+//						0,
+//						(LPSECURITY_ATTRIBUTES) NULL,
+//						OPEN_EXISTING,
+//						FILE_ATTRIBUTE_NORMAL,
+//						(HANDLE) NULL);
 //
-//
+	return ofn.lpstrFile;
+}
+
+
 
 //TOOLTIP TRYOUTS
 //

@@ -32,12 +32,21 @@ public:
 
 //------------------------------------------------------------------------------
 //Variables
+	//PortCommunications portComm;
+	DCB dcb;
 
+	//Port timeout struct
+	COMMTIMEOUTS timeouts;
 	vector<string> vPortList;
 	vector<string> vBaud;
 	vector<DWORD> dwvBaudRates;
+
 	string saDefaultBaudrates[19];
+	string sPort;
+
+
 	int iExitCode;
+
 	HANDLE hCom;
 
 //------------------------------------------------------------------------------
@@ -49,6 +58,10 @@ public:
 	long decodeBaudrates(DWORD dwBitMask);
 	int translateBaudrate(string sBaud);
 	void enumeratePorts();
+
+	long setTimeOuts();
+	long getDCB();
+	long setDCB();
 	//void setParity(int i);
 	//void setProtocol(int i);
 	//void setStopBits(int i);
@@ -57,8 +70,8 @@ public:
 protected:
 //------------------------------------------------------------------------------
 //Variables
-	string sPort;
-	DCB dcb;			//Device-Control Block
+	
+				//Device-Control Block
 	COMMPROP commProp;
 	bool protocol;
 	bool transfer;
@@ -69,8 +82,6 @@ private:
 	Tools tool;
 	DWORD fBinary;
 	DWORD _dwError;
-	DWORD BaudRate;
-	
 
 };
 

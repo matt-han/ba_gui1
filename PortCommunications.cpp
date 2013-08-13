@@ -27,7 +27,10 @@ PortCommunications::~PortCommunications(void)
 {
 }
 
-
+void PortCommunications::setComHandle(HANDLE hCom)
+{
+	this->hCom = hCom;
+}
 //------------------------------------------------------------------------------
 //	Read from opened port
 //	Parameters:
@@ -79,7 +82,7 @@ bool PortCommunications::readData(char * lpBuf, DWORD dwSize)
 	if (fWaitingOnRead)
 	{
 		dwRes = WaitForSingleObject(osReader.hEvent, READ_TIMEOUT);
-		clog << "dwres " << dwRes << endl;
+
 		switch(dwRes)
 		{
 			// Read completed.

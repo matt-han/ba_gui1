@@ -176,7 +176,7 @@ long IniFileHandler::readINIFile(string sFilePath)
 	int iPort = 0;
 
 	//try to find test settings for all possible system ports
-	for(int iCom = 1; iCom < 10; iCom++)//256
+	for(int iCom = 1; iCom < 256; iCom++)//256 ports
 	{
 		sPort = "COM";
 		sTemp = tools.convertToString(iCom);
@@ -188,7 +188,7 @@ long IniFileHandler::readINIFile(string sFilePath)
 
 		if (0 != dwExists)
 		{
-			vComPorts.push_back(comPort());
+			vComPorts.push_back(TestStruct());
 			vComPorts.at(iPort).sMasterPort = sPort;
 
 			error = readPortConfig(sPort, sFilePath, iPort);

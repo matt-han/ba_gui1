@@ -24,6 +24,7 @@ class BaseWindow
 {
 public:
 
+
 	//Windows default STATIC message handler
 	static LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
     {

@@ -78,14 +78,14 @@ private:
 
 	DWORD error;
 	DWORD dwExists;
-	comPort comPortStruct;
+	TestStruct comPortStruct;
 	Tools tools;
 	int index;
 	char szValue[15];
 	string sFilePath;
 	string substr;
 	
-	vector<comPort> vComPorts;
+	vector<TestStruct> vComPorts;
 	
 //------------------------------------------------------------------------------
 //Methods	
