@@ -49,7 +49,7 @@ public:
 	long startMasterSlaveTest();
 	long communicate(string sSendData);
 	bool sendData(bool MasterSlave, string sSendData);
-	bool getData(bool MasterSlave, string sSendData);
+	string getData(bool MasterSlave, string sSendData);
 	void printTestSettings();
 	
 private:

@@ -175,17 +175,27 @@ long FixedTest::communicate(string sSendData)
 		clog <<"write was true"<<endl;
 		MessageBoxA(NULL, sSendData.c_str(), "COM 1 SENT", MB_OK);
 
-		if (true == getData(true, sSendData))
+		string sTemp = getData(true, sSendData);
+		if (sTemp != ERROR_TRANSMITION)
 		{
-			clog << "read was true"<<endl;
-			MessageBoxA(NULL, (LPCSTR)empfang, "COM 1 GOT",
-						MB_OK);
+			if(0 == strcmp(sTemp.c_str(), sSendData.c_str()) )
+			{
+				clog << "read was true"<<endl;
+				
+			}
+			else
+			{
+				clog << "String recieved is NOT equal to the sent string" << endl;
+				MessageBoxA(NULL, (LPCSTR)empfang, "ERROR, COM 1 GOT",
+							MB_OK);
+			}
 			
-			clog << "SUCCESS!!!"<<endl;
+			clog << "Finish!"<<endl;
 			clog<<"-----------------------------------------"<<endl;
 			clog<<"-----------------------------------------"<<endl;
 			
 			return ERROR_SUCCESS;
+
 		}
 		else
 		{
@@ -366,7 +376,7 @@ long FixedTest::startDoubleTest()
 }
 
 
-bool FixedTest::getData(bool MasterSlave, string sSendData)
+string FixedTest::getData(bool MasterSlave, string sSendData)
 {
 	
 	SecureZeroMemory(empfang, sizeof(empfang));
@@ -374,12 +384,20 @@ bool FixedTest::getData(bool MasterSlave, string sSendData)
 	//Single test -> send and read information from the same port
 	//MasterSlave test -> send and read reply from the same port
 	if (MasterSlave)
-		return masterPortComm.readData(empfang, sSendData.size());
-	
+	{
+		if (true == masterPortComm.readData(empfang, sSendData.size()) )
+			return empfang;
+		else
+			return ERROR_TRANSMITION;
+	}
 	//else Double test ->send data true master and read slave
 	else
-		return slavePortComm.readData(empfang, sSendData.size());
-
+	{
+		if (true == slavePortComm.readData(empfang, sSendData.size()) )
+			return empfang;
+		else
+			return ERROR_TRANSMITION;
+	}
 }
 
 

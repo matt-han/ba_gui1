@@ -1,11 +1,9 @@
-﻿Der Buildvorgang wurde am 14.08.2013 19:01:57 gestartet.
+﻿Der Buildvorgang wurde am 14.08.2013 19:11:51 gestartet.
      1>Projekt "C:\Users\Benjamin\Documents\GitHub\ba_gui1\ba_gui1.vcxproj" auf Knoten "2", build Ziel(e).
      1>InitializeBuildStatus:
          "Debug\ba_gui1.unsuccessfulbuild" wird erstellt, da "AlwaysCreate" angegeben wurde.
        ClCompile:
-         c:\Program Files\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /ZI /nologo /W4 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt FixedTest.cpp TransferFileHandler.cpp
-         TransferFileHandler.cpp
-         Code wird generiert...
+         c:\Program Files\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /ZI /nologo /W4 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt FixedTest.cpp
          Überspringen... (keine relevanten Änderungen gefunden)
          FixedTest.cpp
        ManifestResourceCompile:
@@ -38,4 +36,4 @@
 
 Das Erstellen war erfolgreich.
 
-Verstrichene Zeit 00:00:03.03
+Verstrichene Zeit 00:00:02.33

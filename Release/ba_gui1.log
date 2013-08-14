@@ -1,31 +1,70 @@
-﻿Der Buildvorgang wurde am 31.07.2013 14:32:09 gestartet.
-     1>Projekt "C:\Users\m.hansertvivar\Documents\Visual Studio 2010\Projects\ba_gui1\ba_gui1\ba_gui1.vcxproj" auf Knoten "2", build Ziel(e).
+﻿Der Buildvorgang wurde am 14.08.2013 19:29:24 gestartet.
+     1>Projekt "C:\Users\Benjamin\Documents\GitHub\ba_gui1\ba_gui1.vcxproj" auf Knoten "2", build Ziel(e).
      1>InitializeBuildStatus:
          "Release\ba_gui1.unsuccessfulbuild" wird erstellt, da "AlwaysCreate" angegeben wurde.
        ClCompile:
-         c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /Zi /nologo /W4 /WX- /O2 /Oi /Oy- /GL /D WIN32 /D NDEBUG /D _WINDOWS /D _UNICODE /D UNICODE /Gm- /EHsc /MT /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt PortHandler.cpp
-         PortHandler.cpp
-     1>PortHandler.cpp(248): warning C4800: 'BOOL': Variable wird auf booleschen Wert ('True' oder 'False') gesetzt (Auswirkungen auf Leistungsverhalten möglich)
+         c:\Program Files\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /Zi /nologo /W4 /WX- /O2 /Oi /Oy- /GL /D WIN32 /D NDEBUG /D _WINDOWS /D _UNICODE /D UNICODE /Gm- /EHsc /MT /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt AutomaticTest.cpp Com.cpp FixedTest.cpp IniFileHandler.cpp Interpreter.cpp Logger.cpp PortCommunications.cpp TestManager.cpp Tools.cpp TransferFileHandler.cpp Window.cpp WobbleTest.cpp main.cpp
+         AutomaticTest.cpp
+         Com.cpp
+     1>Com.cpp(169): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\Program Files\Microsoft Visual Studio 10.0\VC\include\stdio.h(371): Siehe Deklaration von 'sprintf'
+     1>Com.cpp(171): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\Program Files\Microsoft Visual Studio 10.0\VC\include\stdio.h(371): Siehe Deklaration von 'sprintf'
+     1>Com.cpp(302): warning C4244: 'return': Konvertierung von 'double' in 'int', möglicher Datenverlust
+         FixedTest.cpp
+     1>FixedTest.cpp(119): warning C4244: '=': Konvertierung von 'int' in 'BYTE', möglicher Datenverlust
+     1>FixedTest.cpp(120): warning C4244: '=': Konvertierung von 'int' in 'BYTE', möglicher Datenverlust
+     1>FixedTest.cpp(301): warning C4244: '=': Konvertierung von 'int' in 'BYTE', möglicher Datenverlust
+     1>FixedTest.cpp(302): warning C4244: '=': Konvertierung von 'int' in 'BYTE', möglicher Datenverlust
+     1>FixedTest.cpp(307): warning C4244: '=': Konvertierung von 'int' in 'BYTE', möglicher Datenverlust
+     1>FixedTest.cpp(308): warning C4244: '=': Konvertierung von 'int' in 'BYTE', möglicher Datenverlust
+         IniFileHandler.cpp
+     1>IniFileHandler.cpp(46): warning C4996: 'getenv': This function or variable may be unsafe. Consider using _dupenv_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\Program Files\Microsoft Visual Studio 10.0\VC\include\stdlib.h(433): Siehe Deklaration von 'getenv'
+         Interpreter.cpp
+         Logger.cpp
+     1>Logger.cpp(42): warning C4996: 'getenv': This function or variable may be unsafe. Consider using _dupenv_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\Program Files\Microsoft Visual Studio 10.0\VC\include\stdlib.h(433): Siehe Deklaration von 'getenv'
+         PortCommunications.cpp
+     1>PortCommunications.cpp(214): warning C4800: 'BOOL': Variable wird auf booleschen Wert ('True' oder 'False') gesetzt (Auswirkungen auf Leistungsverhalten möglich)
+         TestManager.cpp
+         Tools.cpp
+     1>Tools.cpp(80): warning C4996: 'localtime': This function or variable may be unsafe. Consider using localtime_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\Program Files\Microsoft Visual Studio 10.0\VC\include\time.inl(112): Siehe Deklaration von 'localtime'
+     1>Tools.cpp(82): warning C4996: 'asctime': This function or variable may be unsafe. Consider using asctime_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\Program Files\Microsoft Visual Studio 10.0\VC\include\time.h(153): Siehe Deklaration von 'asctime'
+         TransferFileHandler.cpp
+         Window.cpp
+         WobbleTest.cpp
+         main.cpp
+     1>main.cpp(12): warning C4100: 'pCmdLine': Unreferenzierter formaler Parameter
+     1>main.cpp(22): warning C4101: 'get_info': Unreferenzierte lokale Variable
+     1>main.cpp(14): warning C4189: 'z': Lokale Variable ist initialisiert aber nicht referenziert
+     1>main.cpp(21): warning C4101: 'info': Unreferenzierte lokale Variable
        Link:
-         c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\m.hansertvivar\Documents\Visual Studio 2010\Projects\ba_gui1\Release\ba_gui1.exe" /INCREMENTAL:NO /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"Release\ba_gui1.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"C:\Users\m.hansertvivar\Documents\Visual Studio 2010\Projects\ba_gui1\Release\ba_gui1.pdb" /SUBSYSTEM:WINDOWS /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\m.hansertvivar\Documents\Visual Studio 2010\Projects\ba_gui1\Release\ba_gui1.lib" /MACHINE:X86 Release\Com.obj
-         Release\FileManager.obj
+         c:\Program Files\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Benjamin\Documents\GitHub\ba_gui1\Release\ba_gui1.exe" /INCREMENTAL:NO /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"Release\ba_gui1.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"C:\Users\Benjamin\Documents\GitHub\ba_gui1\Release\ba_gui1.pdb" /SUBSYSTEM:WINDOWS /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Benjamin\Documents\GitHub\ba_gui1\Release\ba_gui1.lib" /MACHINE:X86 Release\AutomaticTest.obj
+         Release\Com.obj
+         Release\FixedTest.obj
+         Release\IniFileHandler.obj
          Release\Interpreter.obj
          Release\Logger.obj
          Release\main.obj
-         Release\PortHandler.obj
-         Release\TestProperties.obj
+         Release\PortCommunications.obj
+         Release\TestManager.obj
          Release\Tools.obj
+         Release\TransferFileHandler.obj
          Release\Window.obj
+         Release\WobbleTest.obj
          Code wird generiert.
          Codegenerierung ist abgeschlossen.
-         ba_gui1.vcxproj -> C:\Users\m.hansertvivar\Documents\Visual Studio 2010\Projects\ba_gui1\Release\ba_gui1.exe
+         ba_gui1.vcxproj -> C:\Users\Benjamin\Documents\GitHub\ba_gui1\Release\ba_gui1.exe
        Manifest:
-         C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\mt.exe /nologo /verbose /outputresource:"C:\Users\m.hansertvivar\Documents\Visual Studio 2010\Projects\ba_gui1\Release\ba_gui1.exe;#1" /manifest Release\ba_gui1.exe.intermediate.manifest
+         C:\Program Files\Microsoft SDKs\Windows\v7.0A\bin\mt.exe /nologo /verbose /outputresource:"C:\Users\Benjamin\Documents\GitHub\ba_gui1\Release\ba_gui1.exe;#1" /manifest Release\ba_gui1.exe.intermediate.manifest
        FinalizeBuildStatus:
          Die Datei "Release\ba_gui1.unsuccessfulbuild" wird gelöscht.
          Aktualisieren des Timestamps von "Release\ba_gui1.lastbuildstate".
-     1>Die Erstellung des Projekts "C:\Users\m.hansertvivar\Documents\Visual Studio 2010\Projects\ba_gui1\ba_gui1\ba_gui1.vcxproj" ist abgeschlossen, build Ziel(e).
+     1>Die Erstellung des Projekts "C:\Users\Benjamin\Documents\GitHub\ba_gui1\ba_gui1.vcxproj" ist abgeschlossen, build Ziel(e).
 
 Das Erstellen war erfolgreich.
 
-Verstrichene Zeit 00:00:01.84
+Verstrichene Zeit 00:00:17.80

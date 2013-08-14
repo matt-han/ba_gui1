@@ -55,6 +55,7 @@ long TransferFileHandler::readTransferFile()
 	while (!inputFile.eof())
 	{
 		getline(inputFile, templine);
+
 		vTranferFileLines.push_back(templine);
 	}
 
