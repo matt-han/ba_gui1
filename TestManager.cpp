@@ -43,6 +43,10 @@ long TestManager::startFixedTest()
 {
 	FixedTest fixedTest(&testStruct);
 
+	//set the text to be transfered
+	fixedTest.setTextVector(testStruct.iTransTextMode);
+	
+	
 	switch(testStruct.iTransfer)
 	{
 		//Single test

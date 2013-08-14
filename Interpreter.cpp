@@ -161,6 +161,13 @@ void Interpreter::setTextToSend(string sTextToSend)
 }
 
 
+
+void Interpreter::setTransTextMode(int iTransTextMode)
+{
+	this->_iTransTextMode = iTransTextMode;
+}
+
+
 //------------------------------------------------------------------------------
 //	Set the variables to the default values
 //------------------------------------------------------------------------------
@@ -171,8 +178,8 @@ void Interpreter::setDefaultValues()
 	_iStopBits  = DEFAULT_VALUE;
 	_iTransfer  = DEFAULT_VALUE;
 	_iProtocol  = DEFAULT_VALUE;
-	_iBaudrate = DEFAULT_VALUE;
-
+	_iBaudrate  = DEFAULT_VALUE;
+	_iTransTextMode = DEFAULT_VALUE;
 	_bLoggerState = true;
 
 	_sMasPort      = "";
@@ -386,10 +393,16 @@ void Interpreter::handleGui()
 
 				}//switch
 
-				//save the logger state, file path and textToSend
+				//save the logger state, file path, textToSend and transtextmode
 				testManager.testStruct.bLoggerState = _bLoggerState;
 				testManager.testStruct.sFilePath = _sFilePath;
 				testManager.testStruct.sTextToTransfer = _sTextToSend;
+				testManager.testStruct.iTransTextMode = _iTransTextMode;
+
+
+
+
+
 
 				//--------------------------------------------------------------
 				//--------------------------------------------------------------

@@ -45,6 +45,7 @@ public:
 	void sendTransferFile();
 	void sendTextToSend();
 	void sendLoggerState();
+	void sendTransTextMode(int iTransTextMode);
 
 	void sendTestSettings(int iTransferText);
 

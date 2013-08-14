@@ -52,16 +52,14 @@ void TransferFileHandler::closeFile()
 //------------------------------------------------------------------------------
 long TransferFileHandler::readTransferFile()
 {
+	while (!inputFile.eof())
+	{
+		getline(inputFile, templine);
+		vTranferFileLines.push_back(templine);
+	}
 
 	if (vTranferFileLines.empty())
 		return ERROR_EMPTY_FILE;
 	else
-	{
-		while (!inputFile.eof())
-		{
-			getline(inputFile, templine);
-			vTranferFileLines.push_back(templine);
-		}
-	}
-	return ERROR_SUCCESS;
+		return ERROR_SUCCESS;
 }

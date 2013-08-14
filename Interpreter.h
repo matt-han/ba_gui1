@@ -45,6 +45,7 @@ public:
 	void setLoggerState(bool);
 	void setTransferFile(string);
 	void setTextToSend(string);
+	void setTransTextMode(int);
 	void setDefaultValues();
 	void handleGui();
 	void setBaudrateList();
@@ -64,6 +65,7 @@ private:
 	int _iProtocol;
 	int _iInfoToTransfer;
 	int _iBaudrate;
+	int _iTransTextMode;
 	string _sMasPort;
 	string _sSlaPort;
 	string _sFilePath;

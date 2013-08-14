@@ -697,16 +697,21 @@ void Window::sendLoggerState()
 	interpreter.setLoggerState(_bLoggerState);	
 }
 
+
+void Window::sendTransTextMode(int iTransTextMode)
+{
+	interpreter.setTransTextMode(iTransTextMode);
+}
 //------------------------------------------------------------------------------
 //	Sends the GUI input settings to the interpreter
 //------------------------------------------------------------------------------
-void Window::sendTestSettings(int iTransferText)
+void Window::sendTestSettings(int iTransTextMode)
 {
 	//iTransferText
 	//0 for default
 	//1 for file
 	//2 for string
-	switch(iTransferText)
+	switch(iTransTextMode)
 	{
 		//1 for file
 		case 1:
@@ -733,6 +738,7 @@ void Window::sendTestSettings(int iTransferText)
 	sendSelectedSlavePort();
 	sendPortBaudRate();
 	sendLoggerState();
+	sendTransTextMode(iTransTextMode);
 
 	interpreter.handleGui();
 }
@@ -742,34 +748,34 @@ void Window::sendTestSettings(int iTransferText)
 //	Set the path for the test file to be used
 //	Return: string with the file path
 //------------------------------------------------------------------------------
-string Window::getTransferFile()
-{
-	int iLen = GetWindowTextLengthW(hwnd_lbLoad);
-	char* pstrText;
-	pstrText = (char*) malloc (sizeof(char)*iLen+1);
-
-	if(pstrText == NULL)
-	{
-		error = GetLastError();
-		clog << "Error allocating memory. Error : " << error << endl;
-		return "-1";
-	}
-
-	if (0 == GetWindowTextA(hwnd_lbLoad, pstrText, iLen) )
-	{
-		error = GetLastError();
-		clog << "Error getting path for transfer file. Error: " <<
-				error << endl;
-		return "-1";
-	}
-
-	_sTransferFilePath = interpreter.tools.convertToString(pstrText);
-
-	free(pstrText);
-	pstrText = NULL;
-	
-	return _sTransferFilePath;
-}
+//string Window::getTransferFile()
+//{
+//	int iLen = GetWindowTextLengthW(hwnd_lbLoad);
+//	char* pstrText;
+//	pstrText = (char*) malloc (sizeof(char)*iLen+1);
+//
+//	if(pstrText == NULL)
+//	{
+//		error = GetLastError();
+//		clog << "Error allocating memory. Error : " << error << endl;
+//		return "-1";
+//	}
+//
+//	if (0 == GetWindowTextA(hwnd_lbLoad, pstrText, iLen) )
+//	{
+//		error = GetLastError();
+//		clog << "Error getting path for transfer file. Error: " <<
+//				error << endl;
+//		return "-1";
+//	}
+//
+//	_sTransferFilePath = interpreter.tools.convertToString(pstrText);
+//
+//	free(pstrText);
+//	pstrText = NULL;
+//	
+//	return _sTransferFilePath;
+//}
 
 
 //------------------------------------------------------------------------------

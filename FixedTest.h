@@ -4,8 +4,11 @@
 #include "Com.h"
 #include "Constants.h"
 #include "PortCommunications.h"
+#include "TransferFileHandler.h"
 
+#include <vector>
 
+#define TEXT_LENGTH 8
 using namespace std;
 
 
@@ -23,25 +26,32 @@ public:
 	PortCommunications masterPortComm;
 	PortCommunications slavePortComm;
 
+	TransferFileHandler transFile;
+
+	TestStruct *testStruct;
+
+	string defaultText[TEXT_LENGTH];
+	vector<string>vTextToSend;
 	DWORD dwExitCode;
 	HANDLE masterHCom;
 	HANDLE slaveHCom;
-	TestStruct *testStruct;
+	
 
 	//char test[15];
 	string test;
 	char empfang[100];
 
 //------------------------------------------------------------------------------
-//Methods	
+//Methods
+	void setTextVector(int iTextMode);	
 	long startSingleTest();
 	long startDoubleTest();
 	long startMasterSlaveTest();
-	long communicate(bool MasterSlave);
-	bool sendData(bool MasterSlave);
-	bool getData(bool MasterSlave);
+	long communicate(string sSendData);
+	bool sendData(bool MasterSlave, string sSendData);
+	bool getData(bool MasterSlave, string sSendData);
 	void printTestSettings();
-
+	
 private:
 	DWORD _dwError;
 };

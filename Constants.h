@@ -130,7 +130,8 @@ using namespace std;
 		int iProtocol;
 		int iStopbits;
 		bool bLoggerState;
-		
+		int iTransTextMode;
+
 		//constructor
 		TestStruct(void)
 		{
@@ -144,6 +145,7 @@ using namespace std;
 			iProtocol		= DEFAULT_VALUE;
 			iStopbits		= DEFAULT_VALUE;
 			iTransfer		= DEFAULT_VALUE;
+			iTransTextMode  = DEFAULT_VALUE;
 			bLoggerState	= true;
 		}
 	};//struct
