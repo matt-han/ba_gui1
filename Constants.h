@@ -72,15 +72,47 @@ using namespace std;
 #define ERROR_LOG			-8
 #define ERROR_INI			-9
 #define ERROR_SET_DCB		-10
-#define ERROR_INPUT	-11
+#define ERROR_INPUT			-11
 //#define ERROR_INPUT_	-12
 #define ERROR_FILE_NOT_OPEN -13
 #define ERROR_EMPTY_FILE	-14
 #define ERROR_CFG_HEADER	-15
 #define ERROR_SYNTAX		-16
 #define ERROR_PARSE			-17
+#define ERROR_READ_PORT		-18
+#define ERROR_WRITE_PORT	-19
 
 #define DEFAULT_VALUE		-100
+
+//------------------------------------------------------------------------------
+//Baud rates
+//can NOT trust baud rates defined in WinBase.h
+
+#define B_075			 75
+#define B_110			 110
+#define B_134_5			 134.5
+#define B_150			 150
+#define B_300			 300
+#define B_600			 600
+#define B_1200			 1200
+#define B_1800			 1800
+#define B_2400			 2400
+#define B_4800			 4800
+#define B_7200			 7200
+#define B_9600			 9600
+#define B_14400			 14400
+#define B_19200			 19200
+#define B_38400			 38400
+#define B_56K			 56000
+#define B_57600			 57600
+#define B_115200		 115200
+#define B_128K			 128000
+#define B_256K			 256000
+
+
+
+
+
 
 
 //------------------------------------------------------------------------------

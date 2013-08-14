@@ -30,6 +30,8 @@ public:
 //Variables
 	Com comEnumerator;
 	Tools tools;
+
+	DWORD dwError;
 //------------------------------------------------------------------------------
 //Methods	
 	void setTestMode(int);

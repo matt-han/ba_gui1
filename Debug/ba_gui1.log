@@ -1,36 +1,15 @@
-﻿Der Buildvorgang wurde am 13.08.2013 17:31:27 gestartet.
+﻿Der Buildvorgang wurde am 14.08.2013 15:09:38 gestartet.
      1>Projekt "C:\Users\m.hansertvivar\Documents\Visual Studio 2010\Projects\ba_gui1\ba_gui1\ba_gui1.vcxproj" auf Knoten "2", build Ziel(e).
      1>InitializeBuildStatus:
          "Debug\ba_gui1.unsuccessfulbuild" wird erstellt, da "AlwaysCreate" angegeben wurde.
        ClCompile:
-         c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /ZI /nologo /W4 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt FixedTest.cpp
-         FixedTest.cpp
-     1>c:\users\m.hansertvivar\documents\visual studio 2010\projects\ba_gui1\ba_gui1\fixedtest.cpp(48): warning C4244: '=': Konvertierung von 'int' in 'BYTE', möglicher Datenverlust
-     1>c:\users\m.hansertvivar\documents\visual studio 2010\projects\ba_gui1\ba_gui1\fixedtest.cpp(49): warning C4244: '=': Konvertierung von 'int' in 'BYTE', möglicher Datenverlust
-     1>c:\users\m.hansertvivar\documents\visual studio 2010\projects\ba_gui1\ba_gui1\fixedtest.cpp(71): warning C4715: "FixedTest::startTest": Nicht alle Steuerelementpfade geben einen Wert zurück.
+         Alle Ausgaben sind aktuell.
        ManifestResourceCompile:
          Alle Ausgaben sind aktuell.
        Link:
-         c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\m.hansertvivar\Documents\Visual Studio 2010\Projects\ba_gui1\Debug\ba_gui1.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"Debug\ba_gui1.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"C:\Users\m.hansertvivar\Documents\Visual Studio 2010\Projects\ba_gui1\Debug\ba_gui1.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\m.hansertvivar\Documents\Visual Studio 2010\Projects\ba_gui1\Debug\ba_gui1.lib" /MACHINE:X86 Debug\ba_gui1.exe.embed.manifest.res
-         Debug\AutomaticTest.obj
-         Debug\Com.obj
-         Debug\FixedTest.obj
-         Debug\IniFileHandler.obj
-         Debug\Interpreter.obj
-         Debug\Logger.obj
-         Debug\main.obj
-         Debug\PortCommunications.obj
-         Debug\TestManager.obj
-         Debug\Tools.obj
-         Debug\TransferFileHandler.obj
-         Debug\Window.obj
-         Debug\WobbleTest.obj
+         Alle Ausgaben sind aktuell.
        Manifest:
-         C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\mt.exe /nologo /verbose /out:"Debug\ba_gui1.exe.embed.manifest" /manifest Debug\ba_gui1.exe.intermediate.manifest
          Alle Ausgaben sind aktuell.
-       LinkEmbedManifest:
-         Alle Ausgaben sind aktuell.
-         ba_gui1.vcxproj -> C:\Users\m.hansertvivar\Documents\Visual Studio 2010\Projects\ba_gui1\Debug\ba_gui1.exe
        FinalizeBuildStatus:
          Die Datei "Debug\ba_gui1.unsuccessfulbuild" wird gelöscht.
          Aktualisieren des Timestamps von "Debug\ba_gui1.lastbuildstate".
@@ -38,4 +17,4 @@
 
 Das Erstellen war erfolgreich.
 
-Verstrichene Zeit 00:00:01.39
+Verstrichene Zeit 00:00:00.06

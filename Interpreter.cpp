@@ -349,6 +349,16 @@ void Interpreter::handleGui()
 								bErr = true;
 								break;
 							}
+							else if(_iBaudrate == ERROR_BAUDRATE)
+							{
+								MessageBoxW(NULL,L"Baud rate is not suported by"
+									L" this port (WinBase define error)\n"
+									L"Please choose another baud rate",
+									L"Error", MB_OK);
+								setDefaultValues();
+								bErr = true;
+								break;
+							}
 							else
 								testManager.testStruct.iBaud = _iBaudrate;
 						}
@@ -386,7 +396,19 @@ void Interpreter::handleGui()
 				//start the manager to start testing
 				//checkj structure to avoid asking for bErr
 				if(bErr == false)
-				testManager.startManager();
+				{
+					dwError = testManager.startManager();
+					if(dwError == ERROR_SUCCESS)
+					{
+						MessageBoxA(NULL, "Send and Recieve OK", "SUCCESS!!",
+									MB_OK);
+					}
+					else
+					{
+						MessageBoxA(NULL, "Send and Recieve failure", "FAIL!!",
+									MB_OK);
+					}
+				}
 				//--------------------------------------------------------------
 				//--------------------------------------------------------------
 

@@ -64,6 +64,7 @@ Com::Com(string sPort)
 	saDefaultBaudrates[16] = "57600";
 	saDefaultBaudrates[17] = "115200";
 	saDefaultBaudrates[18] = "128000";
+	saDefaultBaudrates[19] = "256000";
 	//saDefaultBaudrates[0] = ;
 	//saDefaultBaudrates[0] = ;
 
@@ -97,6 +98,7 @@ Com::Com(void)
 	saDefaultBaudrates[16] = "57600";
 	saDefaultBaudrates[17] = "115200";
 	saDefaultBaudrates[18] = "128000";
+	saDefaultBaudrates[19] = "256000";
 }
 
 
@@ -259,9 +261,8 @@ long Com::decodeBaudrates(DWORD dwBitMask)
 	//bitmask with the possible baud rates
 	bitset<32> bitMask ((int)dwBitMask);
 	
-	//ignore first bit -> 75 bps
 	//ignore last 4 bits -> BAUD_USER
-	for( int i = 1; i < 28; i++)
+	for( int i = 0; i < 28; i++)
 	{
 		//if bit set
 		if (bitMask.test(i) == true)
@@ -291,50 +292,70 @@ long Com::decodeBaudrates(DWORD dwBitMask)
 //------------------------------------------------------------------------------
 int Com::translateBaudrate(string sBaud)
 {
-	if(sBaud == "110")
-		return CBR_110;
+	if(sBaud == "75")
+		return B_075;
+
+	else if(sBaud == "110")
+		return B_110;
+
+	else if(sBaud == "134.5")
+		return B_134_5;
+
+	else if(sBaud == "150")
+		return B_150;
 
 	else if(sBaud == "300")
-		return CBR_300;
+		return B_300;
 
 	else if(sBaud == "600")
-		return CBR_600;
+		return B_600;
 
     else if(sBaud == "1200")
-		return CBR_1200;
+		return B_1200;
+
+	else if(sBaud == "1800")
+		return B_1800;
 
     else if(sBaud == "2400")
-		return CBR_2400;
+		return B_2400;
 
     else if(sBaud == "4800")
-		return CBR_4800;
+		return B_4800;
+
+	else if(sBaud == "7200")
+		return B_7200;
 
 	else if(sBaud == "9600")
-		return CBR_9600;
+		return B_9600;
 
-    else if(sBaud == "14400:")
-		return CBR_14400;
+    else if(sBaud == "14400")
+		return B_14400;
 
     else if(sBaud == "19200")
-		return CBR_19200;
+		return B_19200;
 
     else if(sBaud == "38400")
-		return  CBR_38400;
+		return B_38400;
 
     else if(sBaud == "56000")
-		return CBR_56000;
+		return B_56K;
 
 	else if(sBaud == "57600")
-		return CBR_57600;
+		return B_57600;
 
     else if(sBaud == "115200")
-		return CBR_115200;
+		return B_115200;
 
     else if(sBaud == "128000")
-		return CBR_128000;
+		return B_128K;
 
 	else if(sBaud == "256000")
-		return  CBR_256000;
+		return B_256K;
+	
+	//SUNIX BAUD RATES
+	//
+	//
+	//
 	else
 		return ERROR_BAUDRATE;
 }
@@ -413,7 +434,7 @@ long Com::setDCB()
 			MessageBoxW(NULL, L"Error setting Port dcb. For more details check "
 							  L"the log file", L"ERROR", MB_OK);
 
-			clog << "Error setting " << sPort << " dcb. Error : "
+			clog << "Error setting " << sPort << " dcb. System Error : "
 				 << _dwError << endl;
 
 			return ERROR_SET_DCB;

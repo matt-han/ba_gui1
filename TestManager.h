@@ -19,14 +19,15 @@ public:
 //Variables
 	//FixedTest fixedTest;
 	TestStruct testStruct;
-
+	DWORD dwError;
 //------------------------------------------------------------------------------
 //Methods
+void evaluateInput();
 
 	long startManager();
-	long startTest();
-	void evaluateInput();
-	long createTestObject();
+	long startAutomaticTest();
+	long startWobbleTest();
+	long startFixedTest();
 
 	//get the text to be transmitted... either from a file, input string or default
 	long getTextToTransmit();

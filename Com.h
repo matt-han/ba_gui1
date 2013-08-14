@@ -9,7 +9,7 @@
 #ifndef _COM_H
 #define _COM_H
 
-#include "PortCommunications.h"
+
 #include "Constants.h"
 #include "Tools.h"
 
@@ -32,7 +32,7 @@ public:
 
 //------------------------------------------------------------------------------
 //Variables
-	//PortCommunications portComm;
+
 	DCB dcb;
 
 	//Port timeout struct
@@ -41,7 +41,7 @@ public:
 	vector<string> vBaud;
 	vector<DWORD> dwvBaudRates;
 
-	string saDefaultBaudrates[19];
+	string saDefaultBaudrates[25];
 	string sPort;
 
 

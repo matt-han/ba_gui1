@@ -18,12 +18,28 @@ public:
 
 //------------------------------------------------------------------------------
 //Variables
-	Com com;
-	PortCommunications portComm;
-	HANDLE hCom;
+	Com masterCom;
+	Com slaveCom;
+	PortCommunications masterPortComm;
+	PortCommunications slavePortComm;
+
+	DWORD dwExitCode;
+	HANDLE masterHCom;
+	HANDLE slaveHCom;
 	TestStruct *testStruct;
-	long startTest();
-	long communicate();
+
+	//char test[15];
+	string test;
+	char empfang[100];
+
+//------------------------------------------------------------------------------
+//Methods	
+	long startSingleTest();
+	long startDoubleTest();
+	long startMasterSlaveTest();
+	long communicate(bool MasterSlave);
+	bool sendData(bool MasterSlave);
+	bool getData(bool MasterSlave);
 	void printTestSettings();
 
 private:

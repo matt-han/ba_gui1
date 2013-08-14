@@ -13,32 +13,64 @@ TestManager::~TestManager(void)
 //
 long TestManager::startManager()
 {
-	startTest();
-	return ERROR_SUCCESS;
-}
-
-long TestManager::startTest()
-{
-	evaluateInput();
-	return ERROR_SUCCESS;
-}
-
-void TestManager::evaluateInput()
-{
-	//if fixed test
-	if (testStruct.iTestMode == 2)
+	
+	switch(testStruct.iTestMode)
 	{
-		//if single transfer mode
-		if (testStruct.iTransfer == 0)
-		{
-			FixedTest fixedTest(&testStruct);
-		}
-	}
+		//automatic test
+		case 0:
+				MessageBoxA(NULL, "not programmed yet", "!!!!!!!!!",
+									MB_OK);
+			dwError = startAutomaticTest();
+			break;
 
+		case 1:
+				MessageBoxA(NULL, "not programmed yet", "!!!!!!!!!",
+									MB_OK);
+			dwError = startWobbleTest();
+			break;
+
+		case 2:
+			dwError = startFixedTest();
+			break;
+	}
+	
+	//if(dwError == ERROR_SUCCESS)
+	return dwError;
 }
 
-long TestManager::createTestObject()
-{
 
+long TestManager::startFixedTest()
+{
+	FixedTest fixedTest(&testStruct);
+
+	switch(testStruct.iTransfer)
+	{
+		//Single test
+		case 0:
+			dwError = fixedTest.startSingleTest();
+			break;
+
+		//Double Test
+		case 1:
+			dwError = fixedTest.startDoubleTest();
+			break;
+
+		//Master Slave
+		case 2:
+			dwError = fixedTest.startMasterSlaveTest();
+			break;
+	}
+	
+	return dwError;
+}
+
+
+long TestManager::startWobbleTest()
+{
+	return ERROR_SUCCESS;
+}
+
+long TestManager::startAutomaticTest()
+{
 	return ERROR_SUCCESS;
 }
