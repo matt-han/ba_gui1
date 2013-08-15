@@ -81,6 +81,7 @@ using namespace std;
 #define ERROR_PARSE			-17
 #define ERROR_READ_PORT		-18
 #define ERROR_WRITE_PORT	-19
+#define ERROR_TRANS_INFO	-20
 
 #define ERROR_TRANSMITION "ERROR_TRANSMITION"
 #define DEFAULT_VALUE		-100

@@ -674,6 +674,10 @@ void Window::sendPortBaudRate()
 void Window::sendTransferFile()
 {
 	//interpreter.setTransferFile(this->getTransferFile());
+	//int a = _sTransferFilePath.find_last_of("\\");
+	//clog << "\nFile to send : "
+	//	 << _sTransferFilePath.substr(a,_sTransferFilePath.npos - a)
+	//	 << endl;
 	interpreter.setTransferFile(this->_sTransferFilePath);
 }
 
@@ -684,7 +688,7 @@ void Window::sendTransferFile()
 void Window::sendTextToSend()
 {
 	GetWindowTextA(hwnd_lbText, _szTextToSend, 30);
-	clog << "Text to send : " << _szTextToSend << endl;
+	clog << "\nText to send : " << _szTextToSend << endl;
 	interpreter.setTextToSend(_szTextToSend);
 }
 
@@ -698,10 +702,15 @@ void Window::sendLoggerState()
 }
 
 
+//------------------------------------------------------------------------------
+//	Sends the text transfer mode setting
+//------------------------------------------------------------------------------
 void Window::sendTransTextMode(int iTransTextMode)
 {
 	interpreter.setTransTextMode(iTransTextMode);
 }
+
+
 //------------------------------------------------------------------------------
 //	Sends the GUI input settings to the interpreter
 //------------------------------------------------------------------------------

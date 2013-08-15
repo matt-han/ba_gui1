@@ -11,7 +11,7 @@ FixedTest::FixedTest(void)
 	defaultText[5] = "Was die Mode streng getheilt,";
 	defaultText[6] = "Alle Menschen werden Brüder,";
 	defaultText[7] = "Wo Dein sanfter Flügel weilt";
-
+	bTransmitionError = false;
 }
 
 FixedTest::FixedTest(TestStruct *testStruct)
@@ -21,9 +21,11 @@ FixedTest::FixedTest(TestStruct *testStruct)
 
 	this->testStruct = testStruct;
 	masterCom.sPort = this->testStruct->sMasterPort;
+	slaveCom.sPort = this->testStruct->sSlavePort;
+
 	dwExitCode = ERROR_SUCCESS;
 
-
+	bTransmitionError = false;
 
 	defaultText[0] = "Freude, schöner Götterfunken,";
 	defaultText[1] = "Tochter aus Elysium!";
@@ -89,11 +91,6 @@ void FixedTest::setTextVector(int iTextMode)
 
 long FixedTest::startSingleTest()
 {
-	
-	
-	test = "Niklas sollte sich eine Beschaeftigung suchen";
-
-
 	masterHCom = masterCom.openPort(masterCom.sPort);
 	if (INVALID_HANDLE_VALUE == masterHCom)
 	{
@@ -120,22 +117,42 @@ long FixedTest::startSingleTest()
 				masterCom.dcb.StopBits = testStruct->iStopbits;
 	//IMPLEMENT PROTOCOL
 	//masterCom.dcb.StopBits = testStruct->iStopbits;
+
 				printTestSettings();
 
 				//set the port dcb with the new settings
 				_dwError = masterCom.setDCB();
 				if(_dwError == ERROR_SUCCESS)
 				{
-					//------------------------------------------------------------------------------
-					for (unsigned int index = 0; index < vTextToSend.size(); index++)
+					//----------------------------------------------------------
+					//
+					//	CommunicationLoop(...) ???????
+					//
+					//send and recieve data
+					for (unsigned int index = 0; index < vTextToSend.size();
+						 index++)
 					{
-						_dwError = communicate(vTextToSend.at(index));
+						_dwError = communicate(vTextToSend.at(index),
+												true, false);
 						if(_dwError != ERROR_SUCCESS)
 						{
 							clog << "Error communicating!!!!!!"<<endl;
-							clog << "line : "<< vTextToSend.at(index) << endl;
 						}
 					}
+					clog<<"-----------------------------------------"<<endl;
+					clog << "Transmition finished"<<endl;
+					clog<<"-----------------------------------------"<<endl;
+					if (bTransmitionError == true)
+					{
+						clog<<"Error/s transmitting information"<<endl;
+						clog<<"Please check the file for exact lines"<<endl;
+						clog<<"Proceed to close ports...\n\n\n"<<endl;
+					}
+					else
+					{
+						clog<<"Transmition finished successfully\n\n\n"<<endl;
+					}
+					//----------------------------------------------------------
 				}	 //setDCB
 				else
 				{
@@ -161,39 +178,61 @@ long FixedTest::startSingleTest()
 		}//getDCB
 
 		_dwError = masterCom.closePort();
-		return _dwError;
-	}
+		if(_dwError != ERROR_SUCCESS)
+		{
+			clog << "Error closing " << masterCom.sPort << endl;
+			if (bTransmitionError == true)
+				clog << "Error in tranismition" << endl;	
+			return _dwError;
+		}
 
+		if (bTransmitionError == true)
+			return ERROR_TRANS_INFO;
+		else
+			return ERROR_SUCCESS;
+	}
 }
 
 
-long FixedTest::communicate(string sSendData)
+long FixedTest::communicate(string sSendData, bool bMaster, bool bSlave)
 {
+	bool bRead;
+
+	if (bMaster && !bSlave)		//Single and Master mode
+	{							//if true & false then read and write to master port
+		bRead = bMaster;		
+	}
+	else if (bMaster && bSlave)	//Double mode
+	{							//if true & true then write to master and read slave
+		bRead = !bSlave;
+	}
+	else if( !bMaster && bSlave) //Slave mode
+	{							//if false & true then write and read slave
+		bRead = !bSlave;
+	}
+
 	//start sending something
-	if (true == sendData(true, sSendData))
+	if (true == sendData(bMaster, sSendData))
 	{
 		clog <<"write was true"<<endl;
 		MessageBoxA(NULL, sSendData.c_str(), "COM 1 SENT", MB_OK);
 
-		string sTemp = getData(true, sSendData);
+		string sTemp = getData(bRead, sSendData);
 		if (sTemp != ERROR_TRANSMITION)
 		{
 			if(0 == strcmp(sTemp.c_str(), sSendData.c_str()) )
 			{
-				clog << "read was true"<<endl;
+				clog << "read  was true"<<endl;
 				
 			}
 			else
 			{
-				clog << "String recieved is NOT equal to the sent string" << endl;
-				MessageBoxA(NULL, (LPCSTR)empfang, "ERROR, COM 1 GOT",
-							MB_OK);
+				clog << "String recieved is NOT equal to the sent string"<<endl;
+				clog << "- " << sSendData << endl;
+				clog << "- " << sTemp << endl;
+				bTransmitionError = true;
 			}
-			
-			clog << "Finish!"<<endl;
-			clog<<"-----------------------------------------"<<endl;
-			clog<<"-----------------------------------------"<<endl;
-			
+
 			return ERROR_SUCCESS;
 
 		}
@@ -202,8 +241,6 @@ long FixedTest::communicate(string sSendData)
 			clog <<"read was false"<<endl;
 			clog<<"-----------------------------------------"<<endl;
 			clog<<"-----------------------------------------"<<endl;
-							
-			masterCom.closePort();
 			return ERROR_READ_PORT;
 		}//getData
 
@@ -213,7 +250,6 @@ long FixedTest::communicate(string sSendData)
 		clog <<"write was false"<<endl;
 		clog<<"-----------------------------------------"<<endl;
 		clog<<"-----------------------------------------"<<endl;
-		masterCom.closePort();
 		return ERROR_WRITE_PORT;
 	}//sendData
 
@@ -222,9 +258,6 @@ long FixedTest::communicate(string sSendData)
 //!!!!!!TEST!!!!!
 long FixedTest::startDoubleTest()
 {
-	test = "Fixed test, Double Comm";
-
-
 	//Prepare the master for communications
 	masterHCom = masterCom.openPort(masterCom.sPort);
 	if (INVALID_HANDLE_VALUE == masterHCom)
@@ -334,41 +367,33 @@ long FixedTest::startDoubleTest()
 	
 
 	//if everything ok then communicate
-	//send data trough the master
-	//if (true == sendData(true))
-	//{
-	//	clog <<"write was true"<<endl;
-	//	MessageBoxA(NULL, test.c_str(), "COM 1 SENT", MB_OK);
 
-	//	//read from the slave
-	//	if(true == getData(false))
-	//	{
-	//		clog << "read was true"<<endl;
-	//		MessageBoxA(NULL, (LPCSTR)empfang, "COM 1 GOT", MB_OK);
+	//----------------------------------------------------------
+	//send and recieve data
+	for (unsigned int index = 0; index < vTextToSend.size(); index++)
+	{
+		//	Double mode => true, true
+		_dwError = communicate(vTextToSend.at(index), true, true);
+		if(_dwError != ERROR_SUCCESS)
+		{
+			clog << "Error communicating!!!!!!"<<endl;
+		}
+	}
+	
+	clog<<"-----------------------------------------"<<endl;
+	clog << "Transmition finished"<<endl;
+	clog<<"-----------------------------------------"<<endl;
 
-	//		clog << "SUCCESS!!!"<<endl;
-	//		clog<<"-----------------------------------------"<<endl;
-	//		clog<<"-----------------------------------------"<<endl;
-	//	}
-	//	else
-	//	{
-	//		clog <<"read was false"<<endl;
-	//		clog<<"-----------------------------------------"<<endl;
-	//		clog<<"-----------------------------------------"<<endl;
-	//		masterCom.closePort();
-	//		slaveCom.closePort();
-	//		return ERROR_READ_PORT;
-	//	}
-	//}
-	//else
-	//{
-	//	clog <<"write was false"<<endl;
-	//	clog<<"-----------------------------------------"<<endl;
-	//	clog<<"-----------------------------------------"<<endl;
-	//	masterCom.closePort();
-	//	slaveCom.closePort();
-	//	return ERROR_WRITE_PORT;
-	//}
+	if (bTransmitionError == true)
+	{
+		clog<<"Error/s transmitting information"<<endl;
+		clog<<"Please check the file for exact lines"<<endl;
+		clog<<"Proceed to close ports...\n\n\n"<<endl;
+	}
+	else
+	{
+		clog<<"Transmition finished successfully\n\n\n"<<endl;
+	}
 
 	masterCom.closePort();
 	slaveCom.closePort();
@@ -386,7 +411,10 @@ string FixedTest::getData(bool MasterSlave, string sSendData)
 	if (MasterSlave)
 	{
 		if (true == masterPortComm.readData(empfang, sSendData.size()) )
+		{
+			clog << "--> master reads empfang" << endl;
 			return empfang;
+		}
 		else
 			return ERROR_TRANSMITION;
 	}
@@ -394,7 +422,10 @@ string FixedTest::getData(bool MasterSlave, string sSendData)
 	else
 	{
 		if (true == slavePortComm.readData(empfang, sSendData.size()) )
+		{
+			clog << "--> slave reads empfang" << endl;
 			return empfang;
+		}
 		else
 			return ERROR_TRANSMITION;
 	}
@@ -407,17 +438,23 @@ bool FixedTest::sendData(bool MasterSlave, string sSendData)
 	//MasterSlave test -> send and read reply from the same port
 
 	if (MasterSlave)
+	{
+		clog << "--> master writes" << endl;
 		return masterPortComm.writeData(sSendData.c_str(), sSendData.size());
+	}
 	
 	//else Double test -> write a reply if success or fail
 	else
+	{
+		clog << "--> slave writes" << endl;
 		return slavePortComm.writeData(sSendData.c_str(), sSendData.size());
+	}
 }
 
 
 void FixedTest::printTestSettings()
 {
-	clog << "\n#####################################################" << endl;
+	clog << "#####################################################" << endl;
 	clog << "Communication Settings" << endl;
 	clog << "-------------------------------" << endl;
 	clog << "port   " << masterCom.sPort << endl;

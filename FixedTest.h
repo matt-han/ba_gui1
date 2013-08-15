@@ -36,9 +36,7 @@ public:
 	HANDLE masterHCom;
 	HANDLE slaveHCom;
 	
-
-	//char test[15];
-	string test;
+	bool bTransmitionError;
 	char empfang[100];
 
 //------------------------------------------------------------------------------
@@ -47,7 +45,7 @@ public:
 	long startSingleTest();
 	long startDoubleTest();
 	long startMasterSlaveTest();
-	long communicate(string sSendData);
+	long communicate(string sSendData, bool bMaster, bool bSlave);
 	bool sendData(bool MasterSlave, string sSendData);
 	string getData(bool MasterSlave, string sSendData);
 	void printTestSettings();

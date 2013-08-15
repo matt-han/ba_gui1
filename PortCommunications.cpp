@@ -157,7 +157,6 @@ bool PortCommunications::writeData(const char * lpBuf, DWORD dwSize)
 		{
 			// Write is pending.
 			dwRes = WaitForSingleObject(osWrite.hEvent, INFINITE);
-			clog << "dwres " << dwRes << endl;
 			switch(dwRes)
 			{
             // Overlapped event has been signaled. 
@@ -178,7 +177,7 @@ bool PortCommunications::writeData(const char * lpBuf, DWORD dwSize)
 						}
 						else
 						{
-							clog << "Write operation completed successfully" << endl;
+							//clog << "Write operation completed successfully" << endl;
 							fRes = TRUE;
 						}
 					}
@@ -187,7 +186,9 @@ bool PortCommunications::writeData(const char * lpBuf, DWORD dwSize)
 				default:
 					// An error has occurred in WaitForSingleObject. This usually 
 					// indicates a problem with the overlapped event handle.
-					clog <<"Write error in WaitForSingleObject.\nThis usually indicates a problem with the overlapped event handle." << endl;
+					clog <<"Write error in WaitForSingleObject.\nThis usually "
+						 <<"indicates a problem with the overlapped "
+						 << "event handle." << endl;
 					fRes = FALSE;
 					break;
 			}//switch
