@@ -53,15 +53,15 @@ public:
 //Methods
 
 	HANDLE openPort(string portNumber);
-	long closePort();
-	long getBaudrates(string sChosenPort);
-	long decodeBaudrates(DWORD dwBitMask);
+	int closePort();
+	int getBaudrates(string sChosenPort);
+	int decodeBaudrates(DWORD dwBitMask);
 	int translateBaudrate(string sBaud);
 	void enumeratePorts();
 
-	long setTimeOuts();
-	long getDCB();
-	long setDCB();
+	int setTimeOuts();
+	int getDCB();
+	int setDCB();
 	//void setParity(int i);
 	//void setProtocol(int i);
 	//void setStopBits(int i);
@@ -81,13 +81,13 @@ private:
 //Variables
 	Tools tool;
 	DWORD fBinary;
-	DWORD _dwError;
+	int _iError;
 
 };
 
 #endif
 
-//	DWORD	unsigned long
+//	DWORD	unsigned int
 //	BYTE	unsigned 8-bit
 
 //typedef struct _DCB {

@@ -18,7 +18,7 @@ TransferFileHandler::~TransferFileHandler(void)
 //		- string sFilePath -> file path to be opened
 //	Return: error code signaling if operation succeded or error
 //------------------------------------------------------------------------------
-long TransferFileHandler::openFile(string sFilePath)
+int TransferFileHandler::openFile(string sFilePath)
 {
 	clog << "filepath: " << sFilePath << endl;
 	
@@ -50,7 +50,7 @@ void TransferFileHandler::closeFile()
 //	each line in the vector vTranferFileLines
 //	Return: error code signaling if operation succeded or error
 //------------------------------------------------------------------------------
-long TransferFileHandler::readTransferFile()
+int TransferFileHandler::readTransferFile()
 {
 	while (!inputFile.eof())
 	{

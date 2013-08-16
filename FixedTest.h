@@ -35,7 +35,7 @@ public:
 
 	string defaultText[TEXT_LENGTH];
 	vector<string>vTextToSend;
-	DWORD dwExitCode;
+
 	HANDLE masterHCom;
 	HANDLE slaveHCom;
 	
@@ -45,23 +45,23 @@ public:
 //------------------------------------------------------------------------------
 //Methods
 	void setTextVector(int iTextMode);	
-	long startSingleTest();
-	long startDoubleTest();
-	long startMasterSlaveTest(bool bMaster);
-	long startSlaveTest();
-	long communicate(string sSendData, bool bMaster);
+	int startSingleTest();
+	int startDoubleTest();
+	int startMasterSlaveTest(bool bMaster);
+	int startSlaveTest();
+	int communicate(string sSendData, bool bMaster);
 	
 	
-	long communicateMaster(string sSendData);
-	long communicateSlave(string sSendData);
+	int communicateMaster(string sSendData);
+	int communicateSlave(string sSendData);
 
 	bool sendData(bool MasterSlave, string sSendData);
 	string getData(bool MasterSlave, string sSendData);
 	void printTestSettings();
 	
 private:
-	DWORD _dwError;
-	DWORD _dwExitCode;
+	int _iError;
+	int _iExitCode;
 };
 
 #endif

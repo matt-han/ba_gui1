@@ -6,12 +6,13 @@
 //------------------------------------------------------------------------------
 Interpreter::Interpreter(void)
 {
-	_iTestMode = DEFAULT_VALUE;
-	_iParity   = DEFAULT_VALUE;
-	_iStopBits = DEFAULT_VALUE;
-	_iTransfer = DEFAULT_VALUE;
-	_iProtocol = DEFAULT_VALUE;
-	_iBaudrate = DEFAULT_VALUE;
+	_iTestMode		= DEFAULT_VALUE;
+	_iParity		= DEFAULT_VALUE;
+	_iStopBits		= DEFAULT_VALUE;
+	_iTransfer		= DEFAULT_VALUE;
+	_iProtocol		= DEFAULT_VALUE;
+	_iBaudrate		= DEFAULT_VALUE;
+	_iBaudrateMax	= DEFAULT_VALUE;
 
 	_bLoggerState = true;
 
@@ -122,6 +123,19 @@ void Interpreter::setSelectedSlavePort(string sPort)
 void Interpreter::setPortBaudRate(int iBaudRate)
 {
 	this->_iBaudrate = iBaudRate;
+}
+
+
+//------------------------------------------------------------------------------
+//	Saves the user max baud rate input in _iBaudrate
+//	Parameters:
+//	 IN:
+//		- int iBaudRate -> user GUI input
+//------------------------------------------------------------------------------
+void Interpreter::setPortBaudRateMax(int iBaudrateMax)
+{
+	this->_iBaudrateMax = iBaudrateMax;
+	//this->_svBaudrates = this->comEnumerator.vBaud;
 }
 
 
@@ -270,36 +284,32 @@ void Interpreter::handleGui()
 
 
 					//Wobbeln
-					//needs, master/slave port and logger settings
+					//needs, master/slave port, max baud and logger settings
 					//----------------------------------------------------------
 					case 1:
 						//if needed get the slave port
-						if(_iTransfer == 1)
+						if (_iTransfer >= 0 && _iTransfer <= 3)
 						{
-							//if no slave port was selected -> error
-							if (_sSlaPort == "")
+							//if transfer mode = double then get the slave
+							if(_iTransfer == 1)
 							{
-								MessageBoxW(NULL,L"Please select a slave port",
-									L"Error", MB_OK);
-								setDefaultValues();
-								break;
+								//if no slave port was selected -> error
+								if (_sSlaPort == "")
+								{
+									MessageBoxW(NULL,L"Please select a slave port",
+										L"Error", MB_OK);
+									setDefaultValues();
+									break;
+								}
+								else
+									testManager.testStruct.sSlavePort = _sSlaPort;
 							}
-							else
-								testManager.testStruct.sSlavePort = _sSlaPort;
 
 							//check parity, protocol and stopbits
 							if(ERROR_INPUT == checkInputConfigData())
 							{
 								setDefaultValues();
-								break;
-							}
-						}
-						else if (_iTransfer == 0)
-						{
-							//check parity, protocol and stopbits
-							if(ERROR_INPUT == checkInputConfigData())
-							{
-								setDefaultValues();
+								bErr = true;
 								break;
 							}
 						}
@@ -311,7 +321,28 @@ void Interpreter::handleGui()
 							break;
 						}
 
-					
+						//get the baud rates
+						//MIN
+						_iTemp = checkBaudrate(_iBaudrate);
+						if (_iTemp != DEFAULT_VALUE || _iTemp != ERROR_BAUDRATE)
+							testManager.testStruct.iBaud = _iBaudrate;
+						else
+						{
+							bErr = true;
+							break;
+						}
+						//MAX
+						_iTemp = checkBaudrate(_iBaudrateMax);
+						if (_iTemp != DEFAULT_VALUE || _iTemp != ERROR_BAUDRATE)
+							testManager.testStruct.iBaudrateMax = _iBaudrateMax;
+						else
+						{
+							bErr = true;
+							break;
+						}
+
+						testManager.testStruct.svBaudrates = this->comEnumerator.vBaud;
+						
 						break;
 					//----------------------------------------------------------
 
@@ -346,28 +377,16 @@ void Interpreter::handleGui()
 								bErr = true;
 								break;
 							}
-				
+							
 							//check baudrate
-							if (_iBaudrate == DEFAULT_VALUE)
-							{
-								MessageBoxW(NULL,L"Please select a baud rate",
-									L"Error", MB_OK);
-								setDefaultValues();
-								bErr = true;
-								break;
-							}
-							else if(_iBaudrate == ERROR_BAUDRATE)
-							{
-								MessageBoxW(NULL,L"Baud rate is not suported by"
-									L" this port (WinBase define error)\n"
-									L"Please choose another baud rate",
-									L"Error", MB_OK);
-								setDefaultValues();
-								bErr = true;
-								break;
-							}
-							else
+							_iTemp = checkBaudrate(_iBaudrate);
+							if (_iTemp != DEFAULT_VALUE || _iTemp != ERROR_BAUDRATE)
 								testManager.testStruct.iBaud = _iBaudrate;
+							else
+							{
+								bErr = true;
+								break;
+							}
 						}
 						else
 						{
@@ -393,25 +412,21 @@ void Interpreter::handleGui()
 
 				}//switch
 
-				//save the logger state, file path, textToSend and transtextmode
-				testManager.testStruct.bLoggerState = _bLoggerState;
-				testManager.testStruct.sFilePath = _sFilePath;
-				testManager.testStruct.sTextToTransfer = _sTextToSend;
-				testManager.testStruct.iTransTextMode = _iTransTextMode;
-
-
-
-
-
-
 				//--------------------------------------------------------------
 				//--------------------------------------------------------------
 				//start the manager to start testing
 				//check structure to avoid asking for bErr
 				if(bErr == false)
 				{
-					dwError = testManager.startManager();
-					if(dwError == ERROR_SUCCESS)
+					//save the logger state, file path, textToSend and transtextmode
+					testManager.testStruct.bLoggerState = _bLoggerState;
+					testManager.testStruct.sFilePath = _sFilePath;
+					testManager.testStruct.sTextToTransfer = _sTextToSend;
+					testManager.testStruct.iTransTextMode = _iTransTextMode;
+
+
+					iError = testManager.startManager();
+					if(iError == ERROR_SUCCESS)
 					{
 						MessageBoxA(NULL, "Send and Recieve OK", "SUCCESS!!",
 									MB_OK);
@@ -443,7 +458,7 @@ void Interpreter::handleGui()
 //	Checks the parity, protocol and stopbits in the GUI to save them in the
 //	test manager
 //------------------------------------------------------------------------------
-long Interpreter::checkInputConfigData()
+int Interpreter::checkInputConfigData()
 {
 	if(_iParity == DEFAULT_VALUE)
 	{
@@ -474,4 +489,29 @@ long Interpreter::checkInputConfigData()
 		testManager.testStruct.iStopbits = _iStopBits;
 
 	return ERROR_SUCCESS;
+}
+
+
+int Interpreter::checkBaudrate(int iBaudrate)
+{
+	if (iBaudrate == DEFAULT_VALUE)
+	{
+		MessageBoxW(NULL,L"Please select a baud rate",
+			L"Error", MB_OK);
+		setDefaultValues();
+		return DEFAULT_VALUE;
+
+	}
+	else if(iBaudrate == ERROR_BAUDRATE)
+	{
+		MessageBoxW(NULL,L"Baud rate is not suported by"
+			L" this port (WinBase define error)\n"
+			L"Please choose another baud rate",
+			L"Error", MB_OK);
+		setDefaultValues();
+		return ERROR_BAUDRATE;
+
+	}
+	else
+		return iBaudrate;
 }

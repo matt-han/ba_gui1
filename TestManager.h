@@ -1,8 +1,11 @@
 #ifndef _TESTMANAGER_H
 #define _TESTMANAGER_H
 
-#include "Com.h"
+
 #include "FixedTest.h"
+#include "WobbleTest.h"
+#include "AutomaticTest.h"
+#include "Tools.h"
 #include "Constants.h"
 
 
@@ -17,23 +20,29 @@ public:
 
 //------------------------------------------------------------------------------
 //Variables
-	//FixedTest fixedTest;
+	
 	TestStruct testStruct;
-	DWORD dwError;
+
+
 //------------------------------------------------------------------------------
 //Methods
-void evaluateInput();
+	void evaluateInput();
 
-	long startManager();
-	long startAutomaticTest();
-	long startWobbleTest();
-	long startFixedTest();
+	int startManager();
+	int startAutomaticTest();
+	int startWobbleTest(int iBaudrate);
+	int startFixedTest();
 
 	//get the text to be transmitted... either from a file, input string or default
-	long getTextToTransmit();
+	int getTextToTransmit();
 
 
-
+private:
+//------------------------------------------------------------------------------
+//Variables
+	Tools _tools;
+	int _iError;
+	bool _bError;
 };
 
 #endif

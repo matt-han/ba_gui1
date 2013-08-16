@@ -14,7 +14,8 @@
 
 #include <Windows.h>
 #include <string>
-#include <array>
+//#include <array>
+#include <vector>
 
 
 using namespace std;
@@ -31,7 +32,6 @@ public:
 	Com comEnumerator;
 	Tools tools;
 
-	DWORD dwError;
 //------------------------------------------------------------------------------
 //Methods	
 	void setTestMode(int);
@@ -42,6 +42,7 @@ public:
 	void setSelectedMasterPort(string);
 	void setSelectedSlavePort(string);
 	void setPortBaudRate(int);
+	void setPortBaudRateMax(int);
 	void setLoggerState(bool);
 	void setTransferFile(string);
 	void setTextToSend(string);
@@ -49,8 +50,9 @@ public:
 	void setDefaultValues();
 	void handleGui();
 	void setBaudrateList();
-
-	long checkInputConfigData();
+	
+	int checkInputConfigData();
+	int checkBaudrate(int);
 
 private:
 //------------------------------------------------------------------------------
@@ -65,6 +67,7 @@ private:
 	int _iProtocol;
 	int _iInfoToTransfer;
 	int _iBaudrate;
+	int _iBaudrateMax;
 	int _iTransTextMode;
 	string _sMasPort;
 	string _sSlaPort;
@@ -72,6 +75,10 @@ private:
 	string _sTextToSend;
 	bool _bLoggerState;
 
+	vector<string> _svBaudrates;
+
+	int _iTemp;
+	int iError;
 
 };
 

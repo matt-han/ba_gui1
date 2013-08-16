@@ -20,7 +20,7 @@ FixedTest::FixedTest(TestStruct *testStruct)
 	masterCom.sPort = this->testStruct->sMasterPort;
 	slaveCom.sPort = this->testStruct->sSlavePort;
 
-	dwExitCode = ERROR_SUCCESS;
+	_iExitCode = ERROR_SUCCESS;
 
 	bTransmitionError = false;
 
@@ -64,11 +64,11 @@ void FixedTest::setTextVector(int iTextMode)
 			break;
 
 		case 1:
-			_dwError = transFile.openFile(this->testStruct->sFilePath);
-			if(_dwError == ERROR_SUCCESS)
+			_iError = transFile.openFile(this->testStruct->sFilePath);
+			if(_iError == ERROR_SUCCESS)
 			{
-				_dwError = transFile.readTransferFile();
-				if(_dwError == ERROR_SUCCESS)
+				_iError = transFile.readTransferFile();
+				if(_iError == ERROR_SUCCESS)
 				{
 					vTextToSend = transFile.vTranferFileLines;
 				}
@@ -85,15 +85,15 @@ void FixedTest::setTextVector(int iTextMode)
 }
 
 
-long FixedTest::startSingleTest()
+int FixedTest::startSingleTest()
 {
 	masterHCom = masterCom.openPort(masterCom.sPort);
 	if (INVALID_HANDLE_VALUE == masterHCom)
 	{
-		_dwError = GetLastError();
+		_iError = GetLastError();
 		clog << "Error opening Port " << masterCom.sPort
 			 << ". Invalid Handle was returned. System Error : "
-			 << _dwError << endl;
+			 << _iError << endl;
 
 		return ERROR_PORT_OPEN;
 	}
@@ -101,11 +101,11 @@ long FixedTest::startSingleTest()
 	{
 		masterPortComm.setComHandle(masterHCom);
 
-		_dwError = masterCom.getDCB();
-		if (_dwError == ERROR_SUCCESS)
+		_iError = masterCom.getDCB();
+		if (_iError == ERROR_SUCCESS)
 		{
-			_dwError = masterCom.setTimeOuts();
-			if(_dwError == ERROR_SUCCESS)
+			_iError = masterCom.setTimeOuts();
+			if(_iError == ERROR_SUCCESS)
 			{
 				//change dcb to user input
 				masterCom.dcb.BaudRate = testStruct->iBaud; 
@@ -117,17 +117,17 @@ long FixedTest::startSingleTest()
 				printTestSettings();
 
 				//set the port dcb with the new settings
-				_dwError = masterCom.setDCB();
-				if(_dwError == ERROR_SUCCESS)
+				_iError = masterCom.setDCB();
+				if(_iError == ERROR_SUCCESS)
 				{
 					//Communication Loop
 					//send and recieve data
 					for (unsigned int index = 0; index < vTextToSend.size();
 						 index++)
 					{
-						_dwError = communicate(vTextToSend.at(index),
+						_iError = communicate(vTextToSend.at(index),
 												true);
-						if(_dwError != ERROR_SUCCESS)
+						if(_iError != ERROR_SUCCESS)
 						{
 							clog << "Error communicating!!!!!!"<<endl;
 						}
@@ -151,7 +151,7 @@ long FixedTest::startSingleTest()
 				{
 					clog << "Error setting the master port DCB" << endl;
 					masterCom.closePort();
-					return _dwError;
+					return _iError;
 				}//setDCB
 
 			}	 //setTimeouts
@@ -159,7 +159,7 @@ long FixedTest::startSingleTest()
 			{
 				clog << "Error setting the master port timeouts" << endl;
 				masterCom.closePort();
-				return _dwError;
+				return _iError;
 			}//setTimeouts
 
 		}	 //getDCB
@@ -167,16 +167,16 @@ long FixedTest::startSingleTest()
 		{
 			clog << "Error getting the master port DCB" << endl;
 			masterCom.closePort();
-			return _dwError;
+			return _iError;
 		}//getDCB
 
-		_dwError = masterCom.closePort();
-		if(_dwError != ERROR_SUCCESS)
+		_iError = masterCom.closePort();
+		if(_iError != ERROR_SUCCESS)
 		{
 			clog << "Error closing " << masterCom.sPort << endl;
 			if (bTransmitionError == true)
 				clog << "Error in tranismition" << endl;	
-			return _dwError;
+			return _iError;
 		}
 
 		if (bTransmitionError == true)
@@ -187,16 +187,16 @@ long FixedTest::startSingleTest()
 }
 
 
-long FixedTest::startDoubleTest()
+int FixedTest::startDoubleTest()
 {
 	//Prepare the master for communications
 	masterHCom = masterCom.openPort(masterCom.sPort);
 	if (INVALID_HANDLE_VALUE == masterHCom)
 	{
-		_dwError = GetLastError();
+		_iError = GetLastError();
 		clog << "Error opening Port " << masterCom.sPort
 			 << ". Invalid Handle was returned. System Error : "
-			 << _dwError << endl;
+			 << _iError << endl;
 
 		return ERROR_PORT_OPEN;
 	}
@@ -204,22 +204,22 @@ long FixedTest::startDoubleTest()
 	{
 		masterPortComm.setComHandle(masterHCom);
 
-		_dwError = masterCom.getDCB();
-		if (_dwError == ERROR_SUCCESS)
+		_iError = masterCom.getDCB();
+		if (_iError == ERROR_SUCCESS)
 		{
-			_dwError = masterCom.setTimeOuts();
-			if(_dwError != ERROR_SUCCESS)
+			_iError = masterCom.setTimeOuts();
+			if(_iError != ERROR_SUCCESS)
 			{
 				clog << "Error setting the master port timeouts" << endl;
 				masterCom.closePort();
-				return _dwError;
+				return _iError;
 			}
 		}
 		else
 		{
 			clog << "Error getting the master port DCB" << endl;
 			masterCom.closePort();
-			return _dwError;
+			return _iError;
 		}
 	}
 
@@ -227,10 +227,10 @@ long FixedTest::startDoubleTest()
 	slaveHCom = slaveCom.openPort(slaveCom.sPort);
 	if (INVALID_HANDLE_VALUE == slaveHCom)
 	{
-		_dwError = GetLastError();
+		_iError = GetLastError();
 		clog << "Error opening Port " << slaveCom.sPort
 			 << ". Invalid Handle was returned. System Error : "
-			 << _dwError << endl;
+			 << _iError << endl;
 
 		return ERROR_PORT_OPEN;
 	}
@@ -238,16 +238,16 @@ long FixedTest::startDoubleTest()
 	{
 		slavePortComm.setComHandle(slaveHCom);
 
-		_dwError = slaveCom.getDCB();
-		if (_dwError == ERROR_SUCCESS)
+		_iError = slaveCom.getDCB();
+		if (_iError == ERROR_SUCCESS)
 		{
-			_dwError = slaveCom.setTimeOuts();
-			if(_dwError != ERROR_SUCCESS)
+			_iError = slaveCom.setTimeOuts();
+			if(_iError != ERROR_SUCCESS)
 			{
 				clog << "Error setting the slave port timeouts" << endl;
 				masterCom.closePort();
 				slaveCom.closePort();
-				return _dwError;
+				return _iError;
 			}
 		}
 		else
@@ -255,7 +255,7 @@ long FixedTest::startDoubleTest()
 			clog << "Error getting the slave port DCB" << endl;
 			masterCom.closePort();
 			slaveCom.closePort();
-			return _dwError;
+			return _iError;
 		}
 	}
 
@@ -276,16 +276,16 @@ long FixedTest::startDoubleTest()
 	printTestSettings();
 
 	//set the master & slave port dcb with the new settings
-	_dwError = masterCom.setDCB();
-	if(_dwError == ERROR_SUCCESS)
+	_iError = masterCom.setDCB();
+	if(_iError == ERROR_SUCCESS)
 	{
-		_dwError = slaveCom.setDCB();
-		if(_dwError != ERROR_SUCCESS)
+		_iError = slaveCom.setDCB();
+		if(_iError != ERROR_SUCCESS)
 		{
 			clog << "Error setting the slave port DCB" << endl;
 			masterCom.closePort();
 			slaveCom.closePort();
-			return _dwError;
+			return _iError;
 		}
 	}
 	else
@@ -293,7 +293,7 @@ long FixedTest::startDoubleTest()
 		clog << "Error setting the master port DCB" << endl;
 		masterCom.closePort();
 		slaveCom.closePort();
-		return _dwError;
+		return _iError;
 	}
 	
 
@@ -304,8 +304,8 @@ long FixedTest::startDoubleTest()
 	for (unsigned int index = 0; index < vTextToSend.size(); index++)
 	{
 		//	Double mode => true, true
-		_dwError = communicate(vTextToSend.at(index), false);
-		if(_dwError != ERROR_SUCCESS)
+		_iError = communicate(vTextToSend.at(index), false);
+		if(_iError != ERROR_SUCCESS)
 		{
 			clog << "Error communicating!!!!!!"<<endl;
 		}
@@ -332,15 +332,15 @@ long FixedTest::startDoubleTest()
 }
 
 
-long FixedTest::startMasterSlaveTest(bool bMaster)
+int FixedTest::startMasterSlaveTest(bool bMaster)
 {
 	masterHCom = masterCom.openPort(masterCom.sPort);
 	if (INVALID_HANDLE_VALUE == masterHCom)
 	{
-		_dwError = GetLastError();
+		_iError = GetLastError();
 		clog << "Error opening Port " << masterCom.sPort
 			 << ". Invalid Handle was returned. System Error : "
-			 << _dwError << endl;
+			 << _iError << endl;
 
 		return ERROR_PORT_OPEN;
 	}
@@ -348,11 +348,11 @@ long FixedTest::startMasterSlaveTest(bool bMaster)
 	{
 		masterPortComm.setComHandle(masterHCom);
 
-		_dwError = masterCom.getDCB();
-		if (_dwError == ERROR_SUCCESS)
+		_iError = masterCom.getDCB();
+		if (_iError == ERROR_SUCCESS)
 		{
-			_dwError = masterCom.setTimeOuts();
-			if(_dwError == ERROR_SUCCESS)
+			_iError = masterCom.setTimeOuts();
+			if(_iError == ERROR_SUCCESS)
 			{
 				//change dcb to user input
 				masterCom.dcb.BaudRate = testStruct->iBaud; 
@@ -364,8 +364,8 @@ long FixedTest::startMasterSlaveTest(bool bMaster)
 				printTestSettings();
 
 				//set the port dcb with the new settings
-				_dwError = masterCom.setDCB();
-				if(_dwError == ERROR_SUCCESS)
+				_iError = masterCom.setDCB();
+				if(_iError == ERROR_SUCCESS)
 				{
 					
 					//Communication Loop
@@ -378,11 +378,11 @@ long FixedTest::startMasterSlaveTest(bool bMaster)
 						 index++)
 					{
 						if(bMaster)
-							_dwError = communicateMaster(vTextToSend.at(index));
+							_iError = communicateMaster(vTextToSend.at(index));
 						else
-							_dwError = communicateSlave(vTextToSend.at(index));
+							_iError = communicateSlave(vTextToSend.at(index));
 
-						if(_dwError != ERROR_SUCCESS)
+						if(_iError != ERROR_SUCCESS)
 						{
 							clog << "Error communicating!!!!!!"<<endl;
 						}
@@ -406,7 +406,7 @@ long FixedTest::startMasterSlaveTest(bool bMaster)
 				{
 					clog << "Error setting the master port DCB" << endl;
 					masterCom.closePort();
-					return _dwError;
+					return _iError;
 				}//setDCB
 
 			}	 //setTimeouts
@@ -414,7 +414,7 @@ long FixedTest::startMasterSlaveTest(bool bMaster)
 			{
 				clog << "Error setting the master port timeouts" << endl;
 				masterCom.closePort();
-				return _dwError;
+				return _iError;
 			}//setTimeouts
 
 		}	 //getDCB
@@ -422,16 +422,16 @@ long FixedTest::startMasterSlaveTest(bool bMaster)
 		{
 			clog << "Error getting the master port DCB" << endl;
 			masterCom.closePort();
-			return _dwError;
+			return _iError;
 		}//getDCB
 
-		_dwError = masterCom.closePort();
-		if(_dwError != ERROR_SUCCESS)
+		_iError = masterCom.closePort();
+		if(_iError != ERROR_SUCCESS)
 		{
 			clog << "Error closing " << masterCom.sPort << endl;
 			if (bTransmitionError == true)
 				clog << "Error in tranismition" << endl;	
-			return _dwError;
+			return _iError;
 		}
 
 		if (bTransmitionError == true)
@@ -442,15 +442,15 @@ long FixedTest::startMasterSlaveTest(bool bMaster)
 }
 
 //
-//long FixedTest::startSlaveTest()
+//int FixedTest::startSlaveTest()
 //{
 //	masterHCom = masterCom.openPort(masterCom.sPort);
 //	if (INVALID_HANDLE_VALUE == masterHCom)
 //	{
-//		_dwError = GetLastError();
+//		_iError = GetLastError();
 //		clog << "Error opening Port " << masterCom.sPort
 //			 << ". Invalid Handle was returned. System Error : "
-//			 << _dwError << endl;
+//			 << _iError << endl;
 //
 //		return ERROR_PORT_OPEN;
 //	}
@@ -458,11 +458,11 @@ long FixedTest::startMasterSlaveTest(bool bMaster)
 //	{
 //		masterPortComm.setComHandle(masterHCom);
 //
-//		_dwError = masterCom.getDCB();
-//		if (_dwError == ERROR_SUCCESS)
+//		_iError = masterCom.getDCB();
+//		if (_iError == ERROR_SUCCESS)
 //		{
-//			_dwError = masterCom.setTimeOuts();
-//			if(_dwError == ERROR_SUCCESS)
+//			_iError = masterCom.setTimeOuts();
+//			if(_iError == ERROR_SUCCESS)
 //			{
 //				//change dcb to user input
 //				masterCom.dcb.BaudRate = testStruct->iBaud; 
@@ -474,8 +474,8 @@ long FixedTest::startMasterSlaveTest(bool bMaster)
 //				printTestSettings();
 //
 //				//set the port dcb with the new settings
-//				_dwError = masterCom.setDCB();
-//				if(_dwError == ERROR_SUCCESS)
+//				_iError = masterCom.setDCB();
+//				if(_iError == ERROR_SUCCESS)
 //				{
 //					
 //					//Communication Loop
@@ -487,8 +487,8 @@ long FixedTest::startMasterSlaveTest(bool bMaster)
 //					for (unsigned int index = 0; index < vTextToSend.size();
 //						 index++)
 //					{
-//						_dwError = communicateSlave(vTextToSend.at(index));
-//						if(_dwError != ERROR_SUCCESS)
+//						_iError = communicateSlave(vTextToSend.at(index));
+//						if(_iError != ERROR_SUCCESS)
 //						{
 //							clog << "Error communicating!!!!!!"<<endl;
 //						}
@@ -512,7 +512,7 @@ long FixedTest::startMasterSlaveTest(bool bMaster)
 //				{
 //					clog << "Error setting the master port DCB" << endl;
 //					masterCom.closePort();
-//					return _dwError;
+//					return _iError;
 //				}//setDCB
 //
 //			}	 //setTimeouts
@@ -520,7 +520,7 @@ long FixedTest::startMasterSlaveTest(bool bMaster)
 //			{
 //				clog << "Error setting the master port timeouts" << endl;
 //				masterCom.closePort();
-//				return _dwError;
+//				return _iError;
 //			}//setTimeouts
 //
 //		}	 //getDCB
@@ -528,16 +528,16 @@ long FixedTest::startMasterSlaveTest(bool bMaster)
 //		{
 //			clog << "Error getting the master port DCB" << endl;
 //			masterCom.closePort();
-//			return _dwError;
+//			return _iError;
 //		}//getDCB
 //
-//		_dwError = masterCom.closePort();
-//		if(_dwError != ERROR_SUCCESS)
+//		_iError = masterCom.closePort();
+//		if(_iError != ERROR_SUCCESS)
 //		{
 //			clog << "Error closing " << masterCom.sPort << endl;
 //			if (bTransmitionError == true)
 //				clog << "Error in tranismition" << endl;	
-//			return _dwError;
+//			return _iError;
 //		}
 //
 //		if (bTransmitionError == true)
@@ -548,7 +548,7 @@ long FixedTest::startMasterSlaveTest(bool bMaster)
 //}
 
 
-long FixedTest::communicate(string sSendData, bool bMaster)
+int FixedTest::communicate(string sSendData, bool bMaster)
 {
 	bool bRead;
 
@@ -607,11 +607,11 @@ long FixedTest::communicate(string sSendData, bool bMaster)
 }
 
 
-long FixedTest::communicateMaster(string sSendData)
+int FixedTest::communicateMaster(string sSendData)
 {
 	string sTemp;
 	int iWait = 0;
-	_dwExitCode = ERROR_SUCCESS;
+	_iExitCode = ERROR_SUCCESS;
 
 	//start sending something
 	if (true == sendData(true, sSendData))
@@ -630,7 +630,7 @@ long FixedTest::communicateMaster(string sSendData)
 				if(iWait == 5)
 				{
 					clog << "Error waiting on slave's response" << endl;
-					_dwExitCode = ERROR_WAIT_SLAVE;
+					_iExitCode = ERROR_WAIT_SLAVE;
 					break;
 				}
 			}
@@ -641,7 +641,7 @@ long FixedTest::communicateMaster(string sSendData)
 		while(true);
 		
 
-		if (sTemp != ERROR_TRANSMITION && _dwExitCode != ERROR_WAIT_SLAVE)
+		if (sTemp != ERROR_TRANSMITION && _iExitCode != ERROR_WAIT_SLAVE)
 		{
 			if(0 == strcmp(sTemp.c_str(), sSendData.c_str()) )
 			{
@@ -679,11 +679,11 @@ long FixedTest::communicateMaster(string sSendData)
 }
 
 
-long FixedTest::communicateSlave(string sSendData)
+int FixedTest::communicateSlave(string sSendData)
 {
 	string sTemp;
 	int iWait = 0;
-	_dwExitCode = ERROR_SUCCESS;
+	_iExitCode = ERROR_SUCCESS;
 
 	//start reading something
 	do
@@ -697,7 +697,7 @@ long FixedTest::communicateSlave(string sSendData)
 			if(iWait == 5)
 			{
 				clog << "Error waiting on master to send information" << endl;
-				_dwExitCode = ERROR_WAIT_MASTER;
+				_iExitCode = ERROR_WAIT_MASTER;
 				break;
 			}
 		}
@@ -708,7 +708,7 @@ long FixedTest::communicateSlave(string sSendData)
 	while(true);
 
 	
-	if(sTemp != ERROR_TRANSMITION && _dwExitCode != ERROR_WAIT_MASTER)
+	if(sTemp != ERROR_TRANSMITION && _iExitCode != ERROR_WAIT_MASTER)
 	{
 		if (true == sendData(true, sSendData))
 		{

@@ -9,7 +9,7 @@
 Com::Com(string sPort)
 {
 	
-	_dwError = 0;
+	_iError = 0;
 	iExitCode = 0;
 
 	clog << "Opening port " << sPort <<endl;
@@ -26,10 +26,10 @@ Com::Com(string sPort)
 
 	if (INVALID_HANDLE_VALUE == hCom)
 	{
-		_dwError = GetLastError();
+		_iError = GetLastError();
 		clog << "Error opening Port " << sPort
 			 << ". Invalid Handle was returned. System Error : "
-			 << _dwError << endl;
+			 << _iError << endl;
 
 		iExitCode = ERROR_PORT_OPEN;
 	}
@@ -108,6 +108,7 @@ Com::Com(void)
 //------------------------------------------------------------------------------
 Com::~Com(void)
 {
+	MessageBoxA(NULL, "Deleting Com Object", "!!!!!!!", MB_OK);
 }
 
 
@@ -139,13 +140,13 @@ HANDLE Com::openPort(string portNumber)
 //	Close the opened com port
 //	Return: indicating if close was successful
 //------------------------------------------------------------------------------
-long Com::closePort()
+int Com::closePort()
 {
 	unsigned int close = CloseHandle(this->hCom);
 	if(close == 0)
 	{
-		DWORD _dwError = GetLastError();
-		clog << "Error closing COM port. Error : " << _dwError << endl;
+		DWORD _iError = GetLastError();
+		clog << "Error closing COM port. Error : " << _iError << endl;
 		return ERROR_CLOSE_PORT;
 	}
 	else
@@ -199,7 +200,7 @@ void Com::enumeratePorts()
 //								listed
 //	Return: error code signaling if operation succeded or error
 //------------------------------------------------------------------------------
-long Com::getBaudrates(string sChosenPort)
+int Com::getBaudrates(string sChosenPort)
 {
 	if (INVALID_HANDLE_VALUE != openPort(sChosenPort) )
 	{
@@ -207,8 +208,8 @@ long Com::getBaudrates(string sChosenPort)
 		{
 			clog << "Get baud rate for port " << sChosenPort << endl;
 
-			_dwError = decodeBaudrates(commProp.dwSettableBaud);
-			if (ERROR_SUCCESS == _dwError)
+			_iError = decodeBaudrates(commProp.dwSettableBaud);
+			if (ERROR_SUCCESS == _iError)
 			{
 				return closePort();
 			}
@@ -259,7 +260,7 @@ long Com::getBaudrates(string sChosenPort)
 //		- DWORD dwBitMask -> bit mask containing the available baud rates
 //	Return: error code signaling 
 //------------------------------------------------------------------------------
-long Com::decodeBaudrates(DWORD dwBitMask)
+int Com::decodeBaudrates(DWORD dwBitMask)
 {
 	//bitmask with the possible baud rates
 	bitset<32> bitMask ((int)dwBitMask);
@@ -364,7 +365,7 @@ int Com::translateBaudrate(string sBaud)
 }
 
 
-long Com::setTimeOuts()
+int Com::setTimeOuts()
 {
 	//// Specify time-out between charactor for receiving.
 		//timeouts.ReadIntervalTimeout = 20;
@@ -408,7 +409,7 @@ long Com::setTimeOuts()
 }
 
 
-long Com::getDCB()
+int Com::getDCB()
 {
 	//get original dcb
 		if (GetCommState(hCom, &dcb) == 0)
@@ -416,9 +417,9 @@ long Com::getDCB()
 			MessageBoxW(NULL, L"Error getting Port default settings",
 							  L"ERROR", MB_OK);
 
-			_dwError = GetLastError();
+			_iError = GetLastError();
 			clog << "Error getting Port default settings´. Error : "
-				 << _dwError << endl;
+				 << _iError << endl;
 
 			return ERROR_GET_DCB;
 		}
@@ -427,18 +428,18 @@ long Com::getDCB()
 }
 
 
-long Com::setDCB()
+int Com::setDCB()
 {
 	//get original dcb
 		if (SetCommState(hCom, &dcb) == 0)
 		{
-			_dwError = GetLastError();
+			_iError = GetLastError();
 			
 			MessageBoxW(NULL, L"Error setting Port dcb. For more details check "
 							  L"the log file", L"ERROR", MB_OK);
 
 			clog << "Error setting " << sPort << " dcb. System Error : "
-				 << _dwError << endl;
+				 << _iError << endl;
 
 			return ERROR_SET_DCB;
 		}

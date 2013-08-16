@@ -231,15 +231,29 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
                   POS_X, POS_Y, 90, 15, m_hwnd, NULL, NULL, NULL);
 //------------------------------------------------------------------------------
 //Baudrate
-			CreateWindowA("static", "Baudrate:", 
+			CreateWindowA("static", "Baud rate:", 
                   WS_CHILD | WS_VISIBLE,
-                  POS_X, POS_Y + 50, 90, 15, m_hwnd, NULL, NULL, NULL);
+                  POS_X, POS_Y + 50, 90, 15, m_hwnd, (HMENU)ID_LB_BAUD, NULL, NULL);
+
+//------------------------------------------------------------------------------		
+//Min Baud
+			CreateWindowA("static", "MIN baud rate:", 
+                  WS_CHILD,
+                  POS_X, POS_Y + 50, 120, 30, m_hwnd, (HMENU)ID_LB_MIN, NULL, NULL);
 
 //------------------------------------------------------------------------------		
 //Slave Port
 			CreateWindowA("static", "Slave Port\nfor Double Test:", 
                   WS_CHILD,
                   POS_X, POS_Y + 100, 120, 30, m_hwnd, (HMENU)ID_LB_SLV, NULL, NULL);
+
+
+//------------------------------------------------------------------------------		
+//Max Baud
+			CreateWindowA("static", "MAX baud rate:", 
+                  WS_CHILD,
+                  POS_X, POS_Y + 140, 120, 30, m_hwnd, (HMENU)ID_LB_MAX, NULL, NULL);
+
 
 //------------------------------------------------------------------------------
 //Load file
@@ -249,12 +263,12 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 					POS_X, POS_Y2 + 120, 190, 15, m_hwnd, NULL, NULL, NULL);
 
 //load edit for file transfer path
-			hwnd_lbLoad = CreateWindowA("static", NULL,
+			_hwnd_lbLoad = CreateWindowA("static", NULL,
 				WS_CHILD | WS_VISIBLE | WS_BORDER,
 				POS_X, POS_Y2 + 140, 240, 20, m_hwnd, (HMENU)ID_LB_LOAD,
 				NULL, NULL);
-			//SendMessage(hwnd_lbLoad, EM_SETLIMITTEXT, 256, 0);
-			//SetWindowText(hwnd_lbLoad, "Please type complete file path...");
+			//SendMessage(_hwnd_lbLoad, EM_SETLIMITTEXT, 256, 0);
+			//SetWindowText(_hwnd_lbLoad, "Please type complete file path...");
 
 //------------------------------------------------------------------------------			
 //Send text
@@ -263,42 +277,41 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
                   POS_X, POS_Y2 + 195, 190, 15, m_hwnd, NULL, NULL, NULL);
 
 //load edit for file transfer path
-			hwnd_lbText = CreateWindowA("Edit", NULL,
+			_hwnd_lbText = CreateWindowA("Edit", NULL,
 				WS_CHILD | WS_VISIBLE | WS_BORDER,
 				POS_X, POS_Y2 + 215, 240, 20, m_hwnd, (HMENU)ID_LB_TEXT,
 				NULL, NULL);
 
-			SetWindowTextA(hwnd_lbText, "...abc...");
-//------------------------------------------------------------------------------
-			
-			//debug
-			hDebug = CreateWindowA("static", "",
-				WS_CHILD | WS_VISIBLE,
-                500, 400, 90, 25, m_hwnd, NULL,
-				NULL, NULL);
+			SetWindowTextA(_hwnd_lbText, "...abc...");
 
 //==============================================================================
 //Combo boxes
 
 			//Master port
-			hwndCB_MasPorts = CreateWindowA("combobox", NULL,
+			_hwndCB_MasPorts = CreateWindowA("combobox", NULL,
 				WS_CHILD | WS_VISIBLE | CBS_DROPDOWN | WS_VSCROLL,
                 POS_X, POS_Y + 20, 90, 120, m_hwnd, (HMENU)ID_CB_COM_PORT,
 				NULL, NULL);
 
 
 			//BAUDRATE
-			hwndCB_Baud = CreateWindowA("combobox", NULL, 
+			_hwndCB_Baud = CreateWindowA("combobox", NULL, 
                 WS_CHILD | WS_VISIBLE | CBS_DROPDOWN | WS_VSCROLL,
                 POS_X, POS_Y + 70, 90, 120, m_hwnd, (HMENU)ID_CB_COM_BAUD,
 				NULL, NULL);
 
 			//Slave port
-			hwndCB_SlvPorts = CreateWindowA("combobox", NULL, 
+			_hwndCB_SlvPorts = CreateWindowA("combobox", NULL, 
                 WS_CHILD | CBS_DROPDOWN | WS_VSCROLL,
                 POS_X + 120, POS_Y + 110, 90, 120, m_hwnd, (HMENU)ID_CB_SLV_PORT,
 				NULL, NULL);
 			
+			//BAUDRATE
+			_hwndCB_Baud_MAX = CreateWindowA("combobox", NULL, 
+                WS_CHILD | CBS_DROPDOWN | WS_VSCROLL,
+                POS_X + 120, POS_Y + 140, 90, 120, m_hwnd, (HMENU)ID_CB_BAUD_MAX,
+				NULL, NULL);
+
 
 			//Fill master and slave port combo boxes
 			//baudrate stays empty until user selects a port
@@ -309,29 +322,29 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 				 it != interpreter.comEnumerator.vPortList.end(); ++it)
 			{
 				string s = *it;
-				SendMessageA(hwndCB_MasPorts, CB_ADDSTRING, 0, (LPARAM) s.c_str());
-				SendMessageA(hwndCB_SlvPorts, CB_ADDSTRING, 0, (LPARAM) s.c_str());
+				SendMessageA(_hwndCB_MasPorts, CB_ADDSTRING, 0, (LPARAM) s.c_str());
+				SendMessageA(_hwndCB_SlvPorts, CB_ADDSTRING, 0, (LPARAM) s.c_str());
 			}
 
 
 //==============================================================================
 //Buttons
-			hwnd_btnLoad = CreateWindowA("button", "Clic to load and start",
+			_hwnd_btnLoad = CreateWindowA("button", "Clic to load and start",
 				WS_CHILD | WS_VISIBLE,
 				POS_X, POS_Y2 + 165, 150, 20, m_hwnd, (HMENU)ID_BT_LOAD,
 				NULL, NULL);
 
-			hwnd_btnText = CreateWindowA("button", "Load text and start",
+			_hwnd_btnText = CreateWindowA("button", "Load text and start",
 				WS_CHILD | WS_VISIBLE,
 				POS_X, POS_Y2 + 240, 150, 20, m_hwnd, (HMENU)ID_BT_TEXT,
 				NULL, NULL);
 
-			hwnd_Start = CreateWindowA("button", "Start",
+			_hwnd_Start = CreateWindowA("button", "Start",
 				WS_CHILD | WS_VISIBLE,
 				POS_X+20, POS_Y2 + 290, 70, 30, m_hwnd, (HMENU)ID_BT_START,
 				NULL, NULL);
 
-			hwnd_Close = CreateWindowA("button", "Close",
+			_hwnd_Close = CreateWindowA("button", "Close",
 				WS_CHILD | WS_VISIBLE,
 				POS_X + 140, POS_Y2 + 290, 70, 30, m_hwnd, (HMENU)ID_BT_CLOSE,
 				NULL, NULL);
@@ -360,14 +373,13 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 //------------------------------------------------------------------------------
 //Master port
 					case ID_CB_COM_PORT:
-						portIndex = SendMessage(hwndCB_MasPorts,
+						portIndex = SendMessage(_hwndCB_MasPorts,
 												CB_GETCURSEL, 0, 0);
 						_sMasPort = interpreter.comEnumerator.vPortList.at(portIndex);
-						SetWindowTextA(hDebug, _sMasPort.c_str() );
 						
 						//Get baud rate for chosen COM port
-						error = interpreter.comEnumerator.getBaudrates(_sMasPort);
-						if (ERROR_SUCCESS == error)
+						_iError = interpreter.comEnumerator.getBaudrates(_sMasPort);
+						if (ERROR_SUCCESS == _iError)
 						{
 							string s;
 
@@ -377,33 +389,45 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 								++it)
 							{
 								s = *it;
-								error = SendMessageA(hwndCB_Baud, CB_ADDSTRING,
+
+								//update the baud rate combo boxes
+								_iError = SendMessageA(_hwndCB_Baud, CB_ADDSTRING,
 													0, (LPARAM)s.c_str() );
 
-								if (error == CB_ERR)
+								_iError2 = SendMessageA(_hwndCB_Baud_MAX, CB_ADDSTRING,
+													0, (LPARAM)s.c_str() );
+
+								if (_iError == CB_ERR)
 								{
-									clog << "error updating baud rates in"
-										 <<	"combobox. System error CB_ERR"
+									clog << "_iError updating baud rates in"
+										 <<	"combobox. System Error CB_ERR"
 										 << endl;
 								}
-								else if ( error == CB_ERRSPACE)
+								else if ( _iError == CB_ERRSPACE)
 								{
 									clog << "not enough space in combo box."
-										 <<	"System error CB_ERRSPACE"
+										 <<	"System Error CB_ERRSPACE"
 										 << endl;
 								}
 
 							}
 
-
-							error = SendMessageA(hwndCB_Baud,
+							//Check if baud rates were written in the combo boxes
+							_iError = SendMessageA(_hwndCB_Baud,
 												CB_GETCOUNT, 0, 0);
-							if (error == 0)
-								clog << "error updating the combo box" << endl;
+							if (_iError == 0)
+								clog << "Error updating the baud rate combo box" << endl;
+
+							_iError2 = SendMessageA(_hwndCB_Baud_MAX,
+												CB_GETCOUNT, 0, 0);
+							if (_iError2 == 0)
+							{
+								clog << "Error updating the max baud rate combo box" << endl;
+							}
 						}
 						else
 						{
-							return error;
+							return _iError;
 						}
 						break;
 
@@ -411,7 +435,7 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 //Baudrate
 					case ID_CB_COM_BAUD:
 						//get the index
-						portIndex = SendMessage(hwndCB_Baud,
+						portIndex = SendMessage(_hwndCB_Baud,
 												CB_GETCURSEL, 0, 0);
 						//get the baud rate string
 						_sTempBaud = interpreter.comEnumerator.vBaud.at
@@ -420,23 +444,33 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 						_iBaudrate = interpreter.comEnumerator.
 									  translateBaudrate(_sTempBaud);
 
-						SetWindowTextA(hDebug, _sTempBaud.c_str() );
 						break;
-
+//------------------------------------------------------------------------------
+//Max Baudrate
+					case ID_CB_BAUD_MAX:
+						//get the index
+						portIndex = SendMessage(_hwndCB_Baud_MAX,
+												CB_GETCURSEL, 0, 0);
+						//get the baud rate string
+						_sTempBaud = interpreter.comEnumerator.vBaud.at
+									 (portIndex);
+						//translate it to the system constant
+						_iBaudrateMax = interpreter.comEnumerator.
+									  translateBaudrate(_sTempBaud);
+						break;
 //------------------------------------------------------------------------------
 //Slave port
 					case ID_CB_SLV_PORT:
-						portIndex = SendMessage(hwndCB_SlvPorts,
+						portIndex = SendMessage(_hwndCB_SlvPorts,
 												CB_GETCURSEL, 0, 0);
 						_sSlaPort = interpreter.comEnumerator.vPortList.at
 									(portIndex);
-						SetWindowTextA(hDebug, _sSlaPort.c_str() );
 				}
 
            }
 
 //==============================================================================
-// buttons status		
+// buttons _status		
 
 			if (HIWORD(wParam) == BN_CLICKED)
 			{
@@ -446,18 +480,18 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 //------------------------------------------------------------------------------
 //Logger				
 					case ID_LOGGER:
-						status = IsDlgButtonChecked(m_hwnd, ID_LOGGER);
+						_status = IsDlgButtonChecked(m_hwnd, ID_LOGGER);
 
 						//if checked
-						if (BST_INDETERMINATE == status)
+						if (BST_INDETERMINATE == _status)
 							_bLoggerState = false;
-						else if (BST_CHECKED == status)
+						else if (BST_CHECKED == _status)
 						{
 							//then it was checked and set to false
 							CheckDlgButton(m_hwnd, ID_LOGGER, BST_UNCHECKED);
 							_bLoggerState = false;
 						}
-						else if (BST_UNCHECKED == status)
+						else if (BST_UNCHECKED == _status)
 						{
 							//it was unchecked, so check it and set to true
 							CheckDlgButton(m_hwnd, ID_LOGGER, BST_CHECKED);
@@ -469,14 +503,37 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 //------------------------------------------------------------------------------
 //Test Mode
 					case ID_TM_AUTO:
+
+						//Hide min max labels and combobox
+						ShowWindow(_hwndCB_Baud_MAX	, SW_HIDE);
+						ShowWindow(GetDlgItem(m_hwnd, ID_LB_MAX), SW_HIDE);
+						ShowWindow(GetDlgItem(m_hwnd, ID_LB_MIN), SW_HIDE);
+
+						//show baudrate label
+						ShowWindow(GetDlgItem(m_hwnd, ID_LB_BAUD), SW_SHOWNORMAL);
+
 						_iTestMode = 0;
 						break;
 				
 					case ID_TM_WOBB:
+						//show min max labels and combobox
+						ShowWindow(_hwndCB_Baud_MAX	, SW_SHOWNORMAL);
+						ShowWindow(GetDlgItem(m_hwnd, ID_LB_MAX	), SW_SHOWNORMAL);
+						ShowWindow(GetDlgItem(m_hwnd, ID_LB_MIN	), SW_SHOWNORMAL);
+
+						//hide baudrate label
+						ShowWindow(GetDlgItem(m_hwnd, ID_LB_BAUD), SW_HIDE);
 						_iTestMode = 1;
 						break;
 
 					case ID_TM_FIXED:
+						//Hide min max labels and combobox
+						ShowWindow(_hwndCB_Baud_MAX	, SW_HIDE);
+						ShowWindow(GetDlgItem(m_hwnd, ID_LB_MAX), SW_HIDE);
+						ShowWindow(GetDlgItem(m_hwnd, ID_LB_MIN), SW_HIDE);
+
+						//show baudrate label
+						ShowWindow(GetDlgItem(m_hwnd, ID_LB_BAUD), SW_SHOWNORMAL);
 						_iTestMode = 2;
 						break;
 
@@ -562,9 +619,9 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 						break;
 
 					case ID_BT_CLOSE:
-						ret = MessageBoxA(NULL, "Are you sure to quit?", 
+						_ret = MessageBoxA(NULL, "Are you sure to quit?", 
 									  "Message", MB_OKCANCEL);
-						if ( ret == IDOK) {
+						if ( _ret == IDOK) {
 							SendMessage(m_hwnd, WM_CLOSE, 0, 0);
 						}
 						break;
@@ -576,7 +633,7 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 						_sTemp = _sTransferFilePath.substr(_i,
 							_sTransferFilePath.npos - _i);
 
-						SetWindowTextA(hwnd_lbLoad, _sTemp.c_str());
+						SetWindowTextA(_hwnd_lbLoad, _sTemp.c_str());
 						sendTestSettings(1);
 						break;
 
@@ -609,7 +666,7 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 //------------------------------------------------------------------------------
 void Window::sethInstance(HINSTANCE hInst)
 {
-	this->hInst = hInst;
+	this->_hInst = hInst;
 }
 
 
@@ -680,6 +737,7 @@ void Window::sendSelectedSlavePort()
 void Window::sendPortBaudRate()
 {
 	interpreter.setPortBaudRate(_iBaudrate);
+	interpreter.setPortBaudRateMax(_iBaudrateMax);
 }
 
 
@@ -702,7 +760,7 @@ void Window::sendTransferFile()
 //------------------------------------------------------------------------------
 void Window::sendTextToSend()
 {
-	GetWindowTextA(hwnd_lbText, _szTextToSend, 30);
+	GetWindowTextA(_hwnd_lbText, _szTextToSend, 30);
 	clog << "\nText to send : " << _szTextToSend << endl;
 	interpreter.setTextToSend(_szTextToSend);
 }
@@ -774,22 +832,22 @@ void Window::sendTestSettings(int iTransTextMode)
 //------------------------------------------------------------------------------
 //string Window::getTransferFile()
 //{
-//	int iLen = GetWindowTextLengthW(hwnd_lbLoad);
+//	int iLen = GetWindowTextLengthW(_hwnd_lbLoad);
 //	char* pstrText;
 //	pstrText = (char*) malloc (sizeof(char)*iLen+1);
 //
 //	if(pstrText == NULL)
 //	{
-//		error = GetLastError();
-//		clog << "Error allocating memory. Error : " << error << endl;
+//		_iError = GetLastError();
+//		clog << "Error allocating memory. Error : " << _iError << endl;
 //		return "-1";
 //	}
 //
-//	if (0 == GetWindowTextA(hwnd_lbLoad, pstrText, iLen) )
+//	if (0 == GetWindowTextA(_hwnd_lbLoad, pstrText, iLen) )
 //	{
-//		error = GetLastError();
+//		_iError = GetLastError();
 //		clog << "Error getting path for transfer file. Error: " <<
-//				error << endl;
+//				_iError << endl;
 //		return "-1";
 //	}
 //
@@ -812,8 +870,6 @@ string Window::getFilePath()
 
 	OPENFILENAMEA ofn;       // common dialog box structure
 	char szFile[260];       // buffer for file name
-	//HWND hwnd;              // owner window
-	//HANDLE hf;              // file handle
 
 	// Initialize OPENFILENAME
 	ZeroMemory(&ofn, sizeof(ofn));

@@ -18,18 +18,23 @@ class Logger
 public:
 	Logger(bool log, string sPort);
 	~Logger(void);
+
+//------------------------------------------------------------------------------
+//Methods
+	int log(bool bLog, string sPort);
+	void closelog(bool bLog);
+
+
+private:
 //------------------------------------------------------------------------------
 //Variables	
-	DWORD error;
+	int _iError;
 	string path, temp;
 	const char * logPath;
 	streambuf * backup, * psbuf;
 	ofstream filestr;
 	Tools tools;
 
-//------------------------------------------------------------------------------
-//Methods
-	long log(bool bLog, string sPort);
-	void closelog(bool bLog);
+
 };
 #endif

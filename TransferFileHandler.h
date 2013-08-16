@@ -18,9 +18,9 @@ public:
 	~TransferFileHandler(void);
 
 	
-	long openFile(string sFilePath);
+	int openFile(string sFilePath);
 	void closeFile();
-	long readTransferFile();
+	int readTransferFile();
 
 	ifstream inputFile;
 	vector<string> vTranferFileLines;

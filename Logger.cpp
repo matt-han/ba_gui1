@@ -29,9 +29,9 @@ Logger::~Logger(void)
 //		- bool bLog    -> true for logging events, false for redictecting clog
 //						  to NULL
 //		- string sPort -> COM port for which events will be logged
-//	Return: error code signaling if operation succeded or error
+//	Return: _iError code signaling if operation succeded or _iError
 //------------------------------------------------------------------------------
-long Logger::log(bool bLog, string sPort)
+int Logger::log(bool bLog, string sPort)
 {
 	//backup the clog system default
 	backup = clog.rdbuf();
@@ -54,7 +54,7 @@ long Logger::log(bool bLog, string sPort)
 		
 		if (!filestr.is_open())
 		{
-			error = GetLastError();
+			_iError = GetLastError();
 			clog << "couldn't create log file" << endl;
 			return ERROR_LOG;
 		}

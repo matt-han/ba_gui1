@@ -17,8 +17,7 @@
 #define WIN_HEIGHT	550
 #define WIN_WIDTH	420
 #define POS_Y		10
-#define POS_Y2		160
-#define POSYYY		180
+#define POS_Y2		190
 #define POS_X		20
 
 

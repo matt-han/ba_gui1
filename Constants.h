@@ -6,6 +6,9 @@
 #define _CONSTANTS_H
 
 #include <string>
+#include <vector>
+
+
 using namespace std;
 
 //------------------------------------------------------------------------------
@@ -58,6 +61,11 @@ using namespace std;
 #define ID_CB_SLV_PORT  29
 #define ID_MOD_SLAVE	30
 #define ID_LB_SLV		31
+#define ID_LB_MIN		32
+#define ID_LB_MAX		33
+#define ID_LB_BAUD		34
+#define ID_CB_MAX		35
+#define ID_CB_BAUD_MAX	36
 
 
 #define ID_BUT			100
@@ -87,6 +95,9 @@ using namespace std;
 #define ERROR_TRANS_INFO	-20
 #define ERROR_WAIT_SLAVE	-21
 #define ERROR_WAIT_MASTER	-22
+#define ERROR_BAUD_MINMAX	-23
+
+#define ERROR_WOBBLE		-50
 
 #define ERROR_TRANSMITION "ERROR_TRANSMITION"
 #define DEFAULT_VALUE		-100
@@ -118,10 +129,6 @@ using namespace std;
 
 
 
-
-
-
-
 //------------------------------------------------------------------------------
 //Variables
 	struct TestStruct
@@ -132,12 +139,14 @@ using namespace std;
 		string sFilePath;
 		int iTransfer;
 		int iBaud;
+		int iBaudrateMax;
 		int iTestMode;
 		int iParity;
 		int iProtocol;
 		int iStopbits;
 		bool bLoggerState;
 		int iTransTextMode;
+		vector<string> svBaudrates;
 
 		//constructor
 		TestStruct(void)
@@ -147,6 +156,7 @@ using namespace std;
 			sTextToTransfer = "";
 			sFilePath		= "";
 			iBaud			= DEFAULT_VALUE;
+			iBaudrateMax	= DEFAULT_VALUE;
 			iTestMode		= DEFAULT_VALUE;
 			iParity			= DEFAULT_VALUE;
 			iProtocol		= DEFAULT_VALUE;

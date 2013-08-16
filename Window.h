@@ -24,8 +24,6 @@ public:
 //Variables
 	Interpreter interpreter;
 
-	DWORD error;
-
 //------------------------------------------------------------------------------
 //Methods
 	
@@ -62,15 +60,19 @@ private:
 //------------------------------------------------------------------------------
 //Variables
 
-	HINSTANCE hInst;
-	UINT status;
-	int ret;
+	int _iError;
+	int _iError2;
+
+	HINSTANCE _hInst;
+	UINT _status;
+	int _ret;
 	int _iTestMode;
 	int _iParity;
 	int _iStopBits;
 	int _iTransfer;
 	int _iProtocol;
 	int _iBaudrate;
+	int _iBaudrateMax;
 	bool _bLoggerState;
 	string _sMasPort;
 	string _sSlaPort;
@@ -81,16 +83,17 @@ private:
 	int _i;
 
 	//Window handles
-	HWND hwndCB_MasPorts;
-	HWND hwndCB_SlvPorts;
-	HWND hDebug;
-	HWND hwndCB_Baud;
-	HWND hwnd_lbLoad;
-	HWND hwnd_btnLoad;
-	HWND hwnd_lbText;
-	HWND hwnd_btnText;
-	HWND hwnd_Start;
-	HWND hwnd_Close;
+	HWND _hwndCB_MasPorts;
+	HWND _hwndCB_SlvPorts;
+
+	HWND _hwndCB_Baud;
+	HWND _hwndCB_Baud_MAX;
+	HWND _hwnd_lbLoad;
+	HWND _hwnd_btnLoad;
+	HWND _hwnd_lbText;
+	HWND _hwnd_btnText;
+	HWND _hwnd_Start;
+	HWND _hwnd_Close;
 
 	//void CreateMyTooltip (HWND hwnd);
 	//HWND CreateToolTip(int toolID, HWND hDlg, PTSTR pszText);

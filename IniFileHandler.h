@@ -13,7 +13,7 @@
 #include <vector>
 #include <Windows.h>
 
-#include "Com.h"
+//#include "Com.h"
 #include "Constants.h"
 #include "Tools.h"
 
@@ -28,15 +28,15 @@ public:
 //Methods
 
 	//read methods
-	long readINIFile(string sFilePath);
-	long readPortConfig(string sPort,  string sFilePath, int index);
-	long readTransferMode(string sPort, string sFilePath, int index);
-	long readSlave(string sPort, string sFilePath, int index);
-	long readSettings(string sPort, string sFilePath, int index);
-	long readParity(string sPort, string sFilePath, int index);
-	long readProtocol(string sPort, string sFilePath, int index);
-	long readStopbits(string sPort, string sFilePath, int index);
-	long readBaudRate(string sPort, string sFilePath, int index);
+	int readINIFile(string sFilePath);
+	int readPortConfig(string sPort,  string sFilePath, int index);
+	int readTransferMode(string sPort, string sFilePath, int index);
+	int readSlave(string sPort, string sFilePath, int index);
+	int readSettings(string sPort, string sFilePath, int index);
+	int readParity(string sPort, string sFilePath, int index);
+	int readProtocol(string sPort, string sFilePath, int index);
+	int readStopbits(string sPort, string sFilePath, int index);
+	int readBaudRate(string sPort, string sFilePath, int index);
 
 	//write methods
 	void writeINIfile(string sMasterPort, string sSlavePort, int iBaud,
@@ -51,33 +51,9 @@ public:
 private:
 //------------------------------------------------------------------------------
 //Variables
-	//struct comPort
-	//{
-	//	string sMasterPort;
-	//	string sSlavePort;
-	//	int iTransfer;
-	//	int iBaud;
-	//	int iTestMode;
-	//	int iParity;
-	//	int iProtocol;
-	//	int iStopbits;
-	//	
-	//	//constructor
-	//	comPort(void)
-	//	{
-	//		sMasterPort	= "";
-	//		sSlavePort	= "";
-	//		iBaud		= DEFAULT_VALUE;
-	//		iTestMode	= DEFAULT_VALUE;
-	//		iParity		= DEFAULT_VALUE;
-	//		iProtocol	= DEFAULT_VALUE;
-	//		iStopbits	= DEFAULT_VALUE;
-	//		iTransfer	= DEFAULT_VALUE;
-	//	}
-	//};//struct
-
-	DWORD error;
-	DWORD dwExists;
+	
+	int _iError;
+	DWORD _dwExists;
 	TestStruct comPortStruct;
 	Tools tools;
 	int index;
@@ -95,7 +71,7 @@ private:
 	string parseStopbits(int iStopbits);
 
 	//Parse from INI file to GUI
-	int parseBaud(string);
+	int parseBaud(string, int);
 	int parseTestMode(string);
 	int parseParity(string);
 	int parseProtocol(string);
