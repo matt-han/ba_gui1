@@ -61,7 +61,11 @@ long TestManager::startFixedTest()
 
 		//Master Slave
 		case 2:
-			dwError = fixedTest.startMasterSlaveTest();
+			dwError = fixedTest.startMasterSlaveTest(true);
+			break;
+
+		case 3:
+			dwError = fixedTest.startMasterSlaveTest(false);
 			break;
 	}
 	

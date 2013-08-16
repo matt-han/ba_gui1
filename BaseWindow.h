@@ -8,15 +8,18 @@
 #ifndef _BASEWINDOW_H
 #define _BASEWINDOW_H
 
-#define WINDOW_X 150
-#define WINDOW_Y 150
-#define WIN_HEIGHT 600
-#define WIN_WIDTH 700
-#define POS_Y 180
-#define POS_X 20
-
-
 #include <Windows.h>
+
+
+//Window constants
+#define WINDOW_X	150
+#define WINDOW_Y	150
+#define WIN_HEIGHT	550
+#define WIN_WIDTH	420
+#define POS_Y		10
+#define POS_Y2		160
+#define POSYYY		180
+#define POS_X		20
 
 
 template <class DERIVED_TYPE> 
@@ -62,8 +65,8 @@ public:
         DWORD dwExStyle = 0,
         int x = WINDOW_X,
         int y = WINDOW_Y,
-        int nWidth = WIN_HEIGHT,
-        int nHeight = WIN_WIDTH,
+        int nWidth = WIN_WIDTH,
+        int nHeight = WIN_HEIGHT,
         HWND hWndParent = 0,
         HMENU hMenu = 0
         )

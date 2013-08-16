@@ -149,7 +149,7 @@ string Tools::delSpacesAndComents(string s)
 //	 IN:
 //		- int x -> specifies how often 100 ms will be waited
 //------------------------------------------------------------------------------
-void Tools::warte(int x)
+void Tools::wait(int x)
 {
 	for (int i = 0; i < x; i++)
 	{

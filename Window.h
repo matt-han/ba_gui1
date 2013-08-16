@@ -77,7 +77,8 @@ private:
 	string _sTransferFilePath;
 	string _sTempBaud;
 	char _szTextToSend[31];
-	
+	string _sTemp;
+	int _i;
 
 	//Window handles
 	HWND hwndCB_MasPorts;

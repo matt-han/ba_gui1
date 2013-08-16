@@ -40,7 +40,7 @@ using namespace std;
 #define ID_CB_COM_BAUD  11
 #define ID_MOD_SINGLE	12
 #define ID_MOD_DOUBLE	13
-#define ID_MOD_MS		14
+#define ID_MOD_MASTER	14
 #define ID_SB_ONE		15
 #define ID_SB_ONE5		16
 #define ID_SB_TWO		17
@@ -56,6 +56,9 @@ using namespace std;
 #define ID_LB_TEXT		27
 #define ID_BT_TEXT		28
 #define ID_CB_SLV_PORT  29
+#define ID_MOD_SLAVE	30
+#define ID_LB_SLV		31
+
 
 #define ID_BUT			100
 
@@ -82,6 +85,8 @@ using namespace std;
 #define ERROR_READ_PORT		-18
 #define ERROR_WRITE_PORT	-19
 #define ERROR_TRANS_INFO	-20
+#define ERROR_WAIT_SLAVE	-21
+#define ERROR_WAIT_MASTER	-22
 
 #define ERROR_TRANSMITION "ERROR_TRANSMITION"
 #define DEFAULT_VALUE		-100

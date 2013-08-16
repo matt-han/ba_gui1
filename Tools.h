@@ -37,7 +37,7 @@ public:
 	string printTime();
 	string parseTime(string s);
 	string delSpacesAndComents(string s);
-	void warte(int x);
+	void wait(int x);
 
 //------------------------------------------------------------------------------
 //Template for vector operation "remove_if"

@@ -241,7 +241,7 @@ void Interpreter::handleGui()
 					case 0:
 
 						//if needed get the slave port
-						if(_iTransfer == 1 || _iTransfer == 2)
+						if(_iTransfer == 1)
 						{
 							//if no slave port was selected -> error
 							if (_sSlaPort == "")
@@ -274,7 +274,7 @@ void Interpreter::handleGui()
 					//----------------------------------------------------------
 					case 1:
 						//if needed get the slave port
-						if(_iTransfer == 1 || _iTransfer == 2)
+						if(_iTransfer == 1)
 						{
 							//if no slave port was selected -> error
 							if (_sSlaPort == "")
@@ -322,7 +322,7 @@ void Interpreter::handleGui()
 					case 2:
 						//wenn double or master slave
 						//if needed get the slave port
-						if(_iTransfer == 1 || _iTransfer == 2)
+						if(_iTransfer == 1)
 						{
 							//if no slave port was selected -> error
 							if (_sSlaPort == "")
@@ -337,7 +337,7 @@ void Interpreter::handleGui()
 								testManager.testStruct.sSlavePort = _sSlaPort;
 						}
 					
-						if (_iTransfer >= 0 && _iTransfer <= 2)
+						if (_iTransfer >= 0 && _iTransfer <= 3)
 						{
 							//check parity, protocol and stopbits
 							if(ERROR_INPUT == checkInputConfigData())
@@ -407,7 +407,7 @@ void Interpreter::handleGui()
 				//--------------------------------------------------------------
 				//--------------------------------------------------------------
 				//start the manager to start testing
-				//checkj structure to avoid asking for bErr
+				//check structure to avoid asking for bErr
 				if(bErr == false)
 				{
 					dwError = testManager.startManager();

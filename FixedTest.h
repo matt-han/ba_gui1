@@ -5,6 +5,7 @@
 #include "Constants.h"
 #include "PortCommunications.h"
 #include "TransferFileHandler.h"
+#include "Tools.h"
 
 #include <vector>
 
@@ -30,6 +31,8 @@ public:
 
 	TestStruct *testStruct;
 
+	Tools tools;
+
 	string defaultText[TEXT_LENGTH];
 	vector<string>vTextToSend;
 	DWORD dwExitCode;
@@ -44,14 +47,21 @@ public:
 	void setTextVector(int iTextMode);	
 	long startSingleTest();
 	long startDoubleTest();
-	long startMasterSlaveTest();
-	long communicate(string sSendData, bool bMaster, bool bSlave);
+	long startMasterSlaveTest(bool bMaster);
+	long startSlaveTest();
+	long communicate(string sSendData, bool bMaster);
+	
+	
+	long communicateMaster(string sSendData);
+	long communicateSlave(string sSendData);
+
 	bool sendData(bool MasterSlave, string sSendData);
 	string getData(bool MasterSlave, string sSendData);
 	void printTestSettings();
 	
 private:
 	DWORD _dwError;
+	DWORD _dwExitCode;
 };
 
 #endif

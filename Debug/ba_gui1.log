@@ -1,23 +1,49 @@
-﻿Der Buildvorgang wurde am 15.08.2013 12:59:17 gestartet.
+﻿Der Buildvorgang wurde am 16.08.2013 15:23:36 gestartet.
      1>Projekt "C:\Users\m.hansertvivar\Documents\Visual Studio 2010\Projects\ba_gui1\ba_gui1\ba_gui1.vcxproj" auf Knoten "2", build Ziel(e).
      1>InitializeBuildStatus:
          "Debug\ba_gui1.unsuccessfulbuild" wird erstellt, da "AlwaysCreate" angegeben wurde.
        ClCompile:
-         c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /ZI /nologo /W4 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt FixedTest.cpp Window.cpp
+         c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /ZI /nologo /W4 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt AutomaticTest.cpp Com.cpp FixedTest.cpp IniFileHandler.cpp Interpreter.cpp Logger.cpp main.cpp PortCommunications.cpp TestManager.cpp Tools.cpp TransferFileHandler.cpp Window.cpp WobbleTest.cpp
+         WobbleTest.cpp
          Window.cpp
+         TransferFileHandler.cpp
+         Tools.cpp
+     1>c:\users\m.hansertvivar\documents\visual studio 2010\projects\ba_gui1\ba_gui1\tools.cpp(80): warning C4996: 'localtime': This function or variable may be unsafe. Consider using localtime_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 10.0\vc\include\time.inl(112): Siehe Deklaration von 'localtime'
+     1>c:\users\m.hansertvivar\documents\visual studio 2010\projects\ba_gui1\ba_gui1\tools.cpp(82): warning C4996: 'asctime': This function or variable may be unsafe. Consider using asctime_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 10.0\vc\include\time.h(153): Siehe Deklaration von 'asctime'
+         TestManager.cpp
+         PortCommunications.cpp
+     1>c:\users\m.hansertvivar\documents\visual studio 2010\projects\ba_gui1\ba_gui1\portcommunications.cpp(215): warning C4800: 'BOOL': Variable wird auf booleschen Wert ('True' oder 'False') gesetzt (Auswirkungen auf Leistungsverhalten möglich)
+         main.cpp
+     1>c:\users\m.hansertvivar\documents\visual studio 2010\projects\ba_gui1\ba_gui1\main.cpp(12): warning C4100: 'pCmdLine': Unreferenzierter formaler Parameter
+     1>c:\users\m.hansertvivar\documents\visual studio 2010\projects\ba_gui1\ba_gui1\main.cpp(22): warning C4101: 'get_info': Unreferenzierte lokale Variable
+     1>c:\users\m.hansertvivar\documents\visual studio 2010\projects\ba_gui1\ba_gui1\main.cpp(14): warning C4189: 'z': Lokale Variable ist initialisiert aber nicht referenziert
+     1>c:\users\m.hansertvivar\documents\visual studio 2010\projects\ba_gui1\ba_gui1\main.cpp(21): warning C4101: 'info': Unreferenzierte lokale Variable
+         Logger.cpp
+     1>c:\users\m.hansertvivar\documents\visual studio 2010\projects\ba_gui1\ba_gui1\logger.cpp(42): warning C4996: 'getenv': This function or variable may be unsafe. Consider using _dupenv_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 10.0\vc\include\stdlib.h(433): Siehe Deklaration von 'getenv'
+         Interpreter.cpp
+         IniFileHandler.cpp
+     1>c:\users\m.hansertvivar\documents\visual studio 2010\projects\ba_gui1\ba_gui1\inifilehandler.cpp(46): warning C4996: 'getenv': This function or variable may be unsafe. Consider using _dupenv_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 10.0\vc\include\stdlib.h(433): Siehe Deklaration von 'getenv'
          FixedTest.cpp
-     1>c:\users\m.hansertvivar\documents\visual studio 2010\projects\ba_gui1\ba_gui1\fixedtest.cpp(116): warning C4244: '=': Konvertierung von 'int' in 'BYTE', möglicher Datenverlust
-     1>c:\users\m.hansertvivar\documents\visual studio 2010\projects\ba_gui1\ba_gui1\fixedtest.cpp(117): warning C4244: '=': Konvertierung von 'int' in 'BYTE', möglicher Datenverlust
-     1>c:\users\m.hansertvivar\documents\visual studio 2010\projects\ba_gui1\ba_gui1\fixedtest.cpp(334): warning C4244: '=': Konvertierung von 'int' in 'BYTE', möglicher Datenverlust
-     1>c:\users\m.hansertvivar\documents\visual studio 2010\projects\ba_gui1\ba_gui1\fixedtest.cpp(335): warning C4244: '=': Konvertierung von 'int' in 'BYTE', möglicher Datenverlust
-     1>c:\users\m.hansertvivar\documents\visual studio 2010\projects\ba_gui1\ba_gui1\fixedtest.cpp(340): warning C4244: '=': Konvertierung von 'int' in 'BYTE', möglicher Datenverlust
-     1>c:\users\m.hansertvivar\documents\visual studio 2010\projects\ba_gui1\ba_gui1\fixedtest.cpp(341): warning C4244: '=': Konvertierung von 'int' in 'BYTE', möglicher Datenverlust
+     1>c:\users\m.hansertvivar\documents\visual studio 2010\projects\ba_gui1\ba_gui1\fixedtest.cpp(633): warning C4245: "=": Konvertierung von "int" in "DWORD", signed/unsigned-Konflikt.
+     1>c:\users\m.hansertvivar\documents\visual studio 2010\projects\ba_gui1\ba_gui1\fixedtest.cpp(641): warning C4127: Bedingter Ausdruck ist konstant
+     1>c:\users\m.hansertvivar\documents\visual studio 2010\projects\ba_gui1\ba_gui1\fixedtest.cpp(700): warning C4245: "=": Konvertierung von "int" in "DWORD", signed/unsigned-Konflikt.
+     1>c:\users\m.hansertvivar\documents\visual studio 2010\projects\ba_gui1\ba_gui1\fixedtest.cpp(708): warning C4127: Bedingter Ausdruck ist konstant
+         Com.cpp
+     1>c:\users\m.hansertvivar\documents\visual studio 2010\projects\ba_gui1\ba_gui1\com.cpp(172): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 10.0\vc\include\stdio.h(371): Siehe Deklaration von 'sprintf'
+     1>c:\users\m.hansertvivar\documents\visual studio 2010\projects\ba_gui1\ba_gui1\com.cpp(174): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 10.0\vc\include\stdio.h(371): Siehe Deklaration von 'sprintf'
+     1>c:\users\m.hansertvivar\documents\visual studio 2010\projects\ba_gui1\ba_gui1\com.cpp(305): warning C4244: 'return': Konvertierung von 'double' in 'int', möglicher Datenverlust
+         AutomaticTest.cpp
          Code wird generiert...
-     1>c:\users\m.hansertvivar\documents\visual studio 2010\projects\ba_gui1\ba_gui1\fixedtest.cpp(220): warning C4701: Die möglicherweise nicht initialisierte lokale Variable "bRead" wurde verwendet.
        ManifestResourceCompile:
-         Alle Ausgaben sind aktuell.
+         C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\rc.exe /nologo /fo"Debug\ba_gui1.exe.embed.manifest.res" Debug\ba_gui1_manifest.rc 
        Link:
-         c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\m.hansertvivar\Documents\Visual Studio 2010\Projects\ba_gui1\Debug\ba_gui1.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"Debug\ba_gui1.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"C:\Users\m.hansertvivar\Documents\Visual Studio 2010\Projects\ba_gui1\Debug\ba_gui1.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\m.hansertvivar\Documents\Visual Studio 2010\Projects\ba_gui1\Debug\ba_gui1.lib" /MACHINE:X86 Debug\ba_gui1.exe.embed.manifest.res
+         c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\m.hansertvivar\Documents\Visual Studio 2010\Projects\ba_gui1\ba_gui1\Debug\ba_gui1.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"Debug\ba_gui1.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"C:\Users\m.hansertvivar\Documents\Visual Studio 2010\Projects\ba_gui1\ba_gui1\Debug\ba_gui1.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\m.hansertvivar\Documents\Visual Studio 2010\Projects\ba_gui1\ba_gui1\Debug\ba_gui1.lib" /MACHINE:X86 Debug\ba_gui1.exe.embed.manifest.res
          Debug\AutomaticTest.obj
          Debug\Com.obj
          Debug\FixedTest.obj
@@ -33,10 +59,23 @@
          Debug\WobbleTest.obj
        Manifest:
          C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\mt.exe /nologo /verbose /out:"Debug\ba_gui1.exe.embed.manifest" /manifest Debug\ba_gui1.exe.intermediate.manifest
-         Alle Ausgaben sind aktuell.
+         C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\rc.exe /nologo /fo"Debug\ba_gui1.exe.embed.manifest.res" Debug\ba_gui1_manifest.rc 
        LinkEmbedManifest:
-         Alle Ausgaben sind aktuell.
-         ba_gui1.vcxproj -> C:\Users\m.hansertvivar\Documents\Visual Studio 2010\Projects\ba_gui1\Debug\ba_gui1.exe
+         c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\m.hansertvivar\Documents\Visual Studio 2010\Projects\ba_gui1\ba_gui1\Debug\ba_gui1.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"Debug\ba_gui1.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"C:\Users\m.hansertvivar\Documents\Visual Studio 2010\Projects\ba_gui1\ba_gui1\Debug\ba_gui1.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\m.hansertvivar\Documents\Visual Studio 2010\Projects\ba_gui1\ba_gui1\Debug\ba_gui1.lib" /MACHINE:X86 Debug\ba_gui1.exe.embed.manifest.res
+         Debug\AutomaticTest.obj
+         Debug\Com.obj
+         Debug\FixedTest.obj
+         Debug\IniFileHandler.obj
+         Debug\Interpreter.obj
+         Debug\Logger.obj
+         Debug\main.obj
+         Debug\PortCommunications.obj
+         Debug\TestManager.obj
+         Debug\Tools.obj
+         Debug\TransferFileHandler.obj
+         Debug\Window.obj
+         Debug\WobbleTest.obj
+         ba_gui1.vcxproj -> C:\Users\m.hansertvivar\Documents\Visual Studio 2010\Projects\ba_gui1\ba_gui1\Debug\ba_gui1.exe
        FinalizeBuildStatus:
          Die Datei "Debug\ba_gui1.unsuccessfulbuild" wird gelöscht.
          Aktualisieren des Timestamps von "Debug\ba_gui1.lastbuildstate".
@@ -44,4 +83,4 @@
 
 Das Erstellen war erfolgreich.
 
-Verstrichene Zeit 00:00:02.72
+Verstrichene Zeit 00:00:13.03

@@ -149,7 +149,10 @@ long Com::closePort()
 		return ERROR_CLOSE_PORT;
 	}
 	else
+	{
+		clog << "Closing " << this->sPort << endl;
 		return ERROR_SUCCESS;
+	}
 }
 
 

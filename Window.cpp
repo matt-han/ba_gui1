@@ -57,214 +57,222 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 			_sTransferFilePath	="";
 			_sTempBaud			="";
 
-//==============================================================================
-//Logger
-			CreateWindowW(L"button", L"Logger",
-			  WS_VISIBLE | WS_CHILD | BS_CHECKBOX,
-			  POS_X, POS_Y + 230, 185, 35, m_hwnd, (HMENU) ID_LOGGER, 
-			  NULL, NULL);
-			
-			CheckDlgButton(m_hwnd, ID_LOGGER, BST_CHECKED);
 
 //==============================================================================
 //Test mode
-			CreateWindowW(L"button", L"Test Mode",
+			CreateWindowA("button", "Test Mode",
 							WS_CHILD | WS_VISIBLE | BS_GROUPBOX,
-							POS_X + 120, POS_Y - 170, 120, 110,
+							POS_X + 120, POS_Y, 120, 105,
 							m_hwnd, 
 							(HMENU) ID_GB_TESTMODE,
 							NULL, NULL);
 
-			CreateWindowW(L"button", L"Automatic",
+			CreateWindowA("button", "Automatic",
 							WS_GROUP | WS_CHILD |
 							WS_VISIBLE | BS_AUTORADIOBUTTON,
-							POS_X + 130, POS_Y - 155, 100, 30,
+							POS_X + 130, POS_Y + 20, 100, 30,
 							m_hwnd,
 							(HMENU)ID_TM_AUTO,
 							NULL, NULL);
 
-			CreateWindowW(L"button", L"Wobble",
+			CreateWindowA("button", "Wobble",
 							WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON,
-							POS_X + 130, POS_Y - 125, 100, 30,
+							POS_X + 130, POS_Y + 45, 100, 30,
 							m_hwnd,
 							(HMENU)ID_TM_WOBB,
 							NULL, NULL);
 
-			CreateWindowW(L"button", L"Fixed",
+			CreateWindowA("button", "Fixed",
 							WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON,
-							POS_X + 130, POS_Y - 95, 100, 30,
+							POS_X + 130, POS_Y + 70, 100, 30,
 							m_hwnd,
 							(HMENU)ID_TM_FIXED,
+							NULL, NULL);
+//==============================================================================
+//Transfer
+			CreateWindowA("button", "Transfer",
+							WS_CHILD | WS_VISIBLE | BS_GROUPBOX,
+							POS_X + 250, POS_Y, 120, 130,
+							m_hwnd, 
+							(HMENU) ID_GB_TRANSFER,
+							NULL, NULL);
+
+			CreateWindowA("button", "Shorted",
+							WS_GROUP | WS_CHILD |
+							WS_VISIBLE | BS_AUTORADIOBUTTON,
+							POS_X + 260, POS_Y + 20, 100, 30,
+							m_hwnd,
+							(HMENU)ID_MOD_SINGLE,
+							NULL, NULL);
+
+			CreateWindowA("button", "Double",
+							WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON,
+							POS_X + 260, POS_Y + 45, 100, 30,
+							m_hwnd,
+							(HMENU)ID_MOD_DOUBLE,
+							NULL, NULL);
+
+			CreateWindowA("button", "Master",
+							WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON,
+							POS_X + 260,POS_Y + 70, 100, 30,
+							m_hwnd,
+							(HMENU)ID_MOD_MASTER,
+							NULL, NULL);
+
+			CreateWindowA("button", "Slave",
+							WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON,
+							POS_X + 260, POS_Y + 95, 100, 30,
+							m_hwnd,
+							(HMENU)ID_MOD_SLAVE,
 							NULL, NULL);
 
 //==============================================================================
 //Parity
-			CreateWindowW(L"button", L"Parity",
+			CreateWindowA("button", "Parity",
 							WS_CHILD | WS_VISIBLE | BS_GROUPBOX,
-							POS_X, POS_Y, 110, 110,
+							POS_X, POS_Y2, 110, 110,
 							m_hwnd, 
 							(HMENU) ID_GB_PARITY,
 							NULL, NULL);
 
-			CreateWindowW(L"button", L"None",
+			CreateWindowA("button", "None",
 							WS_GROUP | WS_CHILD
 							| WS_VISIBLE | BS_AUTORADIOBUTTON,
-							POS_X + 10, POS_Y + 20, 60, 30,
+							POS_X + 10, POS_Y2 + 20, 60, 30,
 							m_hwnd,
 							(HMENU)ID_PAR_NONE,
 							NULL, NULL);
 
-			CreateWindowW(L"button", L"Odd",
+			CreateWindowA("button", "Odd",
 							WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON,
-							POS_X + 10, POS_Y + 45, 60, 30,
+							POS_X + 10, POS_Y2 + 45, 60, 30,
 							m_hwnd,
 							(HMENU)ID_PAR_ODD,
 							NULL, NULL);
 
-			CreateWindowW(L"button", L"Even",
+			CreateWindowA("button", "Even",
 							WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON,
-							POS_X + 10, POS_Y + 70, 60, 30,
+							POS_X + 10, POS_Y2 + 70, 60, 30,
 							m_hwnd,
 							(HMENU)ID_PAR_EVEN,
 							NULL, NULL);
 
 //==============================================================================
 //Protocol
-			CreateWindowW(L"button", L"Protocol",
+			CreateWindowA("button", "Protocol",
 							WS_CHILD | WS_VISIBLE | BS_GROUPBOX,
-							POS_X + 120, POS_Y, 120, 110,
+							POS_X + 120, POS_Y2, 120, 110,
 							m_hwnd, 
 							(HMENU) ID_GB_TRANSFER,
 							NULL, NULL);
-			CreateWindowW(L"button", L"XON/XOFF",
+			CreateWindowA("button", "XON/XOFF",
 							WS_GROUP | WS_CHILD|
 							WS_VISIBLE | BS_AUTORADIOBUTTON,
-							POS_X + 130, POS_Y + 20, 100, 30,
+							POS_X + 130, POS_Y2 + 20, 100, 30,
 							m_hwnd,
 							(HMENU)ID_PRO_XON_OFF,
 							NULL, NULL);
-			CreateWindowW(L"button", L"DTR/DSR",
+			CreateWindowA("button", "DTR/DSR",
 							WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON,
-							POS_X + 130, POS_Y + 45, 100, 30,
+							POS_X + 130, POS_Y2 + 45, 100, 30,
 							m_hwnd,
 							(HMENU)ID_PRO_DTR_DSR,
 							NULL, NULL);
-			CreateWindowW(L"button", L"CTS/RTS",
+			CreateWindowA("button", "CTS/RTS",
 							WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON,
-							POS_X + 130, POS_Y + 70, 100, 30,
+							POS_X + 130, POS_Y2 + 70, 100, 30,
 							m_hwnd,
 							(HMENU)ID_PRO_CTS_RTS,
 							NULL, NULL);
 
 //==============================================================================
 //Stopbits
-			CreateWindowW(L"button", L"StopBits",
+			CreateWindowA("button", "StopBits",
 							WS_CHILD | WS_VISIBLE | BS_GROUPBOX,
-							POS_X, POS_Y + 115, 110, 110,
+							POS_X + 250, POS_Y2, 110, 80,
 							m_hwnd, 
 							(HMENU) ID_GB_STOPBITS,
 							NULL, NULL);
-			CreateWindowW(L"button", L" 1",
+			CreateWindowA("button", " 1",
 							WS_GROUP | WS_CHILD |
 							WS_VISIBLE | BS_AUTORADIOBUTTON,
-							POS_X + 10, POS_Y + 135, 50, 30,
+							POS_X + 260, POS_Y2 + 20, 50, 30,
 							m_hwnd,
 							(HMENU)ID_SB_ONE,
 							NULL, NULL);
-			CreateWindowW(L"button", L" 1.5",
+			//CreateWindowA("button", " 1.5",
+			//				WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON,
+			//				POS_X + 10, POSYYY + 160, 50, 30,
+			//				m_hwnd,
+			//				(HMENU)ID_SB_ONE5,
+			//				NULL, NULL);
+			CreateWindowA("button", " 2",
 							WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON,
-							POS_X + 10, POS_Y + 160, 50, 30,
-							m_hwnd,
-							(HMENU)ID_SB_ONE5,
-							NULL, NULL);
-			CreateWindowW(L"button", L" 2",
-							WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON,
-							POS_X + 10, POS_Y + 185, 50, 30,
+							POS_X + 260, POS_Y2 + 45, 50, 30,
 							m_hwnd,
 							(HMENU)ID_SB_TWO,
 							NULL, NULL);
 
 //==============================================================================
-//Transfer
-			CreateWindowW(L"button", L"Transfer",
-							WS_CHILD | WS_VISIBLE | BS_GROUPBOX,
-							POS_X + 120, POS_Y + 115, 120, 110,
-							m_hwnd, 
-							(HMENU) ID_GB_TRANSFER,
-							NULL, NULL);
-
-			CreateWindowW(L"button", L"Single",
-							WS_GROUP | WS_CHILD |
-							WS_VISIBLE | BS_AUTORADIOBUTTON,
-							POS_X + 130, POS_Y + 135, 100, 30,
-							m_hwnd,
-							(HMENU)ID_MOD_SINGLE,
-							NULL, NULL);
-
-			CreateWindowW(L"button", L"Double",
-							WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON,
-							POS_X + 130, POS_Y + 160, 100, 30,
-							m_hwnd,
-							(HMENU)ID_MOD_DOUBLE,
-							NULL, NULL);
-
-			CreateWindowW(L"button", L"MasterSlave",
-							WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON,
-							POS_X + 130, POS_Y + 185, 100, 30,
-							m_hwnd,
-							(HMENU)ID_MOD_MS,
-							NULL, NULL);
+//Logger
+			CreateWindowA("button", "Logger",
+			  WS_VISIBLE | WS_CHILD | BS_CHECKBOX,
+			  POS_X + 260, POS_Y2 + 80, 185, 35, m_hwnd, (HMENU) ID_LOGGER, 
+			  NULL, NULL);
+			
+			CheckDlgButton(m_hwnd, ID_LOGGER, BST_CHECKED);
 
 //==============================================================================
 //Labels
 //------------------------------------------------------------------------------		
 //Master Port
-			CreateWindowW(L"static", L"Master Port:", 
+			CreateWindowA("static", "Main Port:", 
                   WS_CHILD | WS_VISIBLE,
-                  POS_X, POS_Y - 170, 90, 15, m_hwnd, NULL, NULL, NULL);
+                  POS_X, POS_Y, 90, 15, m_hwnd, NULL, NULL, NULL);
 //------------------------------------------------------------------------------
 //Baudrate
-			CreateWindowW(L"static", L"Baudrate:", 
+			CreateWindowA("static", "Baudrate:", 
                   WS_CHILD | WS_VISIBLE,
-                  POS_X, POS_Y - 120, 90, 15, m_hwnd, NULL, NULL, NULL);
+                  POS_X, POS_Y + 50, 90, 15, m_hwnd, NULL, NULL, NULL);
 
 //------------------------------------------------------------------------------		
 //Slave Port
-			CreateWindowW(L"static", L"Slave Port:", 
-                  WS_CHILD | WS_VISIBLE,
-                  POS_X, POS_Y - 70, 90, 15, m_hwnd, NULL, NULL, NULL);
+			CreateWindowA("static", "Slave Port\nfor Double Test:", 
+                  WS_CHILD,
+                  POS_X, POS_Y + 100, 120, 30, m_hwnd, (HMENU)ID_LB_SLV, NULL, NULL);
 
 //------------------------------------------------------------------------------
 //Load file
-			CreateWindowW(L"static", L"Load file to be transfered:",
+			CreateWindowA("static", "Load file to be transfered:",
 				WS_CHILD | WS_VISIBLE,
-                  POS_X, POS_Y + 265, 190, 15, m_hwnd, NULL, NULL, NULL);
+                  //POS_X, POSYYY + 285, 190, 15, m_hwnd, NULL, NULL, NULL);
+					POS_X, POS_Y2 + 120, 190, 15, m_hwnd, NULL, NULL, NULL);
 
 //load edit for file transfer path
-			hwnd_lbLoad = CreateWindowW(L"Edit", NULL,
+			hwnd_lbLoad = CreateWindowA("static", NULL,
 				WS_CHILD | WS_VISIBLE | WS_BORDER,
-				POS_X, POS_Y + 285, 240, 20, m_hwnd, (HMENU)ID_LB_LOAD,
+				POS_X, POS_Y2 + 140, 240, 20, m_hwnd, (HMENU)ID_LB_LOAD,
 				NULL, NULL);
-			SendMessage(hwnd_lbLoad, EM_SETLIMITTEXT, 256, 0);
-			SetWindowText(hwnd_lbLoad, L"Please type complete file path...");
+			//SendMessage(hwnd_lbLoad, EM_SETLIMITTEXT, 256, 0);
+			//SetWindowText(hwnd_lbLoad, "Please type complete file path...");
 
 //------------------------------------------------------------------------------			
 //Send text
-			CreateWindowW(L"static", L"Send text:",
+			CreateWindowA("static", "Send text:",
 				WS_CHILD | WS_VISIBLE,
-                  POS_X, POS_Y + 340, 190, 15, m_hwnd, NULL, NULL, NULL);
+                  POS_X, POS_Y2 + 195, 190, 15, m_hwnd, NULL, NULL, NULL);
 
 //load edit for file transfer path
-			hwnd_lbText = CreateWindowW(L"Edit", NULL,
+			hwnd_lbText = CreateWindowA("Edit", NULL,
 				WS_CHILD | WS_VISIBLE | WS_BORDER,
-				POS_X, POS_Y + 360, 240, 20, m_hwnd, (HMENU)ID_LB_TEXT,
+				POS_X, POS_Y2 + 215, 240, 20, m_hwnd, (HMENU)ID_LB_TEXT,
 				NULL, NULL);
 
-			SetWindowText(hwnd_lbText, L"...abc...");
+			SetWindowTextA(hwnd_lbText, "...abc...");
 //------------------------------------------------------------------------------
 			
 			//debug
-			hDebug = CreateWindowW(L"static", L"",
+			hDebug = CreateWindowA("static", "",
 				WS_CHILD | WS_VISIBLE,
                 500, 400, 90, 25, m_hwnd, NULL,
 				NULL, NULL);
@@ -273,22 +281,22 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 //Combo boxes
 
 			//Master port
-			hwndCB_MasPorts = CreateWindowW(L"combobox", NULL,
+			hwndCB_MasPorts = CreateWindowA("combobox", NULL,
 				WS_CHILD | WS_VISIBLE | CBS_DROPDOWN | WS_VSCROLL,
-                POS_X, POS_Y - 150, 90, 120, m_hwnd, (HMENU)ID_CB_COM_PORT,
+                POS_X, POS_Y + 20, 90, 120, m_hwnd, (HMENU)ID_CB_COM_PORT,
 				NULL, NULL);
 
 
 			//BAUDRATE
-			hwndCB_Baud = CreateWindowW(L"combobox", NULL, 
+			hwndCB_Baud = CreateWindowA("combobox", NULL, 
                 WS_CHILD | WS_VISIBLE | CBS_DROPDOWN | WS_VSCROLL,
-                POS_X, POS_Y - 100, 90, 120, m_hwnd, (HMENU)ID_CB_COM_BAUD,
+                POS_X, POS_Y + 70, 90, 120, m_hwnd, (HMENU)ID_CB_COM_BAUD,
 				NULL, NULL);
 
 			//Slave port
-			hwndCB_SlvPorts = CreateWindowW(L"combobox", NULL, 
-                WS_CHILD | WS_VISIBLE | CBS_DROPDOWN | WS_VSCROLL,
-                POS_X, POS_Y - 50, 90, 120, m_hwnd, (HMENU)ID_CB_SLV_PORT,
+			hwndCB_SlvPorts = CreateWindowA("combobox", NULL, 
+                WS_CHILD | CBS_DROPDOWN | WS_VSCROLL,
+                POS_X + 120, POS_Y + 110, 90, 120, m_hwnd, (HMENU)ID_CB_SLV_PORT,
 				NULL, NULL);
 			
 
@@ -304,26 +312,28 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 				SendMessageA(hwndCB_MasPorts, CB_ADDSTRING, 0, (LPARAM) s.c_str());
 				SendMessageA(hwndCB_SlvPorts, CB_ADDSTRING, 0, (LPARAM) s.c_str());
 			}
+
+
 //==============================================================================
 //Buttons
-			hwnd_btnLoad = CreateWindowW(L"button", L"Load file and start",
+			hwnd_btnLoad = CreateWindowA("button", "Clic to load and start",
 				WS_CHILD | WS_VISIBLE,
-				POS_X, POS_Y + 308, 150, 20, m_hwnd, (HMENU)ID_BT_LOAD,
+				POS_X, POS_Y2 + 165, 150, 20, m_hwnd, (HMENU)ID_BT_LOAD,
 				NULL, NULL);
 
-			hwnd_btnText = CreateWindowW(L"button", L"Load text and start",
+			hwnd_btnText = CreateWindowA("button", "Load text and start",
 				WS_CHILD | WS_VISIBLE,
-				POS_X, POS_Y + 383, 150, 20, m_hwnd, (HMENU)ID_BT_TEXT,
+				POS_X, POS_Y2 + 240, 150, 20, m_hwnd, (HMENU)ID_BT_TEXT,
 				NULL, NULL);
 
-			hwnd_Start = CreateWindowW(L"button", L"Start",
+			hwnd_Start = CreateWindowA("button", "Start",
 				WS_CHILD | WS_VISIBLE,
-				POS_X+20, POS_Y + 420, 70, 30, m_hwnd, (HMENU)ID_BT_START,
+				POS_X+20, POS_Y2 + 290, 70, 30, m_hwnd, (HMENU)ID_BT_START,
 				NULL, NULL);
 
-			hwnd_Close = CreateWindowW(L"button", L"Close",
+			hwnd_Close = CreateWindowA("button", "Close",
 				WS_CHILD | WS_VISIBLE,
-				POS_X + 140, POS_Y + 420, 70, 30, m_hwnd, (HMENU)ID_BT_CLOSE,
+				POS_X + 140, POS_Y2 + 290, 70, 30, m_hwnd, (HMENU)ID_BT_CLOSE,
 				NULL, NULL);
 
 
@@ -372,13 +382,15 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 								if (error == CB_ERR)
 								{
-									clog << "error updating baud rates in" <<
-										"combobox. System error CB_ERR" << endl;
+									clog << "error updating baud rates in"
+										 <<	"combobox. System error CB_ERR"
+										 << endl;
 								}
 								else if ( error == CB_ERRSPACE)
 								{
-									clog << "not enough space in combo box."<<
-										"System error CB_ERRSPACE" << endl;
+									clog << "not enough space in combo box."
+										 <<	"System error CB_ERRSPACE"
+										 << endl;
 								}
 
 							}
@@ -443,14 +455,12 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 						{
 							//then it was checked and set to false
 							CheckDlgButton(m_hwnd, ID_LOGGER, BST_UNCHECKED);
-							SetWindowTextW(hDebug,L"false");
 							_bLoggerState = false;
 						}
 						else if (BST_UNCHECKED == status)
 						{
 							//it was unchecked, so check it and set to true
 							CheckDlgButton(m_hwnd, ID_LOGGER, BST_CHECKED);
-							SetWindowTextW(hDebug,L"true");
 							_bLoggerState = true;
 
 						}
@@ -459,113 +469,118 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 //------------------------------------------------------------------------------
 //Test Mode
 					case ID_TM_AUTO:
-						SetWindowTextW(hDebug,L"automatic");
 						_iTestMode = 0;
 						break;
 				
 					case ID_TM_WOBB:
-						SetWindowTextW(hDebug, L"wobbeln");
 						_iTestMode = 1;
 						break;
 
 					case ID_TM_FIXED:
-						SetWindowTextW(hDebug, L"fixed");
 						_iTestMode = 2;
 						break;
 
 //------------------------------------------------------------------------------
 //Parity
 					case ID_PAR_NONE:
-						SetWindowTextW(hDebug,L"NONE");
 						_iParity = NOPARITY;
 						break;
 				
 					case ID_PAR_ODD:
-						SetWindowTextW(hDebug, L"ODD");
 						_iParity = ODDPARITY;
 						break;
 
 					case ID_PAR_EVEN:
-						SetWindowTextW(hDebug, L"EVEN");
 						_iParity = EVENPARITY;
 						break;
 
 //------------------------------------------------------------------------------
 //Protocol
 					case ID_PRO_XON_OFF:
-						SetWindowTextW(hDebug, L"XON_OFF");
 						_iProtocol = 0;
 						break;
 
 					case ID_PRO_DTR_DSR:
-						SetWindowTextW(hDebug, L"DTR_DSR");
 						_iProtocol = 1;
 						break;
 
 					case ID_PRO_CTS_RTS:
-						SetWindowTextW(hDebug, L"CTS_RTS");
 						_iProtocol = 2;
 						break;
 
 //------------------------------------------------------------------------------
 //Stopbits
 					case ID_SB_ONE:
-						SetWindowTextW(hDebug, L"ONE");
 						_iStopBits = ONESTOPBIT;
 						break;
 
-					case ID_SB_ONE5:
-						SetWindowTextW(hDebug, L"ONE.5");
-						_iStopBits = ONE5STOPBITS;
-						break;
+					//case ID_SB_ONE5:
+					//	_iStopBits = ONE5STOPBITS;
+					//	break;
 
 					case ID_SB_TWO:
-						SetWindowTextW(hDebug, L"TWO");
 						_iStopBits = TWOSTOPBITS;
 						break;
 
 //------------------------------------------------------------------------------
 //Transfer
 					case ID_MOD_SINGLE:
-						SetWindowTextW(hDebug, L"Single");
+
+						ShowWindow(GetDlgItem(m_hwnd, ID_LB_SLV), SW_HIDE);
+						ShowWindow(GetDlgItem(m_hwnd, ID_CB_SLV_PORT), SW_HIDE);
+						
 						_iTransfer = 0;
 						break;
 
 					case ID_MOD_DOUBLE:
-						SetWindowTextW(hDebug, L"Double");
+						ShowWindow(GetDlgItem(m_hwnd, ID_LB_SLV), SW_SHOWNORMAL);
+						ShowWindow(GetDlgItem(m_hwnd, ID_CB_SLV_PORT), SW_SHOWNORMAL);
+
 						_iTransfer = 1;
 						break;
 				
-					case ID_MOD_MS:
-						SetWindowTextW(hDebug, L"Master Slave");
+					case ID_MOD_MASTER:
+						ShowWindow(GetDlgItem(m_hwnd, ID_LB_SLV), SW_HIDE);
+						ShowWindow(GetDlgItem(m_hwnd, ID_CB_SLV_PORT), SW_HIDE);
+
 						_iTransfer = 2;
 						break;
 
+					case ID_MOD_SLAVE:
+						ShowWindow(GetDlgItem(m_hwnd, ID_LB_SLV), SW_HIDE);
+						ShowWindow(GetDlgItem(m_hwnd, ID_CB_SLV_PORT), SW_HIDE);
+
+						_iTransfer = 3;
+						break;
+		
 //------------------------------------------------------------------------------
 //Buttons
 					case ID_BT_START:
-						SetWindowTextW(hDebug, L"Start");
 						
 						sendTestSettings(0);
 						
 						break;
 
 					case ID_BT_CLOSE:
-						ret = MessageBoxW(NULL, L"Are you sure to quit?", 
-									  L"Message", MB_OKCANCEL);
+						ret = MessageBoxA(NULL, "Are you sure to quit?", 
+									  "Message", MB_OKCANCEL);
 						if ( ret == IDOK) {
 							SendMessage(m_hwnd, WM_CLOSE, 0, 0);
 						}
 						break;
 
 					case ID_BT_LOAD:
-						SetWindowTextW(hDebug, L"load");
 						_sTransferFilePath = getFilePath();
+
+						_i = _sTransferFilePath.find_last_of("\\")+1;
+						_sTemp = _sTransferFilePath.substr(_i,
+							_sTransferFilePath.npos - _i);
+
+						SetWindowTextA(hwnd_lbLoad, _sTemp.c_str());
 						sendTestSettings(1);
 						break;
 
 					case ID_BT_TEXT:
-						SetWindowTextW(hDebug, L"load");
 						sendTestSettings(2);
 
 				}//switch
