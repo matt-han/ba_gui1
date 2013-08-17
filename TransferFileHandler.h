@@ -1,3 +1,7 @@
+/*
+ *	Opens, reads/writes and closes text files to transfer trough the designated
+ */
+
 #ifndef _TRANSFERFILEHANDLER_H
 #define _TRANSFERFILEHANDLER_H
 

@@ -569,7 +569,7 @@ int IniFileHandler::readBaudRate(string sPort, string sFilePath, int index)
 {
 	int iTemp = 0;
 	
-	//Get port stopbits
+	//Get port baudrate
 	//----------------------------------------------------------
 	_dwExists =GetPrivateProfileStringA(sPort.c_str(),"BaudRate",
 												NULL, szValue,
@@ -577,21 +577,7 @@ int IniFileHandler::readBaudRate(string sPort, string sFilePath, int index)
 												sFilePath.c_str());
 	if (_dwExists != 0)
 	{
-		iTemp = parseBaud(szValue, index);
-		
-		
-		
-		
-		if (iTemp != ERROR_PARSE)
-		{
-			vComPorts.at(index).iBaud = iTemp;
-		}
-		else
-		{
-			clog << "Error in INI file. Incorrect baud rate for "
-				 << "port " << sPort << endl;
-			return ERROR_INI;
-		}
+		parseBaud(szValue, index);
 	}
 	else	//_iError in ini file
 	{
@@ -698,13 +684,13 @@ string IniFileHandler::parseStopbits(int iStopbits)
 
 
 //------------------------------------------------------------------------------
-//	parse INI file parameter to test setting
+//	parse INI file parameter to test setting and saves it in the right struct
 //	Parameters:
 //	 IN:
 //		- string sBaud -> COM port baud rate
-//	Return: baud rate as an integer, if fails returns parsing _iError
+//		- int index -> index of the port struct to be tested
 //------------------------------------------------------------------------------
-int IniFileHandler::parseBaud(string sBaud, int index)
+void IniFileHandler::parseBaud(string sBaud, int index)
 {
 	int iTemp = 0;
 
@@ -714,8 +700,8 @@ int IniFileHandler::parseBaud(string sBaud, int index)
 
 	if (sRate == "MIN-MAX")
 	{
-		sTemp = "MIN";
-		sTemp2 = "MAX";
+		vComPorts.at(index).iBaud = 0;
+		vComPorts.at(index).iBaudrateMax = 1;
 	}
 	else if( 0 != sRate.find_first_of("-"))
 	{
@@ -728,7 +714,7 @@ int IniFileHandler::parseBaud(string sBaud, int index)
 	}
 	else
 	{
-		vComPorts.at(index).iBaud =atoi (sBaud.c_str());
+		vComPorts.at(index).iBaud = atoi(sBaud.c_str());
 	}
 }
 

@@ -1,7 +1,5 @@
 /*
- *	Opens, reads and closes cfg/ini files for automated tests
- *	Opens, reads/writes and closes text files to transfer trough the designated
- *	COM port
+ *	Opens, reads and closes cfg/ini files for automated testing
  */
 
 
@@ -9,13 +7,13 @@
 #ifndef _INIFILEHANDLER_H
 #define _INIFILEHANDLER_H
 
+
+#include "Constants.h"
+#include "Tools.h"
 #include <string>
 #include <vector>
 #include <Windows.h>
 
-//#include "Com.h"
-#include "Constants.h"
-#include "Tools.h"
 
 using namespace std;
 
@@ -71,7 +69,7 @@ private:
 	string parseStopbits(int iStopbits);
 
 	//Parse from INI file to GUI
-	int parseBaud(string, int);
+	void parseBaud(string, int);
 	int parseTestMode(string);
 	int parseParity(string);
 	int parseProtocol(string);
