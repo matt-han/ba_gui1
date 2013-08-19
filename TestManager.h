@@ -30,7 +30,7 @@ public:
 
 	int startManager();
 	int startAutomaticTest();
-	int startWobbleTest(int iBaudrate);
+	int startWobbleTest(int iBaudrate, int iParity);
 	int startFixedTest();
 
 	//get the text to be transmitted... either from a file, input string or default
@@ -43,6 +43,7 @@ private:
 	Tools _tools;
 	int _iError;
 	bool _bError;
+	bool _bWobbleParity;
 };
 
 #endif

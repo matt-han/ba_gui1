@@ -108,7 +108,6 @@ Com::Com(void)
 //------------------------------------------------------------------------------
 Com::~Com(void)
 {
-	MessageBoxA(NULL, "Deleting Com Object", "!!!!!!!", MB_OK);
 }
 
 

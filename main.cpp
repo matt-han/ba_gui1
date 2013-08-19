@@ -21,19 +21,19 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdShow
 	
 	Window win;
 
-	IniFileHandler file;
+	//IniFileHandler file;
 	////------------------------------------------------------------------------------
-	file.writeINIfile( sPort1,"COM2", 9600, 0, 1, 0, 2, 0, "");
-	file.writeINIfile("COM2","COM2", 9600, 0, 1, 0, 2, 1, "");
-	file.writeINIfile( sPort2,"COM2", 9600, 0, 1, 0, 2, 2, "");
+	//file.writeINIfile( sPort1,"COM2", 9600, 0, 1, 0, 2, 0,"file","somefile", "");
+	//file.writeINIfile("COM2","COM2", 9600, 0, 1, 0, 2, 1, "text", "texttosend","");
+	//file.writeINIfile( sPort2,"COM2", 9600, 0, 1, 0, 2, 2, "default", "", "");
 
-	file.writeINIfile("COM11","COM2", 9600, 1, 1, 0, 2, 0, "");
-	file.writeINIfile("COM22","COM2", 9600, 1, 1, 0, 2, 1, "");
-	file.writeINIfile("COM33","COM2", 9600, 1, 1, 0, 2, 2, "");
+	//file.writeINIfile("COM11","COM2", 9600, 1, 1, 0, 2, 0, "text", "texttosend","");
+	//file.writeINIfile("COM22","COM2", 9600, 1, 1, 0, 2, 1, "default", "", "");
+	//file.writeINIfile("COM33","COM2", 9600, 1, 1, 0, 2, 2,"file","somefile", "");
 
-	file.writeINIfile("COM4","COM2", 9600, 2, 1, 0, 2, 0, "");
-	file.writeINIfile("COM5","COM2", 9600, 2, 1, 0, 2, 1, "");
-	file.writeINIfile("COM6","COM2", 9600, 2, 1, 0, 2, 2, "");
+	//file.writeINIfile("COM4","COM2", 9600, 2, 1, 0, 2, 0, "default", "", "");
+	//file.writeINIfile("COM5","COM2", 9600, 2, 1, 0, 2, 1,"file","somefile", "");
+	//file.writeINIfile("COM6","COM2", 9600, 2, 1, 0, 2, 2, "text", "texttosend","");
 
 	//------------------------------------------------------------------------------
 	//------------------------------------------------------------------------------

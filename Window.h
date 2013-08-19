@@ -14,7 +14,6 @@ using namespace std;
 
 
 class Interpreter;
-//class Com;
 //use template class BaseWindow
 class Window : public BaseWindow<Window>
 {
@@ -45,7 +44,7 @@ public:
 	void sendLoggerState();
 	void sendTransTextMode(int iTransTextMode);
 
-	void sendTestSettings(int iTransferText);
+	void sendTestSettings();
 
 	void sethInstance(HINSTANCE hInst);
 
@@ -62,6 +61,7 @@ private:
 
 	int _iError;
 	int _iError2;
+	int _iTextToTransfer;
 
 	HINSTANCE _hInst;
 	UINT _status;
@@ -94,6 +94,7 @@ private:
 	HWND _hwnd_btnText;
 	HWND _hwnd_Start;
 	HWND _hwnd_Close;
+	HWND _hwnd_Save;
 
 	//void CreateMyTooltip (HWND hwnd);
 	//HWND CreateToolTip(int toolID, HWND hDlg, PTSTR pszText);

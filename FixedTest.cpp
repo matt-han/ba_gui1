@@ -48,22 +48,22 @@ void FixedTest::setTextVector(int iTextMode)
 	vTextToSend.erase(vTextToSend.begin(), vTextToSend.end());
 
 
-	// 0 for default string
-	//1 for user .txt
-	//2 for user string
+	//DEFAULT_VALUE for default string
+	//ID_BT_LOAD    for user .txt
+	//ID_BT_TEXT    for user string
 	int index;
 
 
 	switch(iTextMode)
 	{
-		case 0:
+		case DEFAULT_VALUE:
 			for (index = 0; index < TEXT_LENGTH; index ++)
 			{
 				vTextToSend.push_back(defaultText[index]);
 			}
 			break;
 
-		case 1:
+		case ID_BT_LOAD:
 			_iError = transFile.openFile(this->testStruct->sFilePath);
 			if(_iError == ERROR_SUCCESS)
 			{
@@ -77,7 +77,7 @@ void FixedTest::setTextVector(int iTextMode)
 			}
 			break;
 
-		case 2:
+		case ID_BT_TEXT:
 			vTextToSend.push_back(this->testStruct->sTextToTransfer);
 			break;
 	}

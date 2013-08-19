@@ -39,7 +39,8 @@ public:
 	//write methods
 	void writeINIfile(string sMasterPort, string sSlavePort, int iBaud,
 					  int iTestMode, int iParity, int iProtocol,
-					  int iStopbits, int iTransfer, string sPath);
+					  int iStopbits, int iTransfer, string sTextMode, 
+					  string sTextToTransfer, string sPath);
 
 	void writeINItransferSettings(string sMasterPort, string sSlavePort,
 								  int iTransfer, string sPath);
@@ -64,14 +65,14 @@ private:
 //------------------------------------------------------------------------------
 //Methods	
 	//Parse from GUI to INI file
-	string parseParity(int iParity);
-	string parseProtocol(int iProtocol);
-	string parseStopbits(int iStopbits);
+	string parseParityToIni(int iParity);
+	string parseProtocolToIni(int iProtocol);
+	string parseStopbitsToIni(int iStopbits);
 
 	//Parse from INI file to GUI
 	void parseBaud(string, int);
 	int parseTestMode(string);
-	int parseParity(string);
+	int parseParity(string, int);
 	int parseProtocol(string);
 	int parseStopbits(string);
 	int parseTransfer(string);

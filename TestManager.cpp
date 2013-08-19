@@ -27,43 +27,90 @@ int TestManager::startManager()
 			_iError = startAutomaticTest();
 			break;
 
-		//wobble
+	//wobble
+	//----------------------------------------------------------------------
 		case 1:
-
-			sBegin = _tools.convertToString(testStruct.iBaud);
-			sEnd = _tools.convertToString(testStruct.iBaudrateMax);
-
-			//determine the being and end index of the array
-			for( int i = 0;  i < testStruct.svBaudrates.size(); i++)
+			_bWobbleParity = false;
+			int iPar;
+			//user wrote MIN - MAX Baudrate in INI file
+			if(testStruct.iBaud == 0 && testStruct.iBaudrateMax == 1)
 			{
-				if(sBegin == testStruct.svBaudrates.at(i))
-					iBegin = i;
+				iBegin = 0;
+				iEnd = testStruct.svBaudrates.size() - 1;
+			}
+			else
+			{
 
-				if(sEnd == testStruct.svBaudrates.at(i))
+				sBegin = _tools.convertToString(testStruct.iBaud);
+				sEnd = _tools.convertToString(testStruct.iBaudrateMax);
+
+				//determine the begin and end index of the array
+				for( int i = 0;  i < testStruct.svBaudrates.size(); i++)
 				{
-					iEnd = i;
+					if(sBegin == testStruct.svBaudrates.at(i))
+						iBegin = i;
+
+					if(sEnd == testStruct.svBaudrates.at(i))
+					{
+						iEnd = i;
+						break;
+					}
+				}
+
+				if(iBegin >= iEnd)
+				{
+					MessageBoxA(NULL, "MAX baud rate has to be higher than MIN baud rate", "ERROR",
+								MB_OK);
+					_iError = ERROR_BAUD_MINMAX;
 					break;
 				}
-			}
+			}//MIN MAX Baudrate
 
-			if(iBegin >= iEnd)
+
+			//min max parity
+			if(testStruct.iParity == 3)
 			{
-				MessageBoxA(NULL, "MAX baud rate has to be higher than MIN baud rate", "ERROR",
-							MB_OK);
-				_iError = ERROR_BAUD_MINMAX;
-				break;
+				_bWobbleParity = true;
 			}
 
+
+
+			//start the tests
 			for(int index = iBegin; index <= iEnd; index++)
 			{
 				iTemp = atoi(testStruct.svBaudrates.at(index).c_str());
-				_iError = startWobbleTest(iTemp);
-				if (_iError != ERROR_SUCCESS)
+				
+				//for min max parity
+				if(_bWobbleParity)
 				{
-					clog << "Error in wobble test. Error: " << _iError << endl;
-					_bError = true;
+					for(iPar = 0; iPar < 3; iPar++)
+					{
+						_iError = startWobbleTest(iTemp, iPar);
+						if (_iError != ERROR_SUCCESS)
+						{
+							clog << "Error in wobble test. Error: " << _iError << endl;
+							clog << "Baudrate: " << iTemp << endl;
+							clog << "Parity:   " << iPar << endl;
+							_bError = true;
+						}
+					}
 				}
-			}
+				else
+				{
+					iPar = testStruct.iParity;
+					_iError = startWobbleTest(iTemp, iPar);
+
+					if (_iError != ERROR_SUCCESS)
+					{
+						clog << "Error in wobble test. Error: " << _iError << endl;
+						clog << "Baudrate: " << iTemp << endl;
+						clog << "Parity:   " << iPar << endl;
+						_bError = true;
+					}
+				}
+
+				
+			}//for baudrates
 			
 			if(_bError)
 			{
@@ -75,6 +122,7 @@ int TestManager::startManager()
 
 
 		//fixed
+	//----------------------------------------------------------------------
 		case 2:
 			_iError = startFixedTest();
 			break;
@@ -119,7 +167,7 @@ int TestManager::startFixedTest()
 }
 
 
-int TestManager::startWobbleTest(int iBaudrate)
+int TestManager::startWobbleTest(int iBaudrate, int iParity)
 {
 	//create for each test a new object to avoid errors
 	//WobbleTest wobble;

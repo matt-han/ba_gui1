@@ -31,12 +31,15 @@ IniFileHandler::~IniFileHandler(void)
 //		- int iParity -> COM port(s) baud rate
 //		- int iProtocol -> transmition protocol for test
 //		- int iStopbits -> stopbits to be set
-//		- int iTransfer -> single/double/master-slave transmition
+//		- int iTransfer -> single/double/master/slave transmition
+//		- int iTextMode	-> text mode to transfer
+//		- string sTextToTransfer -> default text, input text or input file
 //		- string sPath -> path where to save the ini test file
 //------------------------------------------------------------------------------
 void IniFileHandler::writeINIfile(string sMasterPort, string sSlavePort, int iBaud,
 								int iTestMode, int iParity, int iProtocol,
-								int iStopbits, int iTransfer, string sPath)
+								int iStopbits, int iTransfer,string sTextMode,
+								string sTextToTransfer, string sPath)
 {
 	string sBaud, sParity, sProtocol, sStopbits;
 	
@@ -55,9 +58,9 @@ void IniFileHandler::writeINIfile(string sMasterPort, string sSlavePort, int iBa
 		if (iTestMode == 2)
 			sBaud = tools.convertToString(iBaud);
 		
-		sParity	  = parseParity(iParity);
-		sProtocol = parseProtocol(iProtocol);
-		sStopbits = parseStopbits(iStopbits);
+		sParity	  = parseParityToIni(iParity);
+		sProtocol = parseProtocolToIni(iProtocol);
+		sStopbits = parseStopbitsToIni(iStopbits);
 	}
 
 
@@ -114,6 +117,25 @@ void IniFileHandler::writeINIfile(string sMasterPort, string sSlavePort, int iBa
 										sStopbits.c_str(), sPath.c_str());
 			break;
 	}//switch
+
+	if(sTextMode == "text")
+	{
+		WritePrivateProfileStringA(sMasterPort.c_str(),"TransferTextMode",
+								"text", sPath.c_str());
+	}
+	else if (sTextMode == "file")
+	{
+		WritePrivateProfileStringA(sMasterPort.c_str(),"TransferTextMode",
+								"file", sPath.c_str());
+	}
+	else
+	{
+		WritePrivateProfileStringA(sMasterPort.c_str(),"TransferTextMode",
+								"default", sPath.c_str());
+	}
+
+	WritePrivateProfileStringA(sMasterPort.c_str(),"TransferText",
+								sTextToTransfer.c_str(), sPath.c_str());
 }
 
 
@@ -149,12 +171,16 @@ void IniFileHandler::writeINItransferSettings(string sMasterPort,
 			break;
 
 	
-		//master slave
+		//master
 		case 2:
 			WritePrivateProfileStringA(sMasterPort.c_str(),"TransferMode",
-										"masterSlave", sPath.c_str());
-			WritePrivateProfileStringA(sMasterPort.c_str(),"SlavePort",
-										sSlavePort.c_str(), sPath.c_str());
+										"master", sPath.c_str());
+			break;
+
+		//slave
+		case 3:
+			WritePrivateProfileStringA(sMasterPort.c_str(),"TransferMode",
+										"slave", sPath.c_str());
 			break;
 
 	}
@@ -228,14 +254,14 @@ int IniFileHandler::readPortConfig(string sPort, string sFilePath, int index)
 	_iError = readTransferMode(sPort, sFilePath, index);
 	if (_iError == ERROR_SUCCESS)
 	{
-		switch(iTemp)
+		switch(vComPorts.at(index).iTestMode)
 		{
 			//automatic
 			//------------------------------------------------------------------
 			case 0:	
-				//if transfer mode equals double or masterSlave then read
+				//if transfer mode equals double then read
 				//the slave port
-				if (vComPorts.at(index).iTransfer != 0)
+				if (vComPorts.at(index).iTransfer == 1)
 				{
 					_iError = readSlave(sPort, sFilePath.c_str(), index);
 					if (_iError != ERROR_SUCCESS)
@@ -249,26 +275,28 @@ int IniFileHandler::readPortConfig(string sPort, string sFilePath, int index)
 			//wobble
 			//------------------------------------------------------------------
 			case 1:
-				//if transfer mode equals double or masterSlave then read
+				//if transfer mode equals double then read
 				//the slave port
-				if (vComPorts.at(index).iTransfer != 0)
+				if (vComPorts.at(index).iTransfer == 1)
 				{
 					_iError = readSlave(sPort, sFilePath.c_str(), index);
 					if (_iError != ERROR_SUCCESS)
 						return _iError;
-					else
-					{
-						_iError = readSettings(sPort, sFilePath.c_str(), index);
-						if (_iError != ERROR_SUCCESS)
-							return _iError;
-					}
+					
 				}
-				else	//if transfer mode equals single, then no slave port
+
+				_iError = readSettings(sPort, sFilePath.c_str(), index);
+				if (_iError != ERROR_SUCCESS)
+					return _iError;
+				else
 				{
-					_iError = readSettings(sPort, sFilePath.c_str(), index);
+					//read the baud rate
+					_iError = readBaudRate(sPort, sFilePath.c_str(), index);
+						
 					if (_iError != ERROR_SUCCESS)
 						return _iError;
 				}
+	
 				break;
 			//------------------------------------------------------------------
 
@@ -276,42 +304,29 @@ int IniFileHandler::readPortConfig(string sPort, string sFilePath, int index)
 			//fixed
 			//------------------------------------------------------------------
 			case 2:
-				//if transfer mode equals double or masterSlave then read
+				//if transfer mode equals double then read
 				//the slave port
-				if (vComPorts.at(index).iTransfer != 0)
+				if (vComPorts.at(index).iTransfer == 1)
 				{
 					_iError = readSlave(sPort, sFilePath.c_str(), index);
 					
 					if (_iError != ERROR_SUCCESS)
 						return _iError;
-					else
-					{	//read the baud rate
-						_iError = readBaudRate(sPort, sFilePath.c_str(), index);
-						
-						if (_iError != ERROR_SUCCESS)
-							return _iError;
-						else
-						{	//read the other settings
-							_iError = readSettings(sPort, sFilePath.c_str(), index);
-							if (_iError != ERROR_SUCCESS)
-								return _iError;
-						}
-					}
 				}
-				else	//if transfer mode equals single, then no slave port
-				{		//read the baud rate
-					_iError = readBaudRate(sPort, sFilePath.c_str(), index);
+
+				//read the baud rate
+				_iError = readBaudRate(sPort, sFilePath.c_str(), index);
 					
+				if (_iError != ERROR_SUCCESS)
+					return _iError;
+				else	//read the other settings
+				{
+					_iError = readSettings(sPort, sFilePath.c_str(), index);
+						
 					if (_iError != ERROR_SUCCESS)
 						return _iError;
-					else	//read the other settings
-					{
-						_iError = readSettings(sPort, sFilePath.c_str(), index);
-						
-						if (_iError != ERROR_SUCCESS)
-							return _iError;
-					}
 				}
+
 				break;
 			//------------------------------------------------------------------
 
@@ -453,15 +468,11 @@ int IniFileHandler::readParity(string sPort, string sFilePath, int index)
 											 sFilePath.c_str());
 	if (_dwExists != 0)
 	{
-		iTemp = parseParity(szValue);
-		if (iTemp != ERROR_PARSE)
-		{
-			vComPorts.at(index).iParity = iTemp;
-		}	
-		else
+		iTemp = parseParity(szValue, index);
+		if (iTemp == ERROR_PARSE)
 		{
 			clog << "Error in INI file. Incorrect parity for "
-				<< "port " << sPort << endl;
+				 << "port " << sPort << endl;
 			return ERROR_INI;
 		}
 	}
@@ -593,6 +604,7 @@ int IniFileHandler::readBaudRate(string sPort, string sFilePath, int index)
 //##############################################################################
 //	PARSE METHODS
 //##############################################################################
+
 //------------------------------------------------------------------------------
 //	Parse GUI parameters to a string
 //	Parameters:
@@ -600,7 +612,7 @@ int IniFileHandler::readBaudRate(string sPort, string sFilePath, int index)
 //		- int iParity -> integer describing the parity for the transmition
 //	Return: parsed GUI parameters
 //------------------------------------------------------------------------------
-string IniFileHandler::parseParity(int iParity)
+string IniFileHandler::parseParityToIni(int iParity)
 {
 	string sTemp = "";
 	switch(iParity)
@@ -623,6 +635,8 @@ string IniFileHandler::parseParity(int iParity)
 }
 
 
+
+
 //------------------------------------------------------------------------------
 //	Parse GUI parameters to a string
 //	Parameters:
@@ -630,7 +644,7 @@ string IniFileHandler::parseParity(int iParity)
 //		- int iProtocol -> integer describing the transfer protocol
 //	Return: parsed GUI parameters
 //------------------------------------------------------------------------------
-string IniFileHandler::parseProtocol(int iProtocol)
+string IniFileHandler::parseProtocolToIni(int iProtocol)
 {
 	string sTemp = "";
 	switch(iProtocol)
@@ -660,7 +674,7 @@ string IniFileHandler::parseProtocol(int iProtocol)
 //		- int iStopbits -> integer describing the stropbits for the transmition
 //	Return: parsed GUI parameters
 //------------------------------------------------------------------------------
-string IniFileHandler::parseStopbits(int iStopbits)
+string IniFileHandler::parseStopbitsToIni(int iStopbits)
 {
 	string sTemp = "";
 	switch(iStopbits)
@@ -680,7 +694,6 @@ string IniFileHandler::parseStopbits(int iStopbits)
 
 	return sTemp;
 }
-
 
 
 //------------------------------------------------------------------------------
@@ -709,14 +722,22 @@ void IniFileHandler::parseBaud(string sBaud, int index)
 		sTemp = sRate.substr(0, iTemp - 1);
 		sTemp2 = sRate.substr(sRate.find_first_of("-") + 1, sRate.length() - iTemp);
 
-		vComPorts.at(index).iBaud = atoi(sTemp.c_str());
-		vComPorts.at(index).iBaudrateMax = atoi(sTemp2.c_str());
+		if(sTemp == "MIN")
+			vComPorts.at(index).iBaud = 0;
+		else
+			vComPorts.at(index).iBaud = atoi(sTemp.c_str());
+
+		if (sTemp2 == "MAX")
+			vComPorts.at(index).iBaudrateMax = 1;
+		else
+			vComPorts.at(index).iBaudrateMax = atoi(sTemp2.c_str());
 	}
 	else
 	{
 		vComPorts.at(index).iBaud = atoi(sBaud.c_str());
 	}
 }
+
 
 //------------------------------------------------------------------------------
 //	parse INI file parameter to test setting
@@ -752,23 +773,47 @@ int IniFileHandler::parseTestMode(string sTestMode)
 //		- string sParity -> COM port parity
 //	Return: parity as an integer, if fails returns parsing _iError
 //------------------------------------------------------------------------------
-int IniFileHandler::parseParity(string sParity)
+int IniFileHandler::parseParity(string sParity, int index)
 {
-	int i = ERROR_PARSE;
+	string sPar;//, sTemp, sTemp2;
+	int iErr = ERROR_SUCCESS;
 
-	if (sParity == "none")
-		i = 0;
+	sPar = tools.delSpacesAndComents(sParity);
+
+	if (sPar == "MIN-MAX")
+	{
+		vComPorts.at(index).iParity = 3;
+	}
+	//else if( 0 != sRate.find_first_of("-"))
+	//{
+	//	iTemp = sRate.find_first_of("-");
+	//	sTemp = sRate.substr(0, iTemp - 1);
+	//	sTemp2 = sRate.substr(sRate.find_first_of("-") + 1, sRate.length() - iTemp);
+
+	//	if(sTemp == "MIN")
+	//		vComPorts.at(index).iParity = 0;
+	//	else
+	//		vComPorts.at(index).iParity = atoi(sTemp.c_str());
+
+	//	if (sTemp2 == "MAX")
+	//		vComPorts.at(index).iParityMax = 2;
+	//	else
+	//		vComPorts.at(index).iParityMax = atoi(sTemp2.c_str());
+	//}
+	else if (sParity == "none")
+		vComPorts.at(index).iParity = 0;
 	else if(sParity == "odd")
-		i = 1;
+		vComPorts.at(index).iParity = 1;
 	else if(sParity == "even")
-		i = 2;
+		vComPorts.at(index).iParity = 2;
 	else
 	{
 		clog << "Error parsing the parity. Wrong parameter." << sParity
-			 << "\nUse none, odd or even" << endl;
+			 << "\nUse none, odd, even, or MIN-MAX" << endl;
+		iErr = ERROR_PARSE;
 	}
-	
-	return i;
+
+	return iErr;
 }
 
 
@@ -812,14 +857,12 @@ int IniFileHandler::parseStopbits(string sStopbits)
 
 	if (sStopbits == "1")
 		i = 0;
-	else if(sStopbits == "1.5")
-		i = 1;
 	else if(sStopbits == "2")
 		i = 2;
 	else
 	{
 		clog << "Error parsing the stopbits. Wrong parameter." << sStopbits
-			<< "\nUse 1, 1.5 or 2" << endl;
+			<< "\nUse 1 or 2" << endl;
 	}
 	
 	return i;
@@ -841,12 +884,14 @@ int IniFileHandler::parseTransfer(string sTransfer)
 		i = 0;
 	else if(sTransfer == "double")
 		i = 1;
-	else if(sTransfer == "masterSlave")
+	else if(sTransfer == "master")
 		i = 2;
+	else if(sTransfer == "slave")
+		i = 3;
 	else
 	{
 		clog << "Error parsing the stopbits. Wrong parameter." << sTransfer
-			<< "\nUse single, double or masterSlave" << endl;
+			<< "\nUse single, double, master or slave" << endl;
 	}
 	
 	return i;

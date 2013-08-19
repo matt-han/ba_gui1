@@ -8,11 +8,14 @@ Interpreter::Interpreter(void)
 {
 	_iTestMode		= DEFAULT_VALUE;
 	_iParity		= DEFAULT_VALUE;
+	//_iParityMax		= DEFAULT_VALUE;
 	_iStopBits		= DEFAULT_VALUE;
 	_iTransfer		= DEFAULT_VALUE;
 	_iProtocol		= DEFAULT_VALUE;
 	_iBaudrate		= DEFAULT_VALUE;
 	_iBaudrateMax	= DEFAULT_VALUE;
+
+	_iTransTextMode = DEFAULT_VALUE;
 
 	_bLoggerState = true;
 
@@ -299,6 +302,7 @@ void Interpreter::handleGui()
 									MessageBoxW(NULL,L"Please select a slave port",
 										L"Error", MB_OK);
 									setDefaultValues();
+									bErr = true;
 									break;
 								}
 								else

@@ -66,6 +66,7 @@ using namespace std;
 #define ID_LB_BAUD		34
 #define ID_CB_MAX		35
 #define ID_CB_BAUD_MAX	36
+#define ID_BT_SAVE		37
 
 
 #define ID_BUT			100
@@ -96,6 +97,7 @@ using namespace std;
 #define ERROR_WAIT_SLAVE	-21
 #define ERROR_WAIT_MASTER	-22
 #define ERROR_BAUD_MINMAX	-23
+
 
 #define ERROR_WOBBLE		-50
 
@@ -142,6 +144,7 @@ using namespace std;
 		int iBaudrateMax;
 		int iTestMode;
 		int iParity;
+		//int iParityMax;
 		int iProtocol;
 		int iStopbits;
 		bool bLoggerState;
@@ -159,6 +162,7 @@ using namespace std;
 			iBaudrateMax	= DEFAULT_VALUE;
 			iTestMode		= DEFAULT_VALUE;
 			iParity			= DEFAULT_VALUE;
+			//iParityMax		= DEFAULT_VALUE;
 			iProtocol		= DEFAULT_VALUE;
 			iStopbits		= DEFAULT_VALUE;
 			iTransfer		= DEFAULT_VALUE;

@@ -51,6 +51,8 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 			_iProtocol = DEFAULT_VALUE;
 			_iBaudrate = DEFAULT_VALUE;
 
+			_iTextToTransfer = DEFAULT_VALUE;
+
 			_bLoggerState		= true;
 			_sMasPort			="";
 			_sSlaPort			="";
@@ -92,7 +94,7 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 //Transfer
 			CreateWindowA("button", "Transfer",
 							WS_CHILD | WS_VISIBLE | BS_GROUPBOX,
-							POS_X + 250, POS_Y, 120, 130,
+							POS_X + 250, POS_Y, 110, 130,
 							m_hwnd, 
 							(HMENU) ID_GB_TRANSFER,
 							NULL, NULL);
@@ -100,28 +102,28 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 			CreateWindowA("button", "Shorted",
 							WS_GROUP | WS_CHILD |
 							WS_VISIBLE | BS_AUTORADIOBUTTON,
-							POS_X + 260, POS_Y + 20, 100, 30,
+							POS_X + 260, POS_Y + 20, 90, 30,
 							m_hwnd,
 							(HMENU)ID_MOD_SINGLE,
 							NULL, NULL);
 
 			CreateWindowA("button", "Double",
 							WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON,
-							POS_X + 260, POS_Y + 45, 100, 30,
+							POS_X + 260, POS_Y + 45, 90, 30,
 							m_hwnd,
 							(HMENU)ID_MOD_DOUBLE,
 							NULL, NULL);
 
 			CreateWindowA("button", "Master",
 							WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON,
-							POS_X + 260,POS_Y + 70, 100, 30,
+							POS_X + 260,POS_Y + 70, 90, 30,
 							m_hwnd,
 							(HMENU)ID_MOD_MASTER,
 							NULL, NULL);
 
 			CreateWindowA("button", "Slave",
 							WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON,
-							POS_X + 260, POS_Y + 95, 100, 30,
+							POS_X + 260, POS_Y + 95, 90, 30,
 							m_hwnd,
 							(HMENU)ID_MOD_SLAVE,
 							NULL, NULL);
@@ -329,12 +331,12 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 //==============================================================================
 //Buttons
-			_hwnd_btnLoad = CreateWindowA("button", "Clic to load and start",
+			_hwnd_btnLoad = CreateWindowA("button", "Load file to send",
 				WS_CHILD | WS_VISIBLE,
 				POS_X, POS_Y2 + 165, 150, 20, m_hwnd, (HMENU)ID_BT_LOAD,
 				NULL, NULL);
 
-			_hwnd_btnText = CreateWindowA("button", "Load text and start",
+			_hwnd_btnText = CreateWindowA("button", "Load text to send",
 				WS_CHILD | WS_VISIBLE,
 				POS_X, POS_Y2 + 240, 150, 20, m_hwnd, (HMENU)ID_BT_TEXT,
 				NULL, NULL);
@@ -346,7 +348,12 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 			_hwnd_Close = CreateWindowA("button", "Close",
 				WS_CHILD | WS_VISIBLE,
-				POS_X + 140, POS_Y2 + 290, 70, 30, m_hwnd, (HMENU)ID_BT_CLOSE,
+				POS_X + 100, POS_Y2 + 290, 70, 30, m_hwnd, (HMENU)ID_BT_CLOSE,
+				NULL, NULL);
+
+			_hwnd_Save = CreateWindowA("button", "Save",
+				WS_CHILD | WS_VISIBLE,
+				POS_X + 180, POS_Y2 + 290, 70, 30, m_hwnd, (HMENU)ID_BT_SAVE,
 				NULL, NULL);
 
 
@@ -614,31 +621,36 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 //Buttons
 					case ID_BT_START:
 						
-						sendTestSettings(0);
-						
+						sendTestSettings();
 						break;
 
 					case ID_BT_CLOSE:
 						_ret = MessageBoxA(NULL, "Are you sure to quit?", 
 									  "Message", MB_OKCANCEL);
-						if ( _ret == IDOK) {
+						if ( _ret == IDOK)
 							SendMessage(m_hwnd, WM_CLOSE, 0, 0);
-						}
 						break;
 
 					case ID_BT_LOAD:
 						_sTransferFilePath = getFilePath();
 
 						_i = _sTransferFilePath.find_last_of("\\")+1;
-						_sTemp = _sTransferFilePath.substr(_i,
+							_sTemp = _sTransferFilePath.substr(_i,
 							_sTransferFilePath.npos - _i);
 
 						SetWindowTextA(_hwnd_lbLoad, _sTemp.c_str());
-						sendTestSettings(1);
+						_iTextToTransfer = ID_BT_LOAD;
+
 						break;
 
 					case ID_BT_TEXT:
-						sendTestSettings(2);
+						_iTextToTransfer = ID_BT_TEXT;
+						MessageBoxA(NULL, "Text loaded", "", MB_OK);
+						break;
+
+					case ID_BT_SAVE:
+						MessageBoxA(NULL, "....soon....", "", MB_OK);
+						break;
 
 				}//switch
 			}//if
@@ -787,21 +799,22 @@ void Window::sendTransTextMode(int iTransTextMode)
 //------------------------------------------------------------------------------
 //	Sends the GUI input settings to the interpreter
 //------------------------------------------------------------------------------
-void Window::sendTestSettings(int iTransTextMode)
+void Window::sendTestSettings()
 {
+	
 	//iTransferText
 	//0 for default
 	//1 for file
 	//2 for string
-	switch(iTransTextMode)
+	switch(_iTextToTransfer)
 	{
 		//1 for file
-		case 1:
+		case ID_BT_LOAD:
 			sendTransferFile();
 			break;
 			
 		//2 for string
-		case 2:
+		case ID_BT_TEXT:
 			sendTextToSend();
 			break;
 
@@ -820,9 +833,14 @@ void Window::sendTestSettings(int iTransTextMode)
 	sendSelectedSlavePort();
 	sendPortBaudRate();
 	sendLoggerState();
-	sendTransTextMode(iTransTextMode);
+	sendTransTextMode(_iTextToTransfer);
 
 	interpreter.handleGui();
+
+	_iTextToTransfer = DEFAULT_VALUE;
+	SetWindowTextA(_hwnd_lbLoad,"");
+	SetWindowTextA(_hwnd_lbText,"");
+
 }
 
 

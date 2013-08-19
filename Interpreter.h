@@ -62,6 +62,7 @@ private:
 
 	int _iTestMode;
 	int _iParity;
+	//int _iParityMax;
 	int _iStopBits;
 	int _iTransfer;
 	int _iProtocol;
