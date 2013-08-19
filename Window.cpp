@@ -644,12 +644,15 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 						break;
 
 					case ID_BT_TEXT:
+						ZeroMemory(_szTextToSend, sizeof(_szTextToSend));
+						GetWindowTextA(_hwnd_lbText, _szTextToSend, 30);
 						_iTextToTransfer = ID_BT_TEXT;
 						MessageBoxA(NULL, "Text loaded", "", MB_OK);
 						break;
 
 					case ID_BT_SAVE:
-						MessageBoxA(NULL, "....soon....", "", MB_OK);
+						saveTestSettings();
+						MessageBoxA(NULL, "....saved?....", "", MB_OK);
 						break;
 
 				}//switch
@@ -772,8 +775,8 @@ void Window::sendTransferFile()
 //------------------------------------------------------------------------------
 void Window::sendTextToSend()
 {
-	GetWindowTextA(_hwnd_lbText, _szTextToSend, 30);
-	clog << "\nText to send : " << _szTextToSend << endl;
+	//GetWindowTextA(_hwnd_lbText, _szTextToSend, 30);
+	//clog << "\nText to send : " << _szTextToSend << endl;
 	interpreter.setTextToSend(_szTextToSend);
 }
 
@@ -801,11 +804,6 @@ void Window::sendTransTextMode(int iTransTextMode)
 //------------------------------------------------------------------------------
 void Window::sendTestSettings()
 {
-	
-	//iTransferText
-	//0 for default
-	//1 for file
-	//2 for string
 	switch(_iTextToTransfer)
 	{
 		//1 for file
@@ -834,16 +832,56 @@ void Window::sendTestSettings()
 	sendPortBaudRate();
 	sendLoggerState();
 	sendTransTextMode(_iTextToTransfer);
-
+	
 	interpreter.handleGui();
 
+	//pick the text to send in the new test
 	_iTextToTransfer = DEFAULT_VALUE;
 	SetWindowTextA(_hwnd_lbLoad,"");
 	SetWindowTextA(_hwnd_lbText,"");
 
 }
 
+void Window::saveTestSettings()
+{
+	Interpreter interSaveToFile;
 
+	interSaveToFile.setTestMode(_iTestMode);
+	interSaveToFile.setParity(_iParity);
+	interSaveToFile.setStopBits(_iStopBits);
+	interSaveToFile.setTransfer(_iTransfer);
+	interSaveToFile.setProtocol(_iProtocol);
+	interSaveToFile.setSelectedMasterPort(_sMasPort);
+	interSaveToFile.setSelectedSlavePort(_sSlaPort);
+	interSaveToFile.setPortBaudRate(_iBaudrate);
+	interSaveToFile.setPortBaudRateMax(_iBaudrateMax);
+	interSaveToFile.setLoggerState(_bLoggerState);
+	interSaveToFile.setTransTextMode(_iTextToTransfer);
+	
+	switch(_iTextToTransfer)
+	{
+		//1 for file
+		case ID_BT_LOAD:
+			interSaveToFile.setTransferFile(_sTransferFilePath);
+			break;
+			
+		//2 for string
+		case ID_BT_TEXT:
+			interSaveToFile.setTextToSend(_szTextToSend);
+			break;
+
+		default:
+			break;
+
+	}
+
+	_iError = interSaveToFile.saveToFile();
+	if(_iError != ERROR_SUCCESS)
+	{
+		MessageBoxA(NULL, "Error savig to ini file", "ERROR", MB_OK);
+	}
+	
+}
 //------------------------------------------------------------------------------
 //	Set the path for the test file to be used
 //	Return: string with the file path

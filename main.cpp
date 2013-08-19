@@ -38,7 +38,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdShow
 	//------------------------------------------------------------------------------
 	//------------------------------------------------------------------------------
 	//file.readINIFile("C:\\Users\\m.hansertvivar\\AppData\\Local\\Temp\\WN_ComPortTestFile.ini");
-	//file.readINIFile("C:\\Users\\Benjamin\\AppData\\Local\\Temp\\WN_ComPortTestFile.ini");
+	//file.readINIFile("C:\\Users\\Matthias Hansert\\AppData\\Local\\Temp\\WN_ComPortTestFile_COM1.ini");
 	//------------------------------------------------------------------------------
 	//------------------------------------------------------------------------------
 
@@ -46,7 +46,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdShow
 
     if (!win.Create(L"WN COM Test Tool", WS_OVERLAPPEDWINDOW))
     {
-        return 0;
+        return -100;
     }
 
 //------------------------------------------------------------------------------

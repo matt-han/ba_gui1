@@ -45,6 +45,8 @@ public:
 	void sendTransTextMode(int iTransTextMode);
 
 	void sendTestSettings();
+	void saveTestSettings();
+
 
 	void sethInstance(HINSTANCE hInst);
 

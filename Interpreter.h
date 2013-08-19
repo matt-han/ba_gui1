@@ -11,6 +11,7 @@
 #include "TestManager.h"
 #include "Constants.h"
 #include "Tools.h"
+#include "IniFileHandler.h"
 
 #include <Windows.h>
 #include <string>
@@ -30,7 +31,9 @@ public:
 //------------------------------------------------------------------------------
 //Variables
 	Com comEnumerator;
+	IniFileHandler iniFile;
 	Tools tools;
+
 
 //------------------------------------------------------------------------------
 //Methods	
@@ -53,6 +56,8 @@ public:
 	
 	int checkInputConfigData();
 	int checkBaudrate(int);
+
+	int saveToFile();
 
 private:
 //------------------------------------------------------------------------------
@@ -79,7 +84,7 @@ private:
 	vector<string> _svBaudrates;
 
 	int _iTemp;
-	int iError;
+	int _iError;
 
 };
 

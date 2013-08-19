@@ -35,11 +35,13 @@ public:
 	int readProtocol(string sPort, string sFilePath, int index);
 	int readStopbits(string sPort, string sFilePath, int index);
 	int readBaudRate(string sPort, string sFilePath, int index);
+	int readTextToTransfer(string sPort, string sFilePath, int index);
+
 
 	//write methods
 	void writeINIfile(string sMasterPort, string sSlavePort, int iBaud,
-					  int iTestMode, int iParity, int iProtocol,
-					  int iStopbits, int iTransfer, string sTextMode, 
+					  int iBaudMax, int iTestMode, int iParity, int iProtocol,
+					  int iStopbits, int iTransfer, int iTextMode, 
 					  string sTextToTransfer, string sPath);
 
 	void writeINItransferSettings(string sMasterPort, string sSlavePort,
@@ -56,7 +58,7 @@ private:
 	TestStruct comPortStruct;
 	Tools tools;
 	int index;
-	char szValue[15];
+	char szValue[MAX_PATH];
 	string sFilePath;
 	string substr;
 	
@@ -77,6 +79,7 @@ private:
 	int parseStopbits(string);
 	int parseTransfer(string);
 	string parsePort(string);
+	int parseTextToTransfer(string, string, string, int);
 
 };
 

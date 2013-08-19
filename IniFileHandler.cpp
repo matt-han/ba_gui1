@@ -37,17 +37,19 @@ IniFileHandler::~IniFileHandler(void)
 //		- string sPath -> path where to save the ini test file
 //------------------------------------------------------------------------------
 void IniFileHandler::writeINIfile(string sMasterPort, string sSlavePort, int iBaud,
-								int iTestMode, int iParity, int iProtocol,
-								int iStopbits, int iTransfer,string sTextMode,
+								int iBaudMax, int iTestMode, int iParity, int iProtocol,
+								int iStopbits, int iTransfer,int iTextMode,
 								string sTextToTransfer, string sPath)
 {
-	string sBaud, sParity, sProtocol, sStopbits;
+	string sBaud, sBaudMax, sParity, sProtocol, sStopbits;
 	
 	//if path is empty then create default path
 	if (sPath == "")
 	{
 		sPath = getenv("TEMP");
-		sPath.append("\\WN_ComPortTestFile.ini");
+		sPath.append("\\WN_ComPortTestFile_");
+		sPath.append(sMasterPort);
+		sPath.append(".ini");
 	}
 
 	sFilePath = sPath;
@@ -55,8 +57,13 @@ void IniFileHandler::writeINIfile(string sMasterPort, string sSlavePort, int iBa
 	//copy ints into strings
 	if (iTestMode != 0)
 	{
-		if (iTestMode == 2)
+		if (iTestMode != 0)
+		{	
 			sBaud = tools.convertToString(iBaud);
+			
+			if(iTestMode == 1)
+				sBaudMax = tools.convertToString(iBaudMax);
+		}
 		
 		sParity	  = parseParityToIni(iParity);
 		sProtocol = parseProtocolToIni(iProtocol);
@@ -83,7 +90,14 @@ void IniFileHandler::writeINIfile(string sMasterPort, string sSlavePort, int iBa
 			//Transfer mode + slave port if needed
 			writeINItransferSettings(sMasterPort, sSlavePort, iTransfer, sPath);
 			
-			//Ignore baudrate,
+
+
+			//baudrate
+			sBaud.append("-");
+			sBaud.append(sBaudMax);
+			WritePrivateProfileStringA(sMasterPort.c_str(),"BaudRate",
+										sBaud.c_str(), sPath.c_str());
+
 			//Parity
 			WritePrivateProfileStringA(sMasterPort.c_str(),"Parity",
 										sParity.c_str(), sPath.c_str());
@@ -118,20 +132,25 @@ void IniFileHandler::writeINIfile(string sMasterPort, string sSlavePort, int iBa
 			break;
 	}//switch
 
-	if(sTextMode == "text")
+
+	switch(iTextMode)
 	{
-		WritePrivateProfileStringA(sMasterPort.c_str(),"TransferTextMode",
-								"text", sPath.c_str());
-	}
-	else if (sTextMode == "file")
-	{
-		WritePrivateProfileStringA(sMasterPort.c_str(),"TransferTextMode",
+		//1 for file
+		case ID_BT_LOAD:
+			WritePrivateProfileStringA(sMasterPort.c_str(),"TransferTextMode",
 								"file", sPath.c_str());
-	}
-	else
-	{
-		WritePrivateProfileStringA(sMasterPort.c_str(),"TransferTextMode",
+			break;
+			
+		//2 for string
+		case ID_BT_TEXT:
+			WritePrivateProfileStringA(sMasterPort.c_str(),"TransferTextMode",
+								"text", sPath.c_str());
+			break;
+
+		default:
+			WritePrivateProfileStringA(sMasterPort.c_str(),"TransferTextMode",
 								"default", sPath.c_str());
+			break;
 	}
 
 	WritePrivateProfileStringA(sMasterPort.c_str(),"TransferText",
@@ -331,6 +350,10 @@ int IniFileHandler::readPortConfig(string sPort, string sFilePath, int index)
 			//------------------------------------------------------------------
 
 		}//switch
+
+		_iError = readTextToTransfer(sPort, sFilePath.c_str(), index);
+		if (_iError != ERROR_SUCCESS)
+				return _iError;
 	}//if
 	else
 		return _iError;
@@ -560,7 +583,7 @@ int IniFileHandler::readStopbits(string sPort, string sFilePath, int index)
 	else	//_iError in ini file
 	{
 		clog << "Error in INI file. No Stopbits definied for "
-				<< sPort << " port" << endl;
+				<< sPort << endl;
 		return ERROR_INI;
 	}
 	return ERROR_SUCCESS;
@@ -593,7 +616,7 @@ int IniFileHandler::readBaudRate(string sPort, string sFilePath, int index)
 	else	//_iError in ini file
 	{
 		clog << "Error in INI file. No baud rate definied for "
-				<< sPort << " port" << endl;
+				<< sPort << endl;
 		return ERROR_INI;
 	}
 
@@ -601,9 +624,71 @@ int IniFileHandler::readBaudRate(string sPort, string sFilePath, int index)
 }
 
 
+int IniFileHandler::readTextToTransfer(string sPort, string sFilePath, int index)
+{
+	_dwExists =GetPrivateProfileStringA(sPort.c_str(),"TransferTextMode",
+												NULL, szValue,
+												sizeof(szValue),
+												sFilePath.c_str());
+	if (_dwExists != 0)
+	{
+		parseTextToTransfer(sPort, sFilePath, szValue, index);
+	}
+	else
+	{
+		clog << "Error in INI file. No text transfer mode definied for "
+			 << sPort << endl;
+			return ERROR_INI;
+	}
+
+	return ERROR_SUCCESS;
+}
+
 //##############################################################################
 //	PARSE METHODS
 //##############################################################################
+
+int IniFileHandler::parseTextToTransfer(string sPort, string sFilePath, string sTransferTextMode, int index)
+{
+	_dwExists =GetPrivateProfileStringA(sPort.c_str(),"TransferText",
+													NULL, szValue,
+													sizeof(szValue),
+													sFilePath.c_str());
+	if (_dwExists != 0)
+	{
+
+		if(sTransferTextMode == "file")
+		{
+			vComPorts.at(index).iTransTextMode = ID_BT_LOAD;
+			vComPorts.at(index).sFilePath = szValue;
+		}
+		else if(sTransferTextMode == "text")
+		{
+			vComPorts.at(index).iTransTextMode = ID_BT_TEXT;
+			vComPorts.at(index).sTextToTransfer = szValue;
+		}
+		else if(sTransferTextMode == "default")
+		{
+			return ERROR_SUCCESS;
+		}
+		else
+		{
+			clog << "Error in INI file. No correct text for transfer parameter for "
+					<< sPort << endl;
+			return ERROR_INI;
+		}
+	}	
+	else
+	{
+		clog << "Error in INI file. No text for transfer definied for "
+				<< sPort << endl;
+		return ERROR_INI;
+	}
+	
+
+	return ERROR_SUCCESS;
+}
+
 
 //------------------------------------------------------------------------------
 //	Parse GUI parameters to a string
@@ -719,7 +804,7 @@ void IniFileHandler::parseBaud(string sBaud, int index)
 	else if( 0 != sRate.find_first_of("-"))
 	{
 		iTemp = sRate.find_first_of("-");
-		sTemp = sRate.substr(0, iTemp - 1);
+		sTemp = sRate.substr(0, iTemp);
 		sTemp2 = sRate.substr(sRate.find_first_of("-") + 1, sRate.length() - iTemp);
 
 		if(sTemp == "MIN")

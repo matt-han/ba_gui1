@@ -217,11 +217,6 @@ void Interpreter::setDefaultValues()
 void Interpreter::handleGui()
 {
 	bool bErr = false;
-	//iInformationToTransfer
-	//0 for default
-	//1 for file
-	//2 for string
-	//_iInfoToTransfer = iTransferText;
 
 	if( _sMasPort != "")
 	{
@@ -429,8 +424,8 @@ void Interpreter::handleGui()
 					testManager.testStruct.iTransTextMode = _iTransTextMode;
 
 
-					iError = testManager.startManager();
-					if(iError == ERROR_SUCCESS)
+					_iError = testManager.startManager();
+					if(_iError == ERROR_SUCCESS)
 					{
 						MessageBoxA(NULL, "Send and Recieve OK", "SUCCESS!!",
 									MB_OK);
@@ -518,4 +513,45 @@ int Interpreter::checkBaudrate(int iBaudrate)
 	}
 	else
 		return iBaudrate;
+}
+
+
+int Interpreter::saveToFile()
+{
+
+	string sTemp;
+
+	switch(_iTransTextMode)
+	{
+		//1 for file
+		case ID_BT_LOAD:
+			sTemp = _sFilePath;
+			break;
+			
+		//2 for string
+		case ID_BT_TEXT:
+			sTemp = _sTextToSend;
+			break;
+
+		default:
+			sTemp = "";
+			break;
+	}
+
+
+
+	iniFile.writeINIfile(_sMasPort,
+						 _sSlaPort,
+						 _iBaudrate,
+						 _iBaudrateMax,
+						 _iTestMode,
+						 _iParity,
+						 _iProtocol,
+						 _iStopBits,
+						 _iTransfer,
+						 _iTransTextMode,
+						 sTemp,
+						 "");
+
+	return ERROR_SUCCESS;
 }
