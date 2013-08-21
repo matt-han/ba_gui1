@@ -67,6 +67,7 @@ using namespace std;
 #define ID_CB_MAX		35
 #define ID_CB_BAUD_MAX	36
 #define ID_BT_SAVE		37
+#define ID_BT_LOADINI	38
 
 
 #define ID_BUT			100
@@ -97,13 +98,15 @@ using namespace std;
 #define ERROR_WAIT_SLAVE	-21
 #define ERROR_WAIT_MASTER	-22
 #define ERROR_BAUD_MINMAX	-23
+#define ERROR_TEST			-24
+
 
 
 #define ERROR_WOBBLE		-50
 
 #define ERROR_TRANSMITION "ERROR_TRANSMITION"
 #define DEFAULT_VALUE		-100
-
+#define ERROR_TODO			-666
 //------------------------------------------------------------------------------
 //Baud rates
 //can NOT trust baud rates defined in WinBase.h

@@ -1019,3 +1019,9 @@ string IniFileHandler::parsePort(string sSlavePort)
 		return "";
 	}
 }
+
+
+vector<TestStruct> IniFileHandler::getTestStructure()
+{
+	return vComPorts;
+}

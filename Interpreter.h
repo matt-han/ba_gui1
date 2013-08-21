@@ -15,7 +15,6 @@
 
 #include <Windows.h>
 #include <string>
-//#include <array>
 #include <vector>
 
 
@@ -58,6 +57,7 @@ public:
 	int checkBaudrate(int);
 
 	int saveToFile();
+	int loadIniFile(string sPath);
 
 private:
 //------------------------------------------------------------------------------
@@ -80,8 +80,9 @@ private:
 	string _sFilePath;
 	string _sTextToSend;
 	bool _bLoggerState;
-
+	bool _bErr;
 	vector<string> _svBaudrates;
+	vector<TestStruct> _vIniFilePorts;
 
 	int _iTemp;
 	int _iError;

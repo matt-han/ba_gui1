@@ -356,6 +356,10 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 				POS_X + 180, POS_Y2 + 290, 70, 30, m_hwnd, (HMENU)ID_BT_SAVE,
 				NULL, NULL);
 
+			_hwnd_LoadINI = CreateWindowA("button", "Load test file",
+				WS_CHILD | WS_VISIBLE,
+				POS_X + 260, POS_Y2 + 290, 100, 30, m_hwnd, (HMENU)ID_BT_LOADINI,
+				NULL, NULL);
 
 			//CreateMyTooltip(m_hwnd);
 
@@ -652,7 +656,12 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 					case ID_BT_SAVE:
 						saveTestSettings();
-						MessageBoxA(NULL, "....saved?....", "", MB_OK);
+						MessageBoxA(NULL, "....saved?....\ncheck return codes!!!", "", MB_OK);
+						break;
+
+					case ID_BT_LOADINI:
+						loadTestSettings();
+						MessageBoxA(NULL, "....loaded?....\ncheck return codes!!!\n File loaded successfully, please press start", "", MB_OK);
 						break;
 
 				}//switch
@@ -882,6 +891,34 @@ void Window::saveTestSettings()
 	}
 	
 }
+
+
+
+int Window::loadTestSettings()
+{
+	string sPath = getFilePath();
+	if (sPath != "")
+	{
+		interpreter.loadIniFile(sPath);
+		
+		return ERROR_SUCCESS;
+	}
+	else
+		return ERROR_EMPTY_FILE;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 //------------------------------------------------------------------------------
 //	Set the path for the test file to be used
 //	Return: string with the file path

@@ -44,8 +44,13 @@ public:
 	void sendLoggerState();
 	void sendTransTextMode(int iTransTextMode);
 
+
+
 	void sendTestSettings();
 	void saveTestSettings();
+
+	int loadTestSettings();
+
 
 
 	void sethInstance(HINSTANCE hInst);
@@ -97,6 +102,7 @@ private:
 	HWND _hwnd_Start;
 	HWND _hwnd_Close;
 	HWND _hwnd_Save;
+	HWND _hwnd_LoadINI;
 
 	//void CreateMyTooltip (HWND hwnd);
 	//HWND CreateToolTip(int toolID, HWND hDlg, PTSTR pszText);

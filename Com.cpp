@@ -250,6 +250,58 @@ int Com::getBaudrates(string sChosenPort)
 }
 
 
+vector<string> Com::returnBaudrates(string sChosenPort)
+{
+	vBaud.clear();
+
+	if (INVALID_HANDLE_VALUE != openPort(sChosenPort) )
+	{
+		if ( 0 != GetCommProperties(hCom, &commProp))
+		{
+			clog << "Get baud rate for port " << sChosenPort << endl;
+
+			_iError = decodeBaudrates(commProp.dwSettableBaud);
+			if (ERROR_SUCCESS == _iError)
+			{
+				return vBaud;
+			}
+			else
+			{
+				clog << "Error decoding baud rate" << endl;
+				
+				if (ERROR_SUCCESS == closePort())
+					return vBaud;
+				else
+				{
+					clog << "Error closing port " << sChosenPort << endl;
+					return vBaud;
+				}
+			}
+		}
+		else
+		{
+			iExitCode = GetLastError();
+			clog << "Error getting posible baud rates. System error: "
+				 << iExitCode << endl;
+			
+			if (ERROR_SUCCESS == closePort())
+					return vBaud;
+				else
+				{
+					clog << "Error closing port " << sChosenPort << endl;
+					return vBaud;
+				}
+		}
+	}
+	else
+	{
+		iExitCode = GetLastError();
+		clog << "Error opening port to get baud rates. System error: "
+			 << iExitCode << endl;
+		return vBaud;
+	}
+}
+
 //------------------------------------------------------------------------------
 //	Decode available baud rates for opened port. Fills vector vBaud with
 //	available baud rates

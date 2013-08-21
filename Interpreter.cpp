@@ -555,3 +555,57 @@ int Interpreter::saveToFile()
 
 	return ERROR_SUCCESS;
 }
+
+
+int Interpreter::loadIniFile(string sPath)
+{
+	_bErr = false;
+	_iError = iniFile.readINIFile(sPath);
+
+	if(_iError == ERROR_SUCCESS)
+	{
+		_vIniFilePorts = iniFile.getTestStructure();
+
+		for( int index = 0; index < _vIniFilePorts.size(); index++)
+		{
+			testManager.testStruct = _vIniFilePorts.at(index);
+
+			testManager.testStruct.svBaudrates =
+				comEnumerator.returnBaudrates(_vIniFilePorts.at(index).sMasterPort);
+			
+			if(testManager.testStruct.svBaudrates.empty())
+			{
+				return ERROR_BAUDRATE;
+			}
+			
+			
+			_iError = testManager.startManager();
+
+			if(_iError != ERROR_SUCCESS)
+			{
+				_bErr = true;//handle errors
+				clog << "Error testing port "
+					 << _vIniFilePorts.at(index).sMasterPort
+					 << "Please read "
+					 << endl;
+			}
+		}
+		if(_bErr)
+		{
+			_vIniFilePorts.clear();
+			return ERROR_TEST;
+		}
+
+
+	}
+	else
+	{
+		clog << "error reading test file: "
+			 << sPath
+			 << endl;
+		return _iError;
+	}
+
+	_vIniFilePorts.clear();
+	return ERROR_SUCCESS;
+}

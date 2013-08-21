@@ -55,6 +55,7 @@ public:
 	HANDLE openPort(string portNumber);
 	int closePort();
 	int getBaudrates(string sChosenPort);
+	vector<string> returnBaudrates(string sChosenPort);
 	int decodeBaudrates(DWORD dwBitMask);
 	int translateBaudrate(string sBaud);
 	void enumeratePorts();

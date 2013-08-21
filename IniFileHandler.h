@@ -47,7 +47,7 @@ public:
 	void writeINItransferSettings(string sMasterPort, string sSlavePort,
 								  int iTransfer, string sPath);
 	
-
+	vector<TestStruct> getTestStructure();
 
 private:
 //------------------------------------------------------------------------------

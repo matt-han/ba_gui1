@@ -21,6 +21,9 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdShow
 	
 	Window win;
 
+	Com com(sPort1);
+	com.closePort();
+
 	//IniFileHandler file;
 	////------------------------------------------------------------------------------
 	//file.writeINIfile( sPort1,"COM2", 9600, 0, 1, 0, 2, 0,"file","somefile", "");

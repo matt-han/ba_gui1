@@ -42,8 +42,14 @@ int TestManager::startManager()
 			{
 
 				sBegin = _tools.convertToString(testStruct.iBaud);
-				sEnd = _tools.convertToString(testStruct.iBaudrateMax);
+				sEnd   = _tools.convertToString(testStruct.iBaudrateMax);
 
+
+
+
+
+				//BAUD RATE EMPTY BECAUSE THEY ARE NOT SAVED IN THE INI FILE!!!!
+				// GET THE RATES FROM........
 				//determine the begin and end index of the array
 				for( int i = 0;  i < testStruct.svBaudrates.size(); i++)
 				{
@@ -56,6 +62,9 @@ int TestManager::startManager()
 						break;
 					}
 				}
+
+
+
 
 				if(iBegin >= iEnd)
 				{
@@ -128,7 +137,6 @@ int TestManager::startManager()
 			break;
 	}
 	
-	//if(_iError == ERROR_SUCCESS)
 	return _iError;
 }
 
@@ -171,10 +179,10 @@ int TestManager::startWobbleTest(int iBaudrate, int iParity)
 {
 	//create for each test a new object to avoid errors
 	//WobbleTest wobble;
-	return ERROR_SUCCESS;
+	return ERROR_TODO;
 }
 
 int TestManager::startAutomaticTest()
 {
-	return ERROR_SUCCESS;
+	return ERROR_TODO;
 }
