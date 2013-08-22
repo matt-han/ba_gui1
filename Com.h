@@ -11,7 +11,6 @@
 
 
 #include "Constants.h"
-#include "Tools.h"
 
 #include <Windows.h>
 #include <string.h>
@@ -60,13 +59,11 @@ public:
 	int translateBaudrate(string sBaud);
 	void enumeratePorts();
 
-	int setTimeOuts();
+	int setTimeOuts(int iTimeOut);
+	int calculateTimeOut(int iParity, int iStopbits, int iBaud);
 	int getDCB();
 	int setDCB();
-	//void setParity(int i);
-	//void setProtocol(int i);
-	//void setStopBits(int i);
-	//void setTransfer(int i);
+	void printDCB();
 
 protected:
 //------------------------------------------------------------------------------
@@ -80,8 +77,6 @@ protected:
 private:
 //------------------------------------------------------------------------------
 //Variables
-	Tools tool;
-	DWORD fBinary;
 	int _iError;
 
 };

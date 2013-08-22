@@ -422,7 +422,7 @@ void Interpreter::handleGui()
 					testManager.testStruct.sFilePath = _sFilePath;
 					testManager.testStruct.sTextToTransfer = _sTextToSend;
 					testManager.testStruct.iTransTextMode = _iTransTextMode;
-
+					
 
 					_iError = testManager.startManager();
 					if(_iError == ERROR_SUCCESS)
@@ -459,6 +459,7 @@ void Interpreter::handleGui()
 //------------------------------------------------------------------------------
 int Interpreter::checkInputConfigData()
 {
+	//parity
 	if(_iParity == DEFAULT_VALUE)
 	{
 		MessageBoxW(NULL,L"Please select the parity",
@@ -468,7 +469,7 @@ int Interpreter::checkInputConfigData()
 	else
 		testManager.testStruct.iParity = _iParity;
 
-
+	//protocol
 	if(_iProtocol == DEFAULT_VALUE)
 	{
 		MessageBoxW(NULL,L"Please select the protocol",
@@ -478,6 +479,7 @@ int Interpreter::checkInputConfigData()
 	else
 		testManager.testStruct.iProtocol = _iProtocol;
 
+	//stopbits
 	if(_iStopBits == DEFAULT_VALUE)
 	{
 		MessageBoxW(NULL,L"Please select the stopbits",

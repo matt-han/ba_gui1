@@ -58,10 +58,15 @@ public:
 	bool sendData(bool MasterSlave, string sSendData);
 	string getData(bool MasterSlave, string sSendData);
 	void printTestSettings();
-	
+	void setProtocol(int iProtocol, Com *com);
+
+
+
 private:
+
 	int _iError;
 	int _iExitCode;
+	int _iTimeOut;
 };
 
 #endif

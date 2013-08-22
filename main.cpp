@@ -18,11 +18,20 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdShow
 
 	char info[100];
 	char get_info[100];
-	
+
 	Window win;
 
-	Com com(sPort1);
-	com.closePort();
+	//Com com(sPort1);
+	//clog << "PAR:none; STOP:1, none" << endl;
+	//com.closePort();
+
+	//Com com2("COM2");
+	//clog << "PAR:even; STOP:2, XON/XOFF"<<endl;
+	//com2.closePort();
+
+	//Com com3(sPort2);
+	//clog << "PAR:uneven; STOP:1, HARDWARE"<<endl;
+	//com3.closePort();
 
 	//IniFileHandler file;
 	////------------------------------------------------------------------------------

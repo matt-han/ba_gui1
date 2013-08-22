@@ -14,12 +14,7 @@ Com::Com(string sPort)
 
 	clog << "Opening port " << sPort <<endl;
 	this->sPort=sPort;
-	
-	//Win32 API does not support nonbinary mode transfers
-	fBinary = true;
 
-	//Struct with COM port properties
-	//DCB dcbOrg = {0};
 
 	//open port
 	hCom = openPort(sPort);
@@ -37,11 +32,9 @@ Com::Com(string sPort)
 	{
 		if ( ERROR_SUCCESS != getDCB())
 		{
-			clog << "Port " << sPort << " settings successfully opened" << endl;
+			clog << "Port " << sPort << " settings could NOT be opened" << endl;
 			iExitCode = ERROR_GET_DCB;
 		}
-
-		iExitCode = setTimeOuts();
 	}
 	
 	//string array for possible port baud rates
@@ -416,37 +409,43 @@ int Com::translateBaudrate(string sBaud)
 }
 
 
-int Com::setTimeOuts()
+int Com::setTimeOuts(int iTimeOut)
 {
-	//// Specify time-out between charactor for receiving.
-		//timeouts.ReadIntervalTimeout = 20;
-		//// Specify value that is multiplied 
-		//// by the requested number of bytes to be read. 
-		//timeouts.ReadTotalTimeoutMultiplier = 10;
-		//// Specify value is added to the product of the 
-		//// ReadTotalTimeoutMultiplier member
-		//timeouts.ReadTotalTimeoutConstant = 100;
-		//// Specify value that is multiplied 
-		//// by the requested number of bytes to be sent.
-		//timeouts.WriteTotalTimeoutMultiplier = 10;
-		//// Specify value is added to the product of the 
-		//// WriteTotalTimeoutMultiplier member
-		//timeouts.WriteTotalTimeoutConstant = 100;
+	// Specify time-out between charactor for receiving.
+	//value from msdn
+	timeouts.ReadIntervalTimeout = 20;
+	// Specify value that is multiplied 
+	// by the requested number of bytes to be read. 
+	timeouts.ReadTotalTimeoutMultiplier = iTimeOut;
+	// Specify value is added to the product of the 
+	// ReadTotalTimeoutMultiplier member
+	//value from msdn
+	timeouts.ReadTotalTimeoutConstant = 100;
+	// Specify value that is multiplied 
+	// by the requested number of bytes to be sent.
+	timeouts.WriteTotalTimeoutMultiplier = iTimeOut;
+	// Specify value is added to the product of the 
+	// WriteTotalTimeoutMultiplier member
+	//value from msdn
+	timeouts.WriteTotalTimeoutConstant = 100;
 
-		// Specify time-out between charactor for receiving.
-		timeouts.ReadIntervalTimeout = MAXDWORD;
-		// Specify value that is multiplied 
-		// by the requested number of bytes to be read. 
-		timeouts.ReadTotalTimeoutMultiplier = 0;
-		// Specify value is added to the product of the 
-		// ReadTotalTimeoutMultiplier member
-		timeouts.ReadTotalTimeoutConstant = 0;
-		// Specify value that is multiplied 
-		// by the requested number of bytes to be sent.
-		timeouts.WriteTotalTimeoutMultiplier = 0;
-		// Specify value is added to the product of the 
-		// WriteTotalTimeoutMultiplier member
-		timeouts.WriteTotalTimeoutConstant = 0;
+
+	//EVENT BASED READ
+
+	//// Specify time-out between charactor for receiving.
+	//timeouts.ReadIntervalTimeout = MAXDWORD;
+	//// Specify value that is multiplied 
+	//// by the requested number of bytes to be read. 
+	//timeouts.ReadTotalTimeoutMultiplier = 0;
+	//// Specify value is added to the product of the 
+	//// ReadTotalTimeoutMultiplier member
+	//timeouts.ReadTotalTimeoutConstant = 0;
+	//// Specify value that is multiplied 
+	//// by the requested number of bytes to be sent.
+	//timeouts.WriteTotalTimeoutMultiplier = 0;
+	//// Specify value is added to the product of the 
+	//// WriteTotalTimeoutMultiplier member
+	//timeouts.WriteTotalTimeoutConstant = 0;
 
 
 
@@ -460,10 +459,45 @@ int Com::setTimeOuts()
 }
 
 
+int Com::calculateTimeOut(int iParity, int iStopbits, int iBaud)
+{
+	float iPar;
+	float iStop;
+	float iData = 8.0; //default 8 data bits per character
+	int iTimeOutms = 0;
+	float iTimeOut = 0;
+	 
+	//determine how many bits are sent per character
+	if(iParity == 0)
+		iPar = 0.0;
+	else
+		iPar = 1.0;
+	
+	if(iStopbits == 0)
+		iStop = 1.0;
+	else
+		iStop = 2.0;
+
+	float fAnzBits = iPar + iData + iStop + 1; //+1 for startbit
+	
+	//Time out per character is equal to
+	// the number of bits per character divided by the baud rate
+	//multiplied with 1.1 for a 10% delay increment
+	iTimeOut = fAnzBits / (float)iBaud * 1.1;
+	iTimeOutms = 1000 * iTimeOut;
+
+	//if less than 1 milisecond, make it 1 ms
+	if (iTimeOutms < 1)
+		iTimeOutms = 1;
+
+	return iTimeOut;
+}
+
+
 int Com::getDCB()
 {
 	//get original dcb
-		if (GetCommState(hCom, &dcb) == 0)
+		if (0 == GetCommState(hCom, &dcb))
 		{
 			MessageBoxW(NULL, L"Error getting Port default settings",
 							  L"ERROR", MB_OK);
@@ -475,14 +509,16 @@ int Com::getDCB()
 			return ERROR_GET_DCB;
 		}
 		else
+		{
 			return ERROR_SUCCESS;
+		}
 }
 
 
 int Com::setDCB()
 {
 	//get original dcb
-		if (SetCommState(hCom, &dcb) == 0)
+		if (0 == SetCommState(hCom, &dcb))
 		{
 			_iError = GetLastError();
 			
@@ -495,80 +531,38 @@ int Com::setDCB()
 			return ERROR_SET_DCB;
 		}
 		else
-			return ERROR_SUCCESS;
+			printDCB();
+
+		return ERROR_SUCCESS;
 }
-//
-//
-//
-////set port communication protocol
-//void Com::setProtocol(int i)
-//{
-//	switch(i)
-//		{
-//		//Xon/Xoff
-//		case 0:
-//			this->dcb.fOutX = true;
-//			this->dcb.fInX = true;
-//			//this->dcb.XonChar = ;
-//			//this->dcb.XoffChar = ;
-//			break;
-//
-//		//DTR/DSR
-//		case 1:
-//			
-//			break;
-//
-//		//CTS/RTS
-//		case 2:
-//			
-//			break;
-//		}
-//}
-////
-////
-////
-////BYTE stopBit -> ONESTOPBIT; ONE5STOPBITS; TWOSTOPBITS
-//void Com::setStopBits(int i)
-//{
-//		switch(i)
-//		{
-//		case 0:
-//			this->dcb.StopBits = ONESTOPBIT;
-//			break;
-//
-//		case 1:
-//			this->dcb.StopBits = ONE5STOPBITS;
-//			break;
-//
-//		case 2:
-//			this->dcb.StopBits = TWOSTOPBITS;
-//			break;
-//		}
-//
-//}
-////
-////
-////
-////
-//void Com::setTransfer(int i)
-//{
-//		switch(i)
-//		{
-//		case 0:
-//			this->dcb.StopBits = ONESTOPBIT;
-//			break;
-//
-//		case 1:
-//			this->dcb.StopBits = ONE5STOPBITS;
-//			break;
-//
-//		case 2:
-//			this->dcb.StopBits = TWOSTOPBITS;
-//			break;
-//		}
-//
-//}
-////
-////
-////
-////
+
+void Com::printDCB()
+{
+	clog << "\n\n DCB SETTINGS for " << this->sPort<<endl;
+	clog << "---------------------------------"<<endl;
+	clog << "fBinary			" << dcb.fBinary << endl;
+	clog << "fParity			" << dcb.fParity << endl;
+	clog << "fOutxCtsFlow		" << dcb.fOutxCtsFlow << endl;
+	clog << "fOutxDsrFlow		" << dcb.fOutxDsrFlow << endl;
+	clog << "fDtrControl		" << dcb.fDtrControl  << endl;
+	clog << "fDsrSensitivity	" << dcb.fDsrSensitivity  << endl;
+	clog << "fTXContinueOnXoff	" << dcb.fTXContinueOnXoff  << endl;
+	clog << "fOutX				" << dcb.fOutX  << endl;
+	clog << "fInX				" << dcb.fInX  << endl;
+	clog << "fErrorChar			" << dcb.fErrorChar  << endl;
+	clog << "fNull				" << dcb.fNull  << endl;
+	clog << "fRtsControl		" << dcb.fRtsControl  << endl;
+	clog << "fAbortOnError		" << dcb.fAbortOnError  << endl;
+	clog << "XonLim				" << dcb.XonLim << endl;
+	clog << "XoffLim			" << dcb.XoffLim << endl;
+	clog << "ByteSize			" << dcb.ByteSize  << endl;
+	clog << "Parity				" << dcb.Parity << endl;
+	clog << "StopBits			" << dcb.StopBits << endl;
+	clog << "XonChar			" << dcb.XonChar << endl;
+	clog << "XoffChar			" << dcb.XoffChar << endl;
+	clog << "ErrorChar			" << dcb.ErrorChar<< endl;
+	clog << "EofChar			" << dcb.EofChar << endl;
+	clog << "EvtChar			" << dcb.EvtChar  << endl;
+
+
+}

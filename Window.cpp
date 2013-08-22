@@ -174,17 +174,17 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 							m_hwnd,
 							(HMENU)ID_PRO_XON_OFF,
 							NULL, NULL);
-			CreateWindowA("button", "DTR/DSR",
+			CreateWindowA("button", "Hardware",
 							WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON,
 							POS_X + 130, POS_Y2 + 45, 100, 30,
 							m_hwnd,
-							(HMENU)ID_PRO_DTR_DSR,
+							(HMENU)ID_PRO_HARDWARE,
 							NULL, NULL);
-			CreateWindowA("button", "CTS/RTS",
+			CreateWindowA("button", "None",
 							WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON,
 							POS_X + 130, POS_Y2 + 70, 100, 30,
 							m_hwnd,
-							(HMENU)ID_PRO_CTS_RTS,
+							(HMENU)ID_PRO_NONE,
 							NULL, NULL);
 
 //==============================================================================
@@ -568,11 +568,11 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 						_iProtocol = 0;
 						break;
 
-					case ID_PRO_DTR_DSR:
+					case ID_PRO_HARDWARE:
 						_iProtocol = 1;
 						break;
 
-					case ID_PRO_CTS_RTS:
+					case ID_PRO_NONE:
 						_iProtocol = 2;
 						break;
 

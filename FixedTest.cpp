@@ -105,16 +105,21 @@ int FixedTest::startSingleTest()
 		_iError = masterCom.getDCB();
 		if (_iError == ERROR_SUCCESS)
 		{
-			_iError = masterCom.setTimeOuts();
+			_iTimeOut = masterCom.calculateTimeOut(testStruct->iParity, testStruct->iStopbits, testStruct->iBaud);
+	
+			clog << "Port time out: " << _iTimeOut << endl;
+
+			_iError = masterCom.setTimeOuts(_iTimeOut);
 			if(_iError == ERROR_SUCCESS)
 			{
 				//change dcb to user input
 				masterCom.dcb.BaudRate = testStruct->iBaud; 
 				masterCom.dcb.Parity   = (BYTE)testStruct->iParity;
 				masterCom.dcb.StopBits = (BYTE)testStruct->iStopbits;
-	//IMPLEMENT PROTOCOL
-	//masterCom.dcb.StopBits = testStruct->iStopbits;
-
+				
+				//set all the protocol settings
+				setProtocol(testStruct->iProtocol, &masterCom);
+				
 				printTestSettings();
 
 				//set the port dcb with the new settings
@@ -208,7 +213,11 @@ int FixedTest::startDoubleTest()
 		_iError = masterCom.getDCB();
 		if (_iError == ERROR_SUCCESS)
 		{
-			_iError = masterCom.setTimeOuts();
+			_iTimeOut = masterCom.calculateTimeOut(testStruct->iParity, testStruct->iStopbits, testStruct->iBaud);
+	
+			clog << "Port time out: " << _iTimeOut << endl;
+
+			_iError = masterCom.setTimeOuts(_iTimeOut);
 			if(_iError != ERROR_SUCCESS)
 			{
 				clog << "Error setting the master port timeouts" << endl;
@@ -242,7 +251,11 @@ int FixedTest::startDoubleTest()
 		_iError = slaveCom.getDCB();
 		if (_iError == ERROR_SUCCESS)
 		{
-			_iError = slaveCom.setTimeOuts();
+			//_iTimeOut = slaveCom.calculateTimeOut(testStruct->iParity, testStruct->iStopbits, testStruct->iBaud);
+	
+			clog << "Port time out: " << _iTimeOut << endl;
+
+			_iError = slaveCom.setTimeOuts(_iTimeOut);
 			if(_iError != ERROR_SUCCESS)
 			{
 				clog << "Error setting the slave port timeouts" << endl;
@@ -265,14 +278,14 @@ int FixedTest::startDoubleTest()
 	masterCom.dcb.BaudRate = testStruct->iBaud; 
 	masterCom.dcb.Parity   = (BYTE)testStruct->iParity;
 	masterCom.dcb.StopBits = (BYTE)testStruct->iStopbits;
-	//IMPLEMENT PROTOCOL
-	//masterCom.dcb.StopBits = testStruct->iStopbits;
+	//set all the protocol settings
+	setProtocol(testStruct->iProtocol, &masterCom);
 
 	slaveCom.dcb.BaudRate = testStruct->iBaud; 
 	slaveCom.dcb.Parity   = (BYTE)testStruct->iParity;
 	slaveCom.dcb.StopBits = (BYTE)testStruct->iStopbits;
-	//IMPLEMENT PROTOCOL
-	//slaveCom.dcb.StopBits = testStruct->iStopbits;
+	//set all the protocol settings
+	setProtocol(testStruct->iProtocol, &slaveCom);
 
 	printTestSettings();
 
@@ -332,7 +345,7 @@ int FixedTest::startDoubleTest()
 	return ERROR_SUCCESS;
 }
 
-
+//implement time outs!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 int FixedTest::startMasterSlaveTest(bool bMaster)
 {
 	return ERROR_TODO;
@@ -360,8 +373,8 @@ int FixedTest::startMasterSlaveTest(bool bMaster)
 	//			masterCom.dcb.BaudRate = testStruct->iBaud; 
 	//			masterCom.dcb.Parity   = (BYTE)testStruct->iParity;
 	//			masterCom.dcb.StopBits = (BYTE)testStruct->iStopbits;
-	////IMPLEMENT PROTOCOL
-	////masterCom.dcb.StopBits = testStruct->iStopbits;
+	//			//set all the protocol settings
+				//setProtocol(testStruct->iProtocol, &masterCom);
 
 	//			printTestSettings();
 
@@ -443,7 +456,7 @@ int FixedTest::startMasterSlaveTest(bool bMaster)
 	//}
 }
 
-//
+//implement time outs!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 int FixedTest::startSlaveTest()
 {
 	return ERROR_TODO;
@@ -471,8 +484,8 @@ int FixedTest::startSlaveTest()
 	//			masterCom.dcb.BaudRate = testStruct->iBaud; 
 	//			masterCom.dcb.Parity   = (BYTE)testStruct->iParity;
 	//			masterCom.dcb.StopBits = (BYTE)testStruct->iStopbits;
-	////IMPLEMENT PROTOCOL
-	////masterCom.dcb.StopBits = testStruct->iStopbits;
+	//			//set all the protocol settings
+				//setProtocol(testStruct->iProtocol, &masterCom);
 
 	//			printTestSettings();
 
@@ -806,17 +819,56 @@ bool FixedTest::sendData(bool MasterSlave, string sSendData)
 
 void FixedTest::printTestSettings()
 {
-	clog << "#####################################################" << endl;
-	clog << "Communication Settings" << endl;
-	clog << "-------------------------------" << endl;
-	clog << "port   " << masterCom.sPort << endl;
-	clog << "baud   " << masterCom.dcb.BaudRate << endl;
-	clog << "parity " << masterCom.dcb.Parity << endl;
-	clog << "stop   " << masterCom.dcb.StopBits << endl;
-	clog << "proto  " << testStruct->iProtocol << endl;
-	clog << "#####################################################\n"<< endl;
+	clog << "\nCommunication Settings"                     << endl;
+	clog << "-------------------------"                    << endl;
+	clog << " * Port        " << testStruct->sMasterPort   << endl;
+	clog << " * Baud rate   " << testStruct->iBaud         << endl;
+	clog << " * Parity      " << testStruct->iParity       << endl;
+	clog << " * Stopbits    " << testStruct->iStopbits     << endl;
+	clog << " * Protocol    " << testStruct->iProtocol     << endl;
+	clog << "-------------------------\n"                  << endl;
 	//clog << "port " <<  << endl;
 	//clog << "port " <<  << endl;
 
 }
 
+
+void FixedTest::setProtocol(int iProtocol, Com *com)
+{
+	// 0 -> false
+	// 1 -> true
+
+
+	switch(iProtocol)
+	{
+		case 0:
+			com->dcb.fOutX = true;
+			com->dcb.fInX = true;
+			com->dcb.fOutxCtsFlow = false;
+			com->dcb.fOutxDsrFlow = false;
+			com->dcb.fDsrSensitivity = false;
+			com->dcb.fRtsControl = RTS_CONTROL_DISABLE;
+			com->dcb.fDtrControl = DTR_CONTROL_DISABLE;
+			break;
+
+		case 1:
+			com->dcb.fOutX = false;
+			com->dcb.fInX = false;
+			com->dcb.fOutxCtsFlow = true;
+			com->dcb.fOutxDsrFlow = true;
+			com->dcb.fDsrSensitivity = true;
+			com->dcb.fRtsControl = RTS_CONTROL_HANDSHAKE;
+			com->dcb.fDtrControl = DTR_CONTROL_HANDSHAKE;
+			break;
+
+		case 2:
+			com->dcb.fOutX = false;
+			com->dcb.fInX = false;
+			com->dcb.fOutxCtsFlow = false;
+			com->dcb.fOutxDsrFlow = false;
+			com->dcb.fDsrSensitivity = false;
+			com->dcb.fRtsControl = RTS_CONTROL_ENABLE;
+			com->dcb.fDtrControl = RTS_CONTROL_ENABLE;
+			break;
+	}
+}

@@ -739,11 +739,11 @@ string IniFileHandler::parseProtocolToIni(int iProtocol)
 			break;
 
 		case 1:
-			sTemp = "DTR/DSR";
+			sTemp = "hardware";
 			break;
 
 		case 2:
-			sTemp = "CTS/RTS";
+			sTemp = "none";
 			break;
 	}
 
@@ -915,14 +915,14 @@ int IniFileHandler::parseProtocol(string sProtocol)
 
 	if (sProtocol == "XON/XOFF")
 		i = 0;
-	else if(sProtocol == "DTR/DSR")
+	else if(sProtocol == "hardware")
 		i = 1;
-	else if(sProtocol == "CTS/RTS")
+	else if(sProtocol == "none")
 		i = 2;
 	else
 	{
 		clog << "Error parsing the protocol. Wrong parameter." << sProtocol
-			<< "\nUse XON/XOFF, DTR/DSR or CTS/RTS" << endl;
+			<< "\nUse XON/XOFF, hardware or none" << endl;
 	}
 	
 	return i;

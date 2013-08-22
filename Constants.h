@@ -37,8 +37,8 @@ using namespace std;
 #define ID_GB_PARITY	5
 #define ID_GB_TRANSFER	6
 #define ID_PRO_XON_OFF	7
-#define ID_PRO_DTR_DSR	8
-#define ID_PRO_CTS_RTS	9
+#define ID_PRO_HARDWARE	8
+#define ID_PRO_NONE		9
 #define ID_CB_COM_PORT  10
 #define ID_CB_COM_BAUD  11
 #define ID_MOD_SINGLE	12
