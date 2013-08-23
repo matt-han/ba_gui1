@@ -25,6 +25,15 @@ public:
 //------------------------------------------------------------------------------
 //Methods
 
+	//write methods
+	void writeINIfile(string sMasterPort, string sSlavePort, int iBaud,
+					  int iBaudMax, int iTestMode, int iParity, int iProtocol,
+					  int iStopbits, int iTransfer, int iTextMode, 
+					  string sTextToTransfer, bool bLogger, string sPath);
+
+	void writeINItransferSettings(string sMasterPort, string sSlavePort,
+								  int iTransfer, string sPath);
+	
 	//read methods
 	int readINIFile(string sFilePath);
 	int readPortConfig(string sPort,  string sFilePath, int index);
@@ -36,16 +45,9 @@ public:
 	int readStopbits(string sPort, string sFilePath, int index);
 	int readBaudRate(string sPort, string sFilePath, int index);
 	int readTextToTransfer(string sPort, string sFilePath, int index);
+	int readLogger(string sPort, string sFilePath, int index);
 
-
-	//write methods
-	void writeINIfile(string sMasterPort, string sSlavePort, int iBaud,
-					  int iBaudMax, int iTestMode, int iParity, int iProtocol,
-					  int iStopbits, int iTransfer, int iTextMode, 
-					  string sTextToTransfer, string sPath);
-
-	void writeINItransferSettings(string sMasterPort, string sSlavePort,
-								  int iTransfer, string sPath);
+	
 	
 	vector<TestStruct> getTestStructure();
 
@@ -80,6 +82,7 @@ private:
 	int parseTransfer(string);
 	string parsePort(string);
 	int parseTextToTransfer(string, string, string, int);
+
 
 };
 

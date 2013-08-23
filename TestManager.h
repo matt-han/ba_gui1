@@ -6,6 +6,7 @@
 #include "WobbleTest.h"
 #include "AutomaticTest.h"
 #include "Tools.h"
+#include "Logger.h"
 #include "Constants.h"
 
 
@@ -41,6 +42,7 @@ private:
 //------------------------------------------------------------------------------
 //Variables
 	Tools _tools;
+	Logger * _logger;
 	int _iError;
 	bool _bError;
 	bool _bWobbleParity;

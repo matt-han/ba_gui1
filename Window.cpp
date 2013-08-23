@@ -410,15 +410,21 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 								if (_iError == CB_ERR)
 								{
-									clog << "_iError updating baud rates in"
-										 <<	"combobox. System Error CB_ERR"
-										 << endl;
+									MessageBoxA(NULL, "Error updating baud rates in\n"
+													  "combobox. System Error CB_ERR",
+													  "ERROR", MB_OK | MB_ICONWARNING);
+									/*clog << "Error updating baud rates in"
+										 <<	"combo box. System Error CB_ERR"
+										 << endl;*/
 								}
 								else if ( _iError == CB_ERRSPACE)
 								{
-									clog << "not enough space in combo box."
-										 <<	"System Error CB_ERRSPACE"
-										 << endl;
+									MessageBoxA(NULL, "Error, not enough space in combo box.\n"
+													  "System Error CB_ERRSPACE",
+													  "ERROR", MB_OK | MB_ICONWARNING);
+									//clog << "not enough space in combo box."
+									//	 <<	"System Error CB_ERRSPACE"
+									//	 << endl;
 								}
 
 							}
@@ -427,13 +433,15 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 							_iError = SendMessageA(_hwndCB_Baud,
 												CB_GETCOUNT, 0, 0);
 							if (_iError == 0)
-								clog << "Error updating the baud rate combo box" << endl;
+								MessageBoxA(NULL, "Error updating the baud rate combo box",
+													  "ERROR", MB_OK | MB_ICONWARNING);
 
 							_iError2 = SendMessageA(_hwndCB_Baud_MAX,
 												CB_GETCOUNT, 0, 0);
 							if (_iError2 == 0)
 							{
-								clog << "Error updating the max baud rate combo box" << endl;
+								MessageBoxA(NULL, "Error updating the max baud rate combo box",
+													  "ERROR", MB_OK | MB_ICONWARNING);
 							}
 						}
 						else
@@ -630,7 +638,7 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 					case ID_BT_CLOSE:
 						_ret = MessageBoxA(NULL, "Are you sure to quit?", 
-									  "Message", MB_OKCANCEL);
+									  "Message", MB_OKCANCEL | MB_ICONSTOP);
 						if ( _ret == IDOK)
 							SendMessage(m_hwnd, WM_CLOSE, 0, 0);
 						break;

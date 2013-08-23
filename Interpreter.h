@@ -33,7 +33,6 @@ public:
 	IniFileHandler iniFile;
 	Tools tools;
 
-
 //------------------------------------------------------------------------------
 //Methods	
 	void setTestMode(int);
@@ -63,7 +62,7 @@ private:
 //------------------------------------------------------------------------------
 //Variables
 
-	TestManager testManager;
+	TestManager * _testManager;
 
 	int _iTestMode;
 	int _iParity;

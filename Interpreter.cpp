@@ -218,9 +218,11 @@ void Interpreter::handleGui()
 {
 	bool bErr = false;
 
+	_testManager = new TestManager();
+
 	if( _sMasPort != "")
 	{
-		testManager.testStruct.sMasterPort = _sMasPort;
+		_testManager->testStruct.sMasterPort = _sMasPort;
 
 		//if no test mode was selected -> error
 		if (_iTestMode == DEFAULT_VALUE)
@@ -231,7 +233,7 @@ void Interpreter::handleGui()
 		}
 		else
 		{
-			testManager.testStruct.iTestMode = _iTestMode;
+			_testManager->testStruct.iTestMode = _iTestMode;
 
 			//if no transfer mode was selected -> error
 			if (_iTransfer == DEFAULT_VALUE)
@@ -243,7 +245,7 @@ void Interpreter::handleGui()
 			else
 			{
 				//save the transfer mode
-				testManager.testStruct.iTransfer = _iTransfer;
+				_testManager->testStruct.iTransfer = _iTransfer;
 
 				switch (_iTestMode)
 				{
@@ -264,7 +266,7 @@ void Interpreter::handleGui()
 								break;
 							}
 							else
-								testManager.testStruct.sSlavePort = _sSlaPort;
+								_testManager->testStruct.sSlavePort = _sSlaPort;
 						}
 						else if (_iTransfer == 0)
 						{
@@ -301,7 +303,7 @@ void Interpreter::handleGui()
 									break;
 								}
 								else
-									testManager.testStruct.sSlavePort = _sSlaPort;
+									_testManager->testStruct.sSlavePort = _sSlaPort;
 							}
 
 							//check parity, protocol and stopbits
@@ -324,7 +326,7 @@ void Interpreter::handleGui()
 						//MIN
 						_iTemp = checkBaudrate(_iBaudrate);
 						if (_iTemp != DEFAULT_VALUE || _iTemp != ERROR_BAUDRATE)
-							testManager.testStruct.iBaud = _iBaudrate;
+							_testManager->testStruct.iBaud = _iBaudrate;
 						else
 						{
 							bErr = true;
@@ -333,14 +335,14 @@ void Interpreter::handleGui()
 						//MAX
 						_iTemp = checkBaudrate(_iBaudrateMax);
 						if (_iTemp != DEFAULT_VALUE || _iTemp != ERROR_BAUDRATE)
-							testManager.testStruct.iBaudrateMax = _iBaudrateMax;
+							_testManager->testStruct.iBaudrateMax = _iBaudrateMax;
 						else
 						{
 							bErr = true;
 							break;
 						}
 
-						testManager.testStruct.svBaudrates = this->comEnumerator.vBaud;
+						_testManager->testStruct.svBaudrates = this->comEnumerator.vBaud;
 						
 						break;
 					//----------------------------------------------------------
@@ -364,7 +366,7 @@ void Interpreter::handleGui()
 								break;
 							}
 							else
-								testManager.testStruct.sSlavePort = _sSlaPort;
+								_testManager->testStruct.sSlavePort = _sSlaPort;
 						}
 					
 						if (_iTransfer >= 0 && _iTransfer <= 3)
@@ -380,7 +382,7 @@ void Interpreter::handleGui()
 							//check baudrate
 							_iTemp = checkBaudrate(_iBaudrate);
 							if (_iTemp != DEFAULT_VALUE || _iTemp != ERROR_BAUDRATE)
-								testManager.testStruct.iBaud = _iBaudrate;
+								_testManager->testStruct.iBaud = _iBaudrate;
 							else
 							{
 								bErr = true;
@@ -418,13 +420,14 @@ void Interpreter::handleGui()
 				if(bErr == false)
 				{
 					//save the logger state, file path, textToSend and transtextmode
-					testManager.testStruct.bLoggerState = _bLoggerState;
-					testManager.testStruct.sFilePath = _sFilePath;
-					testManager.testStruct.sTextToTransfer = _sTextToSend;
-					testManager.testStruct.iTransTextMode = _iTransTextMode;
+					_testManager->testStruct.bLoggerState = _bLoggerState;
+					_testManager->testStruct.sFilePath = _sFilePath;
+					_testManager->testStruct.sTextToTransfer = _sTextToSend;
+					_testManager->testStruct.iTransTextMode = _iTransTextMode;
+					
 					
 
-					_iError = testManager.startManager();
+					_iError = _testManager->startManager();
 					if(_iError == ERROR_SUCCESS)
 					{
 						MessageBoxA(NULL, "Send and Recieve OK", "SUCCESS!!",
@@ -450,7 +453,7 @@ void Interpreter::handleGui()
 		setDefaultValues();
 	}
 
-
+	delete _testManager;
 }
 
 //------------------------------------------------------------------------------
@@ -459,6 +462,7 @@ void Interpreter::handleGui()
 //------------------------------------------------------------------------------
 int Interpreter::checkInputConfigData()
 {
+
 	//parity
 	if(_iParity == DEFAULT_VALUE)
 	{
@@ -467,7 +471,7 @@ int Interpreter::checkInputConfigData()
 		return ERROR_INPUT;
 	}
 	else
-		testManager.testStruct.iParity = _iParity;
+		_testManager->testStruct.iParity = _iParity;
 
 	//protocol
 	if(_iProtocol == DEFAULT_VALUE)
@@ -477,7 +481,7 @@ int Interpreter::checkInputConfigData()
 		return ERROR_INPUT;
 	}
 	else
-		testManager.testStruct.iProtocol = _iProtocol;
+		_testManager->testStruct.iProtocol = _iProtocol;
 
 	//stopbits
 	if(_iStopBits == DEFAULT_VALUE)
@@ -487,7 +491,7 @@ int Interpreter::checkInputConfigData()
 		return ERROR_INPUT;
 	}
 	else
-		testManager.testStruct.iStopbits = _iStopBits;
+		_testManager->testStruct.iStopbits = _iStopBits;
 
 	return ERROR_SUCCESS;
 }
@@ -553,6 +557,7 @@ int Interpreter::saveToFile()
 						 _iTransfer,
 						 _iTransTextMode,
 						 sTemp,
+						 _bLoggerState,
 						 "");
 
 	return ERROR_SUCCESS;
@@ -561,6 +566,8 @@ int Interpreter::saveToFile()
 
 int Interpreter::loadIniFile(string sPath)
 {
+	_testManager = new TestManager();
+	
 	_bErr = false;
 	_iError = iniFile.readINIFile(sPath);
 
@@ -570,31 +577,35 @@ int Interpreter::loadIniFile(string sPath)
 
 		for( int index = 0; index < _vIniFilePorts.size(); index++)
 		{
-			testManager.testStruct = _vIniFilePorts.at(index);
+			_testManager->testStruct = _vIniFilePorts.at(index);
 
-			testManager.testStruct.svBaudrates =
+			_testManager->testStruct.svBaudrates =
 				comEnumerator.returnBaudrates(_vIniFilePorts.at(index).sMasterPort);
 			
-			if(testManager.testStruct.svBaudrates.empty())
+			if(_testManager->testStruct.svBaudrates.empty())
 			{
 				return ERROR_BAUDRATE;
 			}
-			
-			
-			_iError = testManager.startManager();
+
+			_iError = _testManager->startManager();
 
 			if(_iError != ERROR_SUCCESS)
 			{
 				_bErr = true;//handle errors
-				clog << "Error testing port "
-					 << _vIniFilePorts.at(index).sMasterPort
-					 << "Please read "
-					 << endl;
+				if(_bLoggerState)
+					clog << "Error testing port "
+						 << _vIniFilePorts.at(index).sMasterPort
+						 << ". Error " << _iError
+						 << endl;
+				else
+					MessageBoxA(NULL, _vIniFilePorts.at(index).sMasterPort.c_str(),
+								"Error testing port ", MB_OK);
 			}
-		}
+		}//for
 		if(_bErr)
 		{
 			_vIniFilePorts.clear();
+			delete _testManager;
 			return ERROR_TEST;
 		}
 
@@ -602,12 +613,13 @@ int Interpreter::loadIniFile(string sPath)
 	}
 	else
 	{
-		clog << "error reading test file: "
-			 << sPath
-			 << endl;
+		MessageBoxA(NULL, sPath.c_str(),
+					"Error reading test file:", MB_OK);
+		delete _testManager;
 		return _iError;
 	}
 
 	_vIniFilePorts.clear();
+	delete _testManager;
 	return ERROR_SUCCESS;
 }

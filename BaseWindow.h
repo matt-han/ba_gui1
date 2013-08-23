@@ -32,6 +32,8 @@ public:
     {
         DERIVED_TYPE *pThis = NULL;
 
+		
+
         if (uMsg == WM_NCCREATE)
         {
 			//extract pointer
@@ -76,7 +78,7 @@ public:
 		wc.lpszClassName = L"WN COM Test Tool";
 		wc.hbrBackground = GetSysColorBrush(COLOR_3DFACE);
 		wc.hCursor       = LoadCursor(0, IDC_ARROW);
-		
+		wc.hIcon		 = LoadIcon(NULL, IDI_APPLICATION);
 		wc.lpfnWndProc   = DERIVED_TYPE::WindowProc;
         wc.hInstance     = GetModuleHandle(NULL);
         wc.lpszClassName = ClassName();

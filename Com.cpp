@@ -461,36 +461,36 @@ int Com::setTimeOuts(int iTimeOut)
 
 int Com::calculateTimeOut(int iParity, int iStopbits, int iBaud)
 {
-	float iPar;
-	float iStop;
-	float iData = 8.0; //default 8 data bits per character
+	double dPar;
+	double dStop;
+	double dData = 8.0; //default 8 data bits per character
 	int iTimeOutms = 0;
-	float iTimeOut = 0;
+	double dTimeOut = 0;
 	 
 	//determine how many bits are sent per character
 	if(iParity == 0)
-		iPar = 0.0;
+		dPar = 0.0;
 	else
-		iPar = 1.0;
+		dPar = 1.0;
 	
 	if(iStopbits == 0)
-		iStop = 1.0;
+		dStop = 1.0;
 	else
-		iStop = 2.0;
+		dStop = 2.0;
 
-	float fAnzBits = iPar + iData + iStop + 1; //+1 for startbit
+	double dAnzBits = dPar + dData + dStop + 1; //+1 for startbit
 	
-	//Time out per character is equal to
+	// Time out per character is equal to
 	// the number of bits per character divided by the baud rate
-	//multiplied with 1.1 for a 10% delay increment
-	iTimeOut = fAnzBits / (float)iBaud * 1.1;
-	iTimeOutms = 1000 * iTimeOut;
+	// multiplied with 1.1 for a 10% delay increment
+	dTimeOut = dAnzBits / (double)iBaud * 1.1;
+	iTimeOutms = 1000 * dTimeOut;
 
 	//if less than 1 milisecond, make it 1 ms
 	if (iTimeOutms < 1)
 		iTimeOutms = 1;
 
-	return iTimeOut;
+	return iTimeOutms;
 }
 
 
@@ -531,38 +531,40 @@ int Com::setDCB()
 			return ERROR_SET_DCB;
 		}
 		else
-			printDCB();
+			//printDCB();
 
 		return ERROR_SUCCESS;
 }
 
-void Com::printDCB()
-{
-	clog << "\n\n DCB SETTINGS for " << this->sPort<<endl;
-	clog << "---------------------------------"<<endl;
-	clog << "fBinary			" << dcb.fBinary << endl;
-	clog << "fParity			" << dcb.fParity << endl;
-	clog << "fOutxCtsFlow		" << dcb.fOutxCtsFlow << endl;
-	clog << "fOutxDsrFlow		" << dcb.fOutxDsrFlow << endl;
-	clog << "fDtrControl		" << dcb.fDtrControl  << endl;
-	clog << "fDsrSensitivity	" << dcb.fDsrSensitivity  << endl;
-	clog << "fTXContinueOnXoff	" << dcb.fTXContinueOnXoff  << endl;
-	clog << "fOutX				" << dcb.fOutX  << endl;
-	clog << "fInX				" << dcb.fInX  << endl;
-	clog << "fErrorChar			" << dcb.fErrorChar  << endl;
-	clog << "fNull				" << dcb.fNull  << endl;
-	clog << "fRtsControl		" << dcb.fRtsControl  << endl;
-	clog << "fAbortOnError		" << dcb.fAbortOnError  << endl;
-	clog << "XonLim				" << dcb.XonLim << endl;
-	clog << "XoffLim			" << dcb.XoffLim << endl;
-	clog << "ByteSize			" << dcb.ByteSize  << endl;
-	clog << "Parity				" << dcb.Parity << endl;
-	clog << "StopBits			" << dcb.StopBits << endl;
-	clog << "XonChar			" << dcb.XonChar << endl;
-	clog << "XoffChar			" << dcb.XoffChar << endl;
-	clog << "ErrorChar			" << dcb.ErrorChar<< endl;
-	clog << "EofChar			" << dcb.EofChar << endl;
-	clog << "EvtChar			" << dcb.EvtChar  << endl;
 
-
-}
+//Debbug methode, prints DCB structure
+//void Com::printDCB()
+//{
+//	clog << "\n\n DCB SETTINGS for " << this->sPort<<endl;
+//	clog << "---------------------------------"<<endl;
+//	clog << "fBinary			" << dcb.fBinary << endl;
+//	clog << "fParity			" << dcb.fParity << endl;
+//	clog << "fOutxCtsFlow		" << dcb.fOutxCtsFlow << endl;
+//	clog << "fOutxDsrFlow		" << dcb.fOutxDsrFlow << endl;
+//	clog << "fDtrControl		" << dcb.fDtrControl  << endl;
+//	clog << "fDsrSensitivity	" << dcb.fDsrSensitivity  << endl;
+//	clog << "fTXContinueOnXoff	" << dcb.fTXContinueOnXoff  << endl;
+//	clog << "fOutX				" << dcb.fOutX  << endl;
+//	clog << "fInX				" << dcb.fInX  << endl;
+//	clog << "fErrorChar			" << dcb.fErrorChar  << endl;
+//	clog << "fNull				" << dcb.fNull  << endl;
+//	clog << "fRtsControl		" << dcb.fRtsControl  << endl;
+//	clog << "fAbortOnError		" << dcb.fAbortOnError  << endl;
+//	clog << "XonLim				" << dcb.XonLim << endl;
+//	clog << "XoffLim			" << dcb.XoffLim << endl;
+//	clog << "ByteSize			" << dcb.ByteSize  << endl;
+//	clog << "Parity				" << dcb.Parity << endl;
+//	clog << "StopBits			" << dcb.StopBits << endl;
+//	clog << "XonChar			" << dcb.XonChar << endl;
+//	clog << "XoffChar			" << dcb.XoffChar << endl;
+//	clog << "ErrorChar			" << dcb.ErrorChar<< endl;
+//	clog << "EofChar			" << dcb.EofChar << endl;
+//	clog << "EvtChar			" << dcb.EvtChar  << endl;
+//
+//
+//}

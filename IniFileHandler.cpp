@@ -34,14 +34,15 @@ IniFileHandler::~IniFileHandler(void)
 //		- int iTransfer -> single/double/master/slave transmition
 //		- int iTextMode	-> text mode to transfer
 //		- string sTextToTransfer -> default text, input text or input file
+//		- bool bLoggerStatur -> true for logfile, false for no logging
 //		- string sPath -> path where to save the ini test file
 //------------------------------------------------------------------------------
 void IniFileHandler::writeINIfile(string sMasterPort, string sSlavePort, int iBaud,
 								int iBaudMax, int iTestMode, int iParity, int iProtocol,
 								int iStopbits, int iTransfer,int iTextMode,
-								string sTextToTransfer, string sPath)
+								string sTextToTransfer, bool bLogger, string sPath)
 {
-	string sBaud, sBaudMax, sParity, sProtocol, sStopbits;
+	string sBaud, sBaudMax, sParity, sProtocol, sStopbits, sLogger;
 	
 	//if path is empty then create default path
 	if (sPath == "")
@@ -68,6 +69,11 @@ void IniFileHandler::writeINIfile(string sMasterPort, string sSlavePort, int iBa
 		sParity	  = parseParityToIni(iParity);
 		sProtocol = parseProtocolToIni(iProtocol);
 		sStopbits = parseStopbitsToIni(iStopbits);
+		
+		if(bLogger)
+			sLogger = "true";
+		else
+			sLogger = "false";
 	}
 
 
@@ -153,8 +159,13 @@ void IniFileHandler::writeINIfile(string sMasterPort, string sSlavePort, int iBa
 			break;
 	}
 
+	//Transfer text
 	WritePrivateProfileStringA(sMasterPort.c_str(),"TransferText",
 								sTextToTransfer.c_str(), sPath.c_str());
+
+	//Logger
+	WritePrivateProfileStringA(sMasterPort.c_str(),"Logger",
+										sLogger.c_str(), sPath.c_str());
 }
 
 
@@ -354,6 +365,18 @@ int IniFileHandler::readPortConfig(string sPort, string sFilePath, int index)
 		_iError = readTextToTransfer(sPort, sFilePath.c_str(), index);
 		if (_iError != ERROR_SUCCESS)
 				return _iError;
+
+		//logger
+		_iError = readLogger(sPort, sFilePath.c_str(), index);
+		if(_iError != ERROR_INI)
+		{
+			if(_iError == 0)
+				vComPorts.at(index).bLoggerState = true;
+			else
+				vComPorts.at(index).bLoggerState = false;
+		}
+		else
+			return _iError;
 	}//if
 	else
 		return _iError;
@@ -600,9 +623,7 @@ int IniFileHandler::readStopbits(string sPort, string sFilePath, int index)
 //	Return: if success or _iError in INI file
 //------------------------------------------------------------------------------
 int IniFileHandler::readBaudRate(string sPort, string sFilePath, int index)
-{
-	int iTemp = 0;
-	
+{	
 	//Get port baudrate
 	//----------------------------------------------------------
 	_dwExists =GetPrivateProfileStringA(sPort.c_str(),"BaudRate",
@@ -644,6 +665,35 @@ int IniFileHandler::readTextToTransfer(string sPort, string sFilePath, int index
 	return ERROR_SUCCESS;
 }
 
+
+int IniFileHandler::readLogger(string sPort, string sFilePath, int index)
+{
+	_dwExists =GetPrivateProfileStringA(sPort.c_str(),"Logger",
+												NULL, szValue,
+												sizeof(szValue),
+												sFilePath.c_str());
+	if (_dwExists != 0)
+	{
+		if(0 == strcmp(szValue,"true"))
+			return 0;				//for true
+		else if(0 == strcmp(szValue,"false"))
+			return 1;				// for false
+		else
+		{
+			clog << "Error in INI file. No logging mode definied for "
+			 << sPort << endl;
+			return ERROR_INI;
+		}
+	}
+	else
+	{
+		clog << "Error in INI file. No logging mode definied for "
+			 << sPort << endl;
+			return ERROR_INI;
+	}
+
+	return ERROR_SUCCESS;
+}
 //##############################################################################
 //	PARSE METHODS
 //##############################################################################

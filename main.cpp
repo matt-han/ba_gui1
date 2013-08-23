@@ -11,27 +11,8 @@
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdShow)
 {
-	int z = 0;
-	string sPort1 = "COM1";
-	string sPort2 = "COM3";
-    Logger log(true, sPort1);
-
-	char info[100];
-	char get_info[100];
 
 	Window win;
-
-	//Com com(sPort1);
-	//clog << "PAR:none; STOP:1, none" << endl;
-	//com.closePort();
-
-	//Com com2("COM2");
-	//clog << "PAR:even; STOP:2, XON/XOFF"<<endl;
-	//com2.closePort();
-
-	//Com com3(sPort2);
-	//clog << "PAR:uneven; STOP:1, HARDWARE"<<endl;
-	//com3.closePort();
 
 	//IniFileHandler file;
 	////------------------------------------------------------------------------------
@@ -74,12 +55,6 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdShow
         TranslateMessage(&msg);
         DispatchMessage(&msg);
     }
-//------------------------------------------------------------------------------
-//------------------------------------------------------------------------------
-	//interpreter.handleGui();
-
-	log.closelog(true);
-
 
     return ERROR_SUCCESS;
 }

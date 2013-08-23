@@ -3,16 +3,26 @@
 
 TestManager::TestManager(void)
 {
+	//log file!!!!!!
 }
 
 
 TestManager::~TestManager(void)
 {
+	if(testStruct.bLoggerState)
+	{
+		_logger->closelog(true);
+		MessageBoxA(NULL,"deleting logger","WATCH OUT", MB_OK | MB_ICONWARNING);
+		delete _logger;
+	}
 }
 
 //
 int TestManager::startManager()
 {
+	if(testStruct.bLoggerState)
+		_logger = new Logger(true, testStruct.sMasterPort);
+
 	_bError = false;
 	string sBegin, sEnd;
 	int iBegin = 0;
