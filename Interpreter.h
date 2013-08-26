@@ -48,10 +48,13 @@ public:
 	void setTransferFile(string);
 	void setTextToSend(string);
 	void setTransTextMode(int);
+	void setRepeater(string);
 	void setDefaultValues();
+	//is void 'cos gui does not handle values!
 	void handleGui();
-	void setBaudrateList();
 	
+
+
 	int checkInputConfigData();
 	int checkBaudrate(int);
 
@@ -66,7 +69,6 @@ private:
 
 	int _iTestMode;
 	int _iParity;
-	//int _iParityMax;
 	int _iStopBits;
 	int _iTransfer;
 	int _iProtocol;
@@ -74,6 +76,7 @@ private:
 	int _iBaudrate;
 	int _iBaudrateMax;
 	int _iTransTextMode;
+	int _iRepeater;
 	string _sMasPort;
 	string _sSlaPort;
 	string _sFilePath;
@@ -85,6 +88,8 @@ private:
 
 	int _iTemp;
 	int _iError;
+
+	string _sTemp;
 
 };
 

@@ -64,11 +64,12 @@ int Logger::log(bool bLog, string sPort)
 			psbuf = filestr.rdbuf();
 			clog.rdbuf(psbuf);
 			
-			clog << "\n\n++++++++++++++++++++++++++++++++++++++++++++" << endl;
-			clog << "+   " << tools.printTime() << flush;
-			clog << "+   " << "WN COM Port Tester" << endl;
-			clog << "+   " << VERSION << endl;
-			clog << "++++++++++++++++++++++++++++++++++++++++++++" << endl;
+			clog << endl << endl;
+			clog << "++++++++++++++++++++++++++++++++++++++++++++"		<< endl;
+			clog << "+   " << tools.printTime()							<< flush;
+			clog << "+   " << "WN Serial COM Port Tester"				<< endl;
+			clog << "+   " << VERSION									<< endl;
+			clog << "++++++++++++++++++++++++++++++++++++++++++++"		<< endl;
 		}
 	}
 	else

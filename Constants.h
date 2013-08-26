@@ -13,7 +13,7 @@ using namespace std;
 
 //------------------------------------------------------------------------------
 //Version
-#define VERSION "1.0"
+#define VERSION "0.70"
 
 
 //------------------------------------------------------------------------------
@@ -68,6 +68,7 @@ using namespace std;
 #define ID_CB_BAUD_MAX	36
 #define ID_BT_SAVE		37
 #define ID_BT_LOADINI	38
+#define ID_LB_REPEATER	39
 
 
 #define ID_BUT			100
@@ -150,8 +151,10 @@ using namespace std;
 		//int iParityMax;
 		int iProtocol;
 		int iStopbits;
-		bool bLoggerState;
 		int iTransTextMode;
+		int iRepeater;
+		bool bLoggerState;
+
 		vector<string> svBaudrates;
 
 		//constructor
@@ -165,11 +168,11 @@ using namespace std;
 			iBaudrateMax	= DEFAULT_VALUE;
 			iTestMode		= DEFAULT_VALUE;
 			iParity			= DEFAULT_VALUE;
-			//iParityMax		= DEFAULT_VALUE;
 			iProtocol		= DEFAULT_VALUE;
 			iStopbits		= DEFAULT_VALUE;
 			iTransfer		= DEFAULT_VALUE;
 			iTransTextMode  = DEFAULT_VALUE;
+			iRepeater		= DEFAULT_VALUE;
 			bLoggerState	= true;
 		}
 	};//struct

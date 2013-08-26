@@ -215,14 +215,6 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 							(HMENU)ID_SB_TWO,
 							NULL, NULL);
 
-//==============================================================================
-//Logger
-			CreateWindowA("button", "Logger",
-			  WS_VISIBLE | WS_CHILD | BS_CHECKBOX,
-			  POS_X + 260, POS_Y2 + 80, 185, 35, m_hwnd, (HMENU) ID_LOGGER, 
-			  NULL, NULL);
-			
-			CheckDlgButton(m_hwnd, ID_LOGGER, BST_CHECKED);
 
 //==============================================================================
 //Labels
@@ -235,28 +227,51 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 //Baudrate
 			CreateWindowA("static", "Baud rate:", 
                   WS_CHILD | WS_VISIBLE,
-                  POS_X, POS_Y + 50, 90, 15, m_hwnd, (HMENU)ID_LB_BAUD, NULL, NULL);
+                  POS_X, POS_Y + 50, 90, 15, m_hwnd,
+				  (HMENU)ID_LB_BAUD, NULL, NULL);
 
 //------------------------------------------------------------------------------		
 //Min Baud
 			CreateWindowA("static", "MIN baud rate:", 
                   WS_CHILD,
-                  POS_X, POS_Y + 50, 120, 30, m_hwnd, (HMENU)ID_LB_MIN, NULL, NULL);
+                  POS_X, POS_Y + 50, 120, 30, m_hwnd,
+				  (HMENU)ID_LB_MIN, NULL, NULL);
 
 //------------------------------------------------------------------------------		
 //Slave Port
 			CreateWindowA("static", "Slave Port\nfor Double Test:", 
                   WS_CHILD,
-                  POS_X, POS_Y + 100, 120, 30, m_hwnd, (HMENU)ID_LB_SLV, NULL, NULL);
+                  POS_X, POS_Y + 100, 120, 30, m_hwnd,
+				  (HMENU)ID_LB_SLV, NULL, NULL);
 
 
 //------------------------------------------------------------------------------		
 //Max Baud
 			CreateWindowA("static", "MAX baud rate:", 
                   WS_CHILD,
-                  POS_X, POS_Y + 140, 120, 30, m_hwnd, (HMENU)ID_LB_MAX, NULL, NULL);
+                  POS_X, POS_Y + 140, 120, 30, m_hwnd,
+				  (HMENU)ID_LB_MAX, NULL, NULL);
 
+//------------------------------------------------------------------------------
+//Logger
+			CreateWindowA("button", "Logger",
+					WS_VISIBLE | WS_CHILD | BS_CHECKBOX,
+					POS_X + 260, POS_Y2 + 85, 185, 35, m_hwnd,
+					(HMENU) ID_LOGGER, NULL, NULL);
+			
+			CheckDlgButton(m_hwnd, ID_LOGGER, BST_CHECKED);
 
+//------------------------------------------------------------------------------
+//Repeater
+			_hwnd_Repeater = CreateWindowA("edit", "1", 
+							  WS_VISIBLE | WS_CHILD | WS_BORDER,
+							  POS_X + 260, POS_Y2 + 120, 50, 20, m_hwnd,
+							  (HMENU)ID_LB_REPEATER, NULL, NULL);
+
+			CreateWindowA("static", "Repeater", 
+                  WS_VISIBLE | WS_CHILD,
+                 POS_X + 315, POS_Y2 + 120, 60, 15, m_hwnd,
+				  NULL, NULL, NULL);
 //------------------------------------------------------------------------------
 //Load file
 			CreateWindowA("static", "Load file to be transfered:",
@@ -609,8 +624,10 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 						break;
 
 					case ID_MOD_DOUBLE:
-						ShowWindow(GetDlgItem(m_hwnd, ID_LB_SLV), SW_SHOWNORMAL);
-						ShowWindow(GetDlgItem(m_hwnd, ID_CB_SLV_PORT), SW_SHOWNORMAL);
+						ShowWindow(GetDlgItem(m_hwnd, ID_LB_SLV),
+									SW_SHOWNORMAL);
+						ShowWindow(GetDlgItem(m_hwnd, ID_CB_SLV_PORT),
+									SW_SHOWNORMAL);
 
 						_iTransfer = 1;
 						break;
@@ -849,7 +866,8 @@ void Window::sendTestSettings()
 	sendPortBaudRate();
 	sendLoggerState();
 	sendTransTextMode(_iTextToTransfer);
-	
+	sendRepeater();
+
 	interpreter.handleGui();
 
 	//pick the text to send in the new test
@@ -858,6 +876,14 @@ void Window::sendTestSettings()
 	SetWindowTextA(_hwnd_lbText,"");
 
 }
+
+
+void Window::sendRepeater()
+{
+	GetWindowTextA(_hwnd_Repeater, _szRepeater, 5);
+	interpreter.setRepeater(_szRepeater);
+}
+
 
 void Window::saveTestSettings()
 {

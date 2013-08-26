@@ -14,7 +14,7 @@ Interpreter::Interpreter(void)
 	_iProtocol		= DEFAULT_VALUE;
 	_iBaudrate		= DEFAULT_VALUE;
 	_iBaudrateMax	= DEFAULT_VALUE;
-
+	_iRepeater		= DEFAULT_VALUE;
 	_iTransTextMode = DEFAULT_VALUE;
 
 	_bLoggerState = true;
@@ -185,6 +185,24 @@ void Interpreter::setTransTextMode(int iTransTextMode)
 }
 
 
+
+void Interpreter::setRepeater(string sRepeater)
+{
+	if (sRepeater != "0")
+	{
+		int iTemp = strtol(sRepeater.c_str(), NULL, 10);
+		if(iTemp != 0)
+			this->_iRepeater = iTemp;
+		else
+		{
+			MessageBoxA(NULL, "Error in repeater value,\n"
+							  "please type an positive int",
+							  "ERROR", MB_OK | MB_ICONWARNING);
+			this->_iRepeater = DEFAULT_VALUE;
+		}
+	}
+	this->_iRepeater = 0;
+}
 //------------------------------------------------------------------------------
 //	Set the variables to the default values
 //------------------------------------------------------------------------------
@@ -220,6 +238,7 @@ void Interpreter::handleGui()
 
 	_testManager = new TestManager();
 
+
 	if( _sMasPort != "")
 	{
 		_testManager->testStruct.sMasterPort = _sMasPort;
@@ -228,7 +247,7 @@ void Interpreter::handleGui()
 		if (_iTestMode == DEFAULT_VALUE)
 		{
 			MessageBoxW(NULL,L"Please select a test mode",
-				L"Error", MB_OK);
+				L"Error", MB_OK | MB_ICONWARNING);
 			setDefaultValues();
 		}
 		else
@@ -239,7 +258,7 @@ void Interpreter::handleGui()
 			if (_iTransfer == DEFAULT_VALUE)
 			{
 				MessageBoxW(NULL,L"Please select a transfer mode",
-					L"Error", MB_OK);
+					L"Error", MB_OK | MB_ICONWARNING);
 				setDefaultValues();
 			}
 			else
@@ -261,7 +280,7 @@ void Interpreter::handleGui()
 							if (_sSlaPort == "")
 							{
 								MessageBoxW(NULL,L"Please select a slave port",
-									L"Error", MB_OK);
+									L"Error", MB_OK | MB_ICONWARNING);
 								setDefaultValues();
 								break;
 							}
@@ -275,11 +294,12 @@ void Interpreter::handleGui()
 						else
 						{
 							MessageBoxW(NULL,L"Please select a transfer mode",
-										L"Error", MB_OK);
+										L"Error", MB_OK | MB_ICONWARNING);
 							setDefaultValues();
 							break;
 						}
 						break;
+					//case 0
 					//----------------------------------------------------------
 
 
@@ -297,7 +317,7 @@ void Interpreter::handleGui()
 								if (_sSlaPort == "")
 								{
 									MessageBoxW(NULL,L"Please select a slave port",
-										L"Error", MB_OK);
+										L"Error", MB_OK | MB_ICONWARNING);
 									setDefaultValues();
 									bErr = true;
 									break;
@@ -317,7 +337,7 @@ void Interpreter::handleGui()
 						else
 						{
 							MessageBoxW(NULL,L"Please select a transfer mode",
-										L"Error", MB_OK);
+										L"Error", MB_OK | MB_ICONWARNING);
 							setDefaultValues();
 							break;
 						}
@@ -345,6 +365,7 @@ void Interpreter::handleGui()
 						_testManager->testStruct.svBaudrates = this->comEnumerator.vBaud;
 						
 						break;
+					//case 1
 					//----------------------------------------------------------
 
 
@@ -360,7 +381,7 @@ void Interpreter::handleGui()
 							if (_sSlaPort == "")
 							{
 								MessageBoxW(NULL,L"Please select a slave port",
-									L"Error", MB_OK);
+									L"Error", MB_OK | MB_ICONWARNING);
 								setDefaultValues();
 								bErr = true;
 								break;
@@ -392,12 +413,13 @@ void Interpreter::handleGui()
 						else
 						{
 							MessageBoxW(NULL,L"Please select a transfer mode",
-										L"Error", MB_OK);
+										L"Error", MB_OK | MB_ICONWARNING);
 							setDefaultValues();
 							bErr = true;
 							break;
 						}
 						break;
+					//case 2
 					//----------------------------------------------------------
 			
 
@@ -405,7 +427,7 @@ void Interpreter::handleGui()
 					//----------------------------------------------------------
 					default:
 						MessageBoxW(NULL,L"Please select a Test Mode",
-							L"Error", MB_OK);
+							L"Error", MB_OK | MB_ICONWARNING);
 						setDefaultValues();
 						bErr = true;
 						break;
@@ -413,20 +435,22 @@ void Interpreter::handleGui()
 
 				}//switch
 
-				//--------------------------------------------------------------
-				//--------------------------------------------------------------
+				
 				//start the manager to start testing
-				//check structure to avoid asking for bErr
-				if(bErr == false)
+				if(bErr == false || _iRepeater != DEFAULT_VALUE)
 				{
-					//save the logger state, file path, textToSend and transtextmode
+					//save the logger state, file path,
+					//repeater, textToSend and transtextmode
 					_testManager->testStruct.bLoggerState = _bLoggerState;
 					_testManager->testStruct.sFilePath = _sFilePath;
+					_testManager->testStruct.iRepeater = _iRepeater;
 					_testManager->testStruct.sTextToTransfer = _sTextToSend;
 					_testManager->testStruct.iTransTextMode = _iTransTextMode;
 					
 					
-
+					//**********************************************************
+					//*	START THE TEST MANAGER
+					//**********************************************************
 					_iError = _testManager->startManager();
 					if(_iError == ERROR_SUCCESS)
 					{
@@ -435,12 +459,14 @@ void Interpreter::handleGui()
 					}
 					else
 					{
-						MessageBoxA(NULL, "Send and Recieve failure", "FAIL!!",
-									MB_OK);
+						_sTemp = "Error : ";
+						_sTemp.append(tools.convertToString(_iError));
+
+						MessageBoxA(NULL, _sTemp.c_str(),
+							"Send and Recieve failure",
+							MB_OK | MB_ICONWARNING);
 					}
 				}
-				//--------------------------------------------------------------
-				//--------------------------------------------------------------
 
 			}//if transfer mode
 		}
@@ -448,13 +474,17 @@ void Interpreter::handleGui()
 	else
 	{
 		MessageBoxW(NULL,L"Please select the port to be tested",
-					L"Error", MB_OK);
+					L"Error", MB_OK | MB_ICONWARNING);
 		//Delete other values to avoid errors in new copy process
 		setDefaultValues();
 	}
 
+
+	
 	delete _testManager;
 }
+
+
 
 //------------------------------------------------------------------------------
 //	Checks the parity, protocol and stopbits in the GUI to save them in the

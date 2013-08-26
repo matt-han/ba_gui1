@@ -43,7 +43,7 @@ public:
 	void sendTextToSend();
 	void sendLoggerState();
 	void sendTransTextMode(int iTransTextMode);
-
+	void sendRepeater();
 
 
 	void sendTestSettings();
@@ -85,6 +85,7 @@ private:
 	string _sSlaPort;
 	string _sTransferFilePath;
 	string _sTempBaud;
+	char _szRepeater[6];
 	char _szTextToSend[31];
 	string _sTemp;
 	int _i;
@@ -103,6 +104,7 @@ private:
 	HWND _hwnd_Close;
 	HWND _hwnd_Save;
 	HWND _hwnd_LoadINI;
+	HWND _hwnd_Repeater;
 
 	//void CreateMyTooltip (HWND hwnd);
 	//HWND CreateToolTip(int toolID, HWND hDlg, PTSTR pszText);

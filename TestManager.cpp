@@ -3,7 +3,6 @@
 
 TestManager::TestManager(void)
 {
-	//log file!!!!!!
 }
 
 
@@ -130,7 +129,7 @@ int TestManager::startManager()
 			break;
 
 
-		//fixed
+	//fixed
 	//----------------------------------------------------------------------
 		case 2:
 			_iError = startFixedTest();
@@ -148,27 +147,32 @@ int TestManager::startFixedTest()
 	//set the text to be transfered
 	fixedTest.setTextVector(testStruct.iTransTextMode);
 	
-	
-	switch(testStruct.iTransfer)
+	//################################################################
+	//#################################################################
+	for(int iRepeat = 0; iRepeat < testStruct.iRepeater; iRepeat++)
 	{
-		//Single test
-		case 0:
-			_iError = fixedTest.startSingleTest();
-			break;
+		switch(testStruct.iTransfer)
+		{
+			//Single test
+			case 0:
+				_iError = fixedTest.startSingleTest();
+				break;
 
-		//Double Test
-		case 1:
-			_iError = fixedTest.startDoubleTest();
-			break;
+			//Double Test
+			case 1:
+				_iError = fixedTest.startDoubleTest();
+				break;
 
-		//Master Slave
-		case 2:
-			_iError = fixedTest.startMasterSlaveTest(true);
-			break;
+			//Master Slave
+			case 2:
+				_iError = fixedTest.startMasterSlaveTest(true);
+				break;
 
-		case 3:
-			_iError = fixedTest.startMasterSlaveTest(false);
-			break;
+			case 3:
+				_iError = fixedTest.startMasterSlaveTest(false);
+				break;
+		}
+	}
 	}
 	
 	return _iError;

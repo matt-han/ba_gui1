@@ -106,7 +106,7 @@ bool PortCommunications::readData(char * lpBuf, DWORD dwSize)
 				// to issue another read until the first one finishes.
 				//
 				// This is a good time to do some background work.
-				tools.wait(3);
+				tools.wait(1);
 				break;                       
 
 			default:

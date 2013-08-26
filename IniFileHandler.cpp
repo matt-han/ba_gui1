@@ -367,7 +367,7 @@ int IniFileHandler::readPortConfig(string sPort, string sFilePath, int index)
 				return _iError;
 
 		//logger
-		_iError = readLogger(sPort, sFilePath.c_str(), index);
+		_iError = readLogger(sPort, sFilePath.c_str());
 		if(_iError != ERROR_INI)
 		{
 			if(_iError == 0)
@@ -624,6 +624,7 @@ int IniFileHandler::readStopbits(string sPort, string sFilePath, int index)
 //------------------------------------------------------------------------------
 int IniFileHandler::readBaudRate(string sPort, string sFilePath, int index)
 {	
+	int iTemp = 0;
 	//Get port baudrate
 	//----------------------------------------------------------
 	_dwExists =GetPrivateProfileStringA(sPort.c_str(),"BaudRate",
@@ -632,7 +633,9 @@ int IniFileHandler::readBaudRate(string sPort, string sFilePath, int index)
 												sFilePath.c_str());
 	if (_dwExists != 0)
 	{
-		parseBaud(szValue, index);
+		iTemp = parseBaud(szValue, index);
+		if(iTemp != ERROR_SUCCESS)
+			return iTemp;
 	}
 	else	//_iError in ini file
 	{
@@ -666,7 +669,7 @@ int IniFileHandler::readTextToTransfer(string sPort, string sFilePath, int index
 }
 
 
-int IniFileHandler::readLogger(string sPort, string sFilePath, int index)
+int IniFileHandler::readLogger(string sPort, string sFilePath)
 {
 	_dwExists =GetPrivateProfileStringA(sPort.c_str(),"Logger",
 												NULL, szValue,
@@ -838,7 +841,7 @@ string IniFileHandler::parseStopbitsToIni(int iStopbits)
 //		- string sBaud -> COM port baud rate
 //		- int index -> index of the port struct to be tested
 //------------------------------------------------------------------------------
-void IniFileHandler::parseBaud(string sBaud, int index)
+int IniFileHandler::parseBaud(string sBaud, int index)
 {
 	int iTemp = 0;
 
@@ -851,7 +854,7 @@ void IniFileHandler::parseBaud(string sBaud, int index)
 		vComPorts.at(index).iBaud = 0;
 		vComPorts.at(index).iBaudrateMax = 1;
 	}
-	else if( 0 != sRate.find_first_of("-"))
+	else if( 0 != sRate.find_first_of("-")) //2 Baud rate values were given
 	{
 		iTemp = sRate.find_first_of("-");
 		sTemp = sRate.substr(0, iTemp);
@@ -860,17 +863,34 @@ void IniFileHandler::parseBaud(string sBaud, int index)
 		if(sTemp == "MIN")
 			vComPorts.at(index).iBaud = 0;
 		else
-			vComPorts.at(index).iBaud = atoi(sTemp.c_str());
+		{
+			iTemp = strtol(sTemp.c_str(),NULL, 10);
+			if (iTemp != 0)
+				vComPorts.at(index).iBaud = iTemp;
+			else
+				return ERROR_PARSE;
+		}
 
 		if (sTemp2 == "MAX")
 			vComPorts.at(index).iBaudrateMax = 1;
 		else
-			vComPorts.at(index).iBaudrateMax = atoi(sTemp2.c_str());
+		{
+			iTemp = strtol(sTemp2.c_str(),NULL, 10);
+			if (iTemp != 0)
+				vComPorts.at(index).iBaudrateMax = iTemp;
+			else
+				return ERROR_PARSE;
+		}
 	}
-	else
+	else //only one baud rate value was given
 	{
-		vComPorts.at(index).iBaud = atoi(sBaud.c_str());
+		iTemp = strtol(sBaud.c_str(),NULL, 10);
+		if (iTemp != 0)
+			vComPorts.at(index).iBaud = iTemp;
+		else
+			return ERROR_PARSE;
 	}
+	return ERROR_SUCCESS;
 }
 
 
@@ -919,22 +939,6 @@ int IniFileHandler::parseParity(string sParity, int index)
 	{
 		vComPorts.at(index).iParity = 3;
 	}
-	//else if( 0 != sRate.find_first_of("-"))
-	//{
-	//	iTemp = sRate.find_first_of("-");
-	//	sTemp = sRate.substr(0, iTemp - 1);
-	//	sTemp2 = sRate.substr(sRate.find_first_of("-") + 1, sRate.length() - iTemp);
-
-	//	if(sTemp == "MIN")
-	//		vComPorts.at(index).iParity = 0;
-	//	else
-	//		vComPorts.at(index).iParity = atoi(sTemp.c_str());
-
-	//	if (sTemp2 == "MAX")
-	//		vComPorts.at(index).iParityMax = 2;
-	//	else
-	//		vComPorts.at(index).iParityMax = atoi(sTemp2.c_str());
-	//}
 	else if (sParity == "none")
 		vComPorts.at(index).iParity = 0;
 	else if(sParity == "odd")

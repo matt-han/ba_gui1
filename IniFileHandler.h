@@ -13,7 +13,7 @@
 #include <string>
 #include <vector>
 #include <Windows.h>
-
+#include <stdlib.h>
 
 using namespace std;
 
@@ -45,7 +45,7 @@ public:
 	int readStopbits(string sPort, string sFilePath, int index);
 	int readBaudRate(string sPort, string sFilePath, int index);
 	int readTextToTransfer(string sPort, string sFilePath, int index);
-	int readLogger(string sPort, string sFilePath, int index);
+	int readLogger(string sPort, string sFilePath);
 
 	
 	
@@ -74,7 +74,7 @@ private:
 	string parseStopbitsToIni(int iStopbits);
 
 	//Parse from INI file to GUI
-	void parseBaud(string, int);
+	int parseBaud(string, int);
 	int parseTestMode(string);
 	int parseParity(string, int);
 	int parseProtocol(string);
