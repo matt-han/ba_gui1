@@ -146,9 +146,7 @@ int TestManager::startFixedTest()
 
 	//set the text to be transfered
 	fixedTest.setTextVector(testStruct.iTransTextMode);
-	
-	//################################################################
-	//#################################################################
+
 	for(int iRepeat = 0; iRepeat < testStruct.iRepeater; iRepeat++)
 	{
 		switch(testStruct.iTransfer)
@@ -171,9 +169,8 @@ int TestManager::startFixedTest()
 			case 3:
 				_iError = fixedTest.startMasterSlaveTest(false);
 				break;
-		}
-	}
-	}
+		}//switch
+	}//for
 	
 	return _iError;
 }

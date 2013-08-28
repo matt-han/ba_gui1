@@ -128,6 +128,10 @@ int FixedTest::startSingleTest()
 				{
 					//Communication Loop
 					//send and recieve data
+					clog<<"-----------------------------------------"<<endl;
+					clog << "Transmition started" << endl;
+					clog << tools.printTime()     << flush;
+					clog<<"-----------------------------------------"<<endl;
 					for (unsigned int index = 0; index < vTextToSend.size();
 						 index++)
 					{
@@ -135,11 +139,12 @@ int FixedTest::startSingleTest()
 												true);
 						if(_iError != ERROR_SUCCESS)
 						{
-							clog << "Error communicating!!!!!!"<<endl;
+							clog << "Error communicating"<<endl;
 						}
 					}
 					clog<<"-----------------------------------------"<<endl;
 					clog << "Transmition finished"<<endl;
+					clog << tools.printTime() << flush;
 					clog<<"-----------------------------------------"<<endl;
 					if (bTransmitionError == true)
 					{
@@ -835,10 +840,6 @@ void FixedTest::printTestSettings()
 
 void FixedTest::setProtocol(int iProtocol, Com *com)
 {
-	// 0 -> false
-	// 1 -> true
-
-
 	switch(iProtocol)
 	{
 		case 0:

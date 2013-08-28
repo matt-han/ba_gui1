@@ -132,10 +132,12 @@ bool PortCommunications::readData(char * lpBuf, DWORD dwSize)
 //------------------------------------------------------------------------------
 bool PortCommunications::writeData(const char * lpBuf, DWORD dwSize)
 {
+	int iCounter = 0;
+	int iErr;
 	OVERLAPPED osWrite = {0};
 	DWORD dwWritten;
 	DWORD dwRes;
-	BOOL  fRes;
+	BOOL  fRes = FALSE;
 
 	//DWORD dwTransfer = sizeof(&lpBuf);
 
@@ -145,70 +147,100 @@ bool PortCommunications::writeData(const char * lpBuf, DWORD dwSize)
 		// Error creating overlapped event handle.
 		return FALSE;
 
-   // Issue write
-	if (!WriteFile(hCom, lpBuf, dwSize, &dwWritten, &osWrite))
+	do
 	{
-		if (GetLastError() != ERROR_IO_PENDING)
-		{ 
-			// WriteFile failed, but it isn't delayed. Report error.
-			fRes = FALSE;
-		}
-		else
+		clog << "...Write attempt number: " << iCounter << endl;
+	   // Issue write
+		if (!WriteFile(hCom, lpBuf, dwSize, &dwWritten, &osWrite))
 		{
-			// Write is pending.
-			dwRes = WaitForSingleObject(osWrite.hEvent, INFINITE);
-			switch(dwRes)
+			iErr = GetLastError();
+			if (iErr != ERROR_IO_PENDING)
+			{ 
+				// WriteFile failed, but it isn't delayed. Report error.
+				fRes = FALSE;
+				iCounter++;
+				clog << "Error writing to port. System Error: " << iErr << endl;
+			}
+			else
 			{
-            // Overlapped event has been signaled. 
-				case WAIT_OBJECT_0:
-					if (!GetOverlappedResult(hCom, &osWrite, &dwWritten, FALSE))
-						fRes = FALSE;
-					else
-					{
-						
-						if (dwWritten != dwSize)
+				// Write is pending.
+				dwRes = WaitForSingleObject(osWrite.hEvent, INFINITE);
+				switch(dwRes)
+				{
+					// Overlapped event has been signaled. 
+					case WAIT_OBJECT_0:
+						if (!GetOverlappedResult(hCom, &osWrite, &dwWritten, FALSE))
 						{
-							// The write operation timed out. I now need to 
-							// decide if I want to abort or retry. If I retry, 
-							// I need to send only the bytes that weren't sent. 
-							// If I want to abort, I would just set fRes to 
-							// FALSE and return.
+							iErr = GetLastError();
 							fRes = FALSE;
+							iCounter++;
+							clog << "Error writing to port. System Error: " << iErr << endl;
 						}
 						else
 						{
-							//clog << "Write operation completed successfully" << endl;
-							fRes = TRUE;
-						}
-					}
-					break;
-            
-				default:
-					// An error has occurred in WaitForSingleObject. This usually 
-					// indicates a problem with the overlapped event handle.
-					clog <<"Write error in WaitForSingleObject.\nThis usually "
-						 <<"indicates a problem with the overlapped "
-						 << "event handle." << endl;
-					fRes = FALSE;
-					break;
-			}//switch
-		}
-	}//writefile
-	else
-	{
-		// WriteFile completed immediately.
+						
+							if (dwWritten != dwSize)
+							{
+								// The write operation timed out. I now need to 
+								// decide if I want to abort or retry. If I retry, 
+								// I need to send only the bytes that weren't sent. 
+								// If I want to abort, I would just set fRes to 
+								// FALSE and return.
 
-		if (dwWritten != dwSize) {
-			// The write operation timed out. I now need to 
-			// decide if I want to abort or retry. If I retry, 
-			// I need to send only the bytes that weren't sent. 
-			// If I want to abort, then I would just set fRes to 
-			// FALSE and return.
-			fRes = FALSE;
-		}
+								clog << "The write operation timed out. " << endl;
+								fRes = FALSE;
+								iCounter++;
+							}
+							else
+							{
+								//clog << "Write operation completed successfully" << endl;
+								fRes = TRUE;
+							}
+						}
+						break;
+            
+					default:
+						// An error has occurred in WaitForSingleObject. This usually 
+						// indicates a problem with the overlapped event handle.
+						iErr = GetLastError();
+						clog <<"Write error in WaitForSingleObject.\nThis usually "
+							 <<"indicates a problem with the overlapped "
+							 << "event handle." << endl;
+						clog << "Error writing to port. System Error: " << iErr << endl;
+						fRes = FALSE;
+						iCounter++;
+						break;
+				}//switch
+
+			}//else to error pending
+
+		}//writefile
 		else
-			fRes = TRUE;
-	}
+		{
+			// WriteFile completed immediately.
+
+			if (dwWritten != dwSize) {
+				// The write operation timed out. I now need to 
+				// decide if I want to abort or retry. If I retry, 
+				// I need to send only the bytes that weren't sent. 
+				// If I want to abort, then I would just set fRes to 
+				// FALSE and return.
+				clog << "The write operation timed out" << endl;
+				fRes = FALSE;
+				iCounter++;
+			}
+			else
+				fRes = TRUE;
+		}
+
+		
+		if(fRes == TRUE)
+		{
+			CloseHandle(osWrite.hEvent);
+			return fRes;
+		}
+
+	}while(iCounter < 5);
 
 	CloseHandle(osWrite.hEvent);
 

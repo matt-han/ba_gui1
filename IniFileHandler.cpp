@@ -683,7 +683,7 @@ int IniFileHandler::readLogger(string sPort, string sFilePath)
 			return 1;				// for false
 		else
 		{
-			clog << "Error in INI file. No logging mode definied for "
+			clog << "Error in INI file. Logging mode has to be either true or false in "
 			 << sPort << endl;
 			return ERROR_INI;
 		}
@@ -694,8 +694,6 @@ int IniFileHandler::readLogger(string sPort, string sFilePath)
 			 << sPort << endl;
 			return ERROR_INI;
 	}
-
-	return ERROR_SUCCESS;
 }
 //##############################################################################
 //	PARSE METHODS

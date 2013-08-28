@@ -8,7 +8,7 @@ Interpreter::Interpreter(void)
 {
 	_iTestMode		= DEFAULT_VALUE;
 	_iParity		= DEFAULT_VALUE;
-	//_iParityMax		= DEFAULT_VALUE;
+
 	_iStopBits		= DEFAULT_VALUE;
 	_iTransfer		= DEFAULT_VALUE;
 	_iProtocol		= DEFAULT_VALUE;
@@ -196,13 +196,22 @@ void Interpreter::setRepeater(string sRepeater)
 		else
 		{
 			MessageBoxA(NULL, "Error in repeater value,\n"
-							  "please type an positive int",
+							  "please type an number > 0",
 							  "ERROR", MB_OK | MB_ICONWARNING);
 			this->_iRepeater = DEFAULT_VALUE;
 		}
 	}
-	this->_iRepeater = 0;
+	else
+	{
+		MessageBoxA(NULL, "Error in repeater value,\n"
+						"please type an number > 0",
+						"ERROR", MB_OK | MB_ICONWARNING);
+		this->_iRepeater = DEFAULT_VALUE;
+	}
 }
+
+
+
 //------------------------------------------------------------------------------
 //	Set the variables to the default values
 //------------------------------------------------------------------------------
