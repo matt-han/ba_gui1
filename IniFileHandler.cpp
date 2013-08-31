@@ -35,12 +35,13 @@ IniFileHandler::~IniFileHandler(void)
 //		- int iTextMode	-> text mode to transfer
 //		- string sTextToTransfer -> default text, input text or input file
 //		- bool bLoggerStatur -> true for logfile, false for no logging
+//		- string sRepeater	-> hoy many times each test is repeated
 //		- string sPath -> path where to save the ini test file
 //------------------------------------------------------------------------------
 void IniFileHandler::writeINIfile(string sMasterPort, string sSlavePort, int iBaud,
 								int iBaudMax, int iTestMode, int iParity, int iProtocol,
 								int iStopbits, int iTransfer,int iTextMode,
-								string sTextToTransfer, bool bLogger, string sPath)
+								string sTextToTransfer, string sRepeater, bool bLogger, string sPath)
 {
 	string sBaud, sBaudMax, sParity, sProtocol, sStopbits, sLogger;
 	
@@ -166,6 +167,10 @@ void IniFileHandler::writeINIfile(string sMasterPort, string sSlavePort, int iBa
 	//Logger
 	WritePrivateProfileStringA(sMasterPort.c_str(),"Logger",
 										sLogger.c_str(), sPath.c_str());
+
+	//Repeater
+	WritePrivateProfileStringA(sMasterPort.c_str(),"Repeater",
+										sRepeater.c_str(), sPath.c_str());
 }
 
 
@@ -225,11 +230,29 @@ void IniFileHandler::writeINItransferSettings(string sMasterPort,
 //		- string sFilePath -> INI file path
 //	Return: _iError code signaling if operation succeded or _iError
 //------------------------------------------------------------------------------
-int IniFileHandler::readINIFile(string sFilePath)
+int IniFileHandler::readINIFile(string sFilePath, string sMainPort)
 {
 	string sPort;
 	string sTemp;
 	int iPort = 0;
+
+
+	//if a port is given, then this is the port to test
+	if( sMainPort != "")
+	{
+		vComPorts.push_back(TestStruct());
+		vComPorts.at(iPort).sMasterPort = sMainPort;
+
+		_iError = readPortConfig("COM", sFilePath, 0);
+		if (_iError != ERROR_SUCCESS)
+		{
+			clog << "Error reading port from INI file."
+				 << "Error " << _iError << endl;
+		}
+
+		return _iError;
+	}
+
 
 	//try to find test settings for all possible system ports
 	for(int iCom = 1; iCom < 256; iCom++)//256 ports
@@ -377,6 +400,16 @@ int IniFileHandler::readPortConfig(string sPort, string sFilePath, int index)
 		}
 		else
 			return _iError;
+
+		//repeater
+		_iError = readRepeater(sPort, sFilePath.c_str());
+		if(_iError != ERROR_INI)
+		{
+			vComPorts.at(index).iRepeater = _iError;
+		}
+		else
+			return _iError;
+
 	}//if
 	else
 		return _iError;
@@ -648,9 +681,18 @@ int IniFileHandler::readBaudRate(string sPort, string sFilePath, int index)
 }
 
 
+//------------------------------------------------------------------------------
+//	Reads the text to send from the INI file
+//	Parameters:
+//	 IN:
+//		- string sPort -> COM port in the system to use for transfer
+//		- string sFilePath -> INI file path
+//		- int index -> index of the COM port for the vector
+//	Return: if success or _iError in INI file
+//------------------------------------------------------------------------------
 int IniFileHandler::readTextToTransfer(string sPort, string sFilePath, int index)
 {
-	_dwExists =GetPrivateProfileStringA(sPort.c_str(),"TransferTextMode",
+	_dwExists = GetPrivateProfileStringA(sPort.c_str(),"TransferTextMode",
 												NULL, szValue,
 												sizeof(szValue),
 												sFilePath.c_str());
@@ -669,9 +711,18 @@ int IniFileHandler::readTextToTransfer(string sPort, string sFilePath, int index
 }
 
 
+//------------------------------------------------------------------------------
+//	Reads the log  setting from the INI file
+//	Parameters:
+//	 IN:
+//		- string sPort -> COM port in the system to use for transfer
+//		- string sFilePath -> INI file path
+//		- int index -> index of the COM port for the vector
+//	Return: if success or _iError in INI file
+//------------------------------------------------------------------------------
 int IniFileHandler::readLogger(string sPort, string sFilePath)
 {
-	_dwExists =GetPrivateProfileStringA(sPort.c_str(),"Logger",
+	_dwExists = GetPrivateProfileStringA(sPort.c_str(),"Logger",
 												NULL, szValue,
 												sizeof(szValue),
 												sFilePath.c_str());
@@ -695,10 +746,61 @@ int IniFileHandler::readLogger(string sPort, string sFilePath)
 			return ERROR_INI;
 	}
 }
+
+
+//------------------------------------------------------------------------------
+//	Reads how many times a test should be repeated from the INI file
+//	Parameters:
+//	 IN:
+//		- string sPort -> COM port in the system to use for transfer
+//		- string sFilePath -> INI file path
+//		- int index -> index of the COM port for the vector
+//	Return: if success or _iError in INI file
+//------------------------------------------------------------------------------
+int IniFileHandler::readRepeater(string sPort, string sFilePath)
+{
+	int iRepeater = 0;
+	_dwExists = GetPrivateProfileStringA(sPort.c_str(),"Repeater",
+												NULL, szValue,
+												sizeof(szValue),
+												sFilePath.c_str());
+	if (_dwExists != 0)
+	{
+		iRepeater = strtol(szValue, NULL, 10);
+		
+		if (iRepeater > 0)
+			return iRepeater;
+		else
+		{
+			clog << "Error in INI file. Repeater has to be a integer number greater than 0, in "
+			 << sPort << endl;
+			return ERROR_INI;
+		}
+	}
+	else
+	{
+		clog << "Error in INI file. No repeater definied for "
+			 << sPort << endl;
+			return ERROR_INI;
+	}
+}
+
+
+
 //##############################################################################
 //	PARSE METHODS
 //##############################################################################
 
+//------------------------------------------------------------------------------
+//	Parse the text to transfer
+//	Parameters:
+//	 IN:
+//		- string sPort -> COM port in the system to use for transfer
+//		- string sFilePath -> INI file path
+//		- string sTranferTextMode -> text mode for transmition
+//		- int index -> index of the COM port for the vector
+//	Return: parsed GUI parameters
+//------------------------------------------------------------------------------
 int IniFileHandler::parseTextToTransfer(string sPort, string sFilePath, string sTransferTextMode, int index)
 {
 	_dwExists =GetPrivateProfileStringA(sPort.c_str(),"TransferText",
@@ -1073,6 +1175,10 @@ string IniFileHandler::parsePort(string sSlavePort)
 }
 
 
+//------------------------------------------------------------------------------
+//	gets the vector with the ports to test and their settings
+//	Return: vector containing the com ports
+//------------------------------------------------------------------------------
 vector<TestStruct> IniFileHandler::getTestStructure()
 {
 	return vComPorts;

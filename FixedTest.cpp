@@ -1,6 +1,8 @@
 #include "FixedTest.h"
 
-
+//------------------------------------------------------------------------------
+//Default constructor
+//------------------------------------------------------------------------------
 FixedTest::FixedTest(void)
 {
 	defaultText[0] = "Freude, schoener Goetterfunken,";
@@ -14,6 +16,12 @@ FixedTest::FixedTest(void)
 	bTransmitionError = false;
 }
 
+//------------------------------------------------------------------------------
+//	Constructor for new fixed test
+//	Parameters:
+//	 IN:
+//		- TestStruct * testStruct -> Test structure for the fixed test
+//------------------------------------------------------------------------------
 FixedTest::FixedTest(TestStruct *testStruct)
 {
 	this->testStruct = testStruct;
@@ -37,11 +45,21 @@ FixedTest::FixedTest(TestStruct *testStruct)
 	//Protocol!!!!!
 }
 
+
+//------------------------------------------------------------------------------
+//Default deconstructor
+//------------------------------------------------------------------------------
 FixedTest::~FixedTest(void)
 {
 }
 
 
+//------------------------------------------------------------------------------
+//	set the text to transfer in a vector
+//	Parameters:
+//	 IN:
+//		- int iTextMode -> text mode
+//------------------------------------------------------------------------------
 void FixedTest::setTextVector(int iTextMode)
 {
 	//delete all elements just in case
@@ -86,6 +104,11 @@ void FixedTest::setTextVector(int iTextMode)
 }
 
 
+
+//------------------------------------------------------------------------------
+//	starts a single test
+//Returns if test succeded or transmition failure
+//------------------------------------------------------------------------------
 int FixedTest::startSingleTest()
 {
 	masterHCom = masterCom.openPort(masterCom.sPort);
@@ -198,6 +221,10 @@ int FixedTest::startSingleTest()
 }
 
 
+//------------------------------------------------------------------------------
+//	starts a double test
+//Returns if test succeded or transmition failure
+//------------------------------------------------------------------------------
 int FixedTest::startDoubleTest()
 {
 	//Prepare the master for communications
@@ -350,6 +377,11 @@ int FixedTest::startDoubleTest()
 	return ERROR_SUCCESS;
 }
 
+
+//------------------------------------------------------------------------------
+//	starts a single maser test
+//Returns if test succeded or transmition failure
+//------------------------------------------------------------------------------
 //implement time outs!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 int FixedTest::startMasterSlaveTest(bool bMaster)
 {
@@ -461,6 +493,11 @@ int FixedTest::startMasterSlaveTest(bool bMaster)
 	//}
 }
 
+
+//------------------------------------------------------------------------------
+//	starts a single slave test
+//Returns if test succeded or transmition failure
+//------------------------------------------------------------------------------
 //implement time outs!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 int FixedTest::startSlaveTest()
 {
@@ -569,6 +606,14 @@ int FixedTest::startSlaveTest()
 }
 
 
+//------------------------------------------------------------------------------
+//	starts the communication for the test
+//	Parameters:
+//	 IN:
+//		- string sSendData -> data to send in the transmition
+//		- bool bMaster	-> determine if master or slave
+//Return: if write error, read error or success
+//------------------------------------------------------------------------------
 int FixedTest::communicate(string sSendData, bool bMaster)
 {
 	bool bRead;
@@ -627,7 +672,13 @@ int FixedTest::communicate(string sSendData, bool bMaster)
 
 }
 
-
+//------------------------------------------------------------------------------
+//	Communications for master mode
+//	Parameters:
+//	 IN:
+//		- string sSendData -> text to send
+//Return: error write or read port, wait error or success
+//------------------------------------------------------------------------------
 int FixedTest::communicateMaster(string sSendData)
 {
 	string sTemp;
@@ -700,6 +751,13 @@ int FixedTest::communicateMaster(string sSendData)
 }
 
 
+//------------------------------------------------------------------------------
+//	Communications for slave mode
+//	Parameters:
+//	 IN:
+//		- string sSendData -> text to send
+//Return: error write or read port, wait error or success
+//------------------------------------------------------------------------------
 int FixedTest::communicateSlave(string sSendData)
 {
 	string sTemp;
@@ -770,7 +828,15 @@ int FixedTest::communicateSlave(string sSendData)
 }
 
 
-
+//------------------------------------------------------------------------------
+//	Read the data from the opened port
+//	Parameters:
+//	 IN:
+//		- bool MasterSlave -> determines if master or slave port
+//		- string sSendData -> text sent, used to know the lenght of the text to
+//								read
+//Return: string read from the port
+//------------------------------------------------------------------------------
 string FixedTest::getData(bool MasterSlave, string sSendData)
 {
 	
@@ -802,6 +868,14 @@ string FixedTest::getData(bool MasterSlave, string sSendData)
 }
 
 
+//------------------------------------------------------------------------------
+//	Writes sSendData to the port
+//	Parameters:
+//	 IN:
+//		- bool MasterSlave -> determines if master or slave port
+//		- string sSendData -> text to send
+//Return: error or success
+//------------------------------------------------------------------------------
 bool FixedTest::sendData(bool MasterSlave, string sSendData)
 {
 	//Single test -> send and read information from the same port
@@ -822,6 +896,9 @@ bool FixedTest::sendData(bool MasterSlave, string sSendData)
 }
 
 
+//------------------------------------------------------------------------------
+//	Prints the set test settings
+//------------------------------------------------------------------------------
 void FixedTest::printTestSettings()
 {
 	clog << "\nCommunication Settings"                     << endl;
@@ -837,7 +914,13 @@ void FixedTest::printTestSettings()
 
 }
 
-
+//------------------------------------------------------------------------------
+//	Set the protocol settings in the dcb according to the test mode
+//	Parameters:
+//	 IN:
+//		- int iProtocol -> protocol mode
+//		- Com * com -> pointer to the com object to test
+//------------------------------------------------------------------------------
 void FixedTest::setProtocol(int iProtocol, Com *com)
 {
 	switch(iProtocol)

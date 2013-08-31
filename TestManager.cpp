@@ -1,11 +1,17 @@
 #include "TestManager.h"
 
-
+//------------------------------------------------------------------------------
+//Default constructor
+//------------------------------------------------------------------------------
 TestManager::TestManager(void)
 {
 }
 
 
+//------------------------------------------------------------------------------
+//Default deconstructor
+//closes the logger if a logger was opened
+//------------------------------------------------------------------------------
 TestManager::~TestManager(void)
 {
 	if(testStruct.bLoggerState)
@@ -16,7 +22,10 @@ TestManager::~TestManager(void)
 	}
 }
 
-//
+//------------------------------------------------------------------------------
+//	Starts the test manager to start a fixed, wobble or automatic
+//Return: test exit code
+//------------------------------------------------------------------------------
 int TestManager::startManager()
 {
 	if(testStruct.bLoggerState)
@@ -139,7 +148,10 @@ int TestManager::startManager()
 	return _iError;
 }
 
-
+//------------------------------------------------------------------------------
+//	Starts fixed test
+//Return: test exit code in a vector
+//------------------------------------------------------------------------------
 int TestManager::startFixedTest()
 {
 	FixedTest fixedTest(&testStruct);
@@ -170,12 +182,18 @@ int TestManager::startFixedTest()
 				_iError = fixedTest.startMasterSlaveTest(false);
 				break;
 		}//switch
+
+		ivTestErrors.push_back(_iError);
 	}//for
 	
-	return _iError;
+	return ERROR_SUCCESS;
 }
 
 
+//------------------------------------------------------------------------------
+//	Starts wooble test
+//Return: test exit code in a vector
+//------------------------------------------------------------------------------
 int TestManager::startWobbleTest(int iBaudrate, int iParity)
 {
 	//create for each test a new object to avoid errors
@@ -183,6 +201,11 @@ int TestManager::startWobbleTest(int iBaudrate, int iParity)
 	return ERROR_TODO;
 }
 
+
+//------------------------------------------------------------------------------
+//	Starts automatic test
+//Return: test exit code in a vector
+//------------------------------------------------------------------------------
 int TestManager::startAutomaticTest()
 {
 	return ERROR_TODO;

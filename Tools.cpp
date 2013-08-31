@@ -144,6 +144,55 @@ string Tools::delSpacesAndComents(string s)
 
 
 //------------------------------------------------------------------------------
+//	Parses the command line argunments and saves it in a string vector
+//	Parameters:
+//	 IN:
+//		- LPSTR pCmdLine -> command line arguments
+//	Return: string vector with the command line arguments
+//------------------------------------------------------------------------------
+vector<string> Tools::parseCmdLine(LPSTR pCmdLine)
+{
+	vector<string> svParameters;
+	string sTemp = "";
+	string sCmdLine = pCmdLine;
+	int i = 0;
+
+
+	int iLength = sCmdLine.length();
+
+	for (int j = 0; i < iLength ; j++)
+	{
+		//clog << "j " << j << endl;
+		while(i < iLength)
+		{
+			//if not a space, save it to sTemp
+			if (0 == isspace(sCmdLine.at(i)) )
+			{
+				sTemp.append( 1, sCmdLine.at(i) );
+				//clog << "i " << sCmdLine.at(i) << "-" << endl;
+				i++;
+			}
+			else
+			{
+				i++;
+				break;
+			}
+		}
+
+		if (sTemp != "")
+		{
+			//clog << "stemp " << sTemp << "-" << endl << endl;
+			svParameters.push_back(sTemp);
+			sTemp = "";
+		}
+		
+	}
+
+	return svParameters;
+}
+
+
+//------------------------------------------------------------------------------
 //	Waits 'x' * 100 miliseconds
 //	Parameters:
 //	 IN:

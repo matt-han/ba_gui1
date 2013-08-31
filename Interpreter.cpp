@@ -105,6 +105,7 @@ void Interpreter::setSelectedMasterPort(string sPort)
 	this->_sMasPort = sPort;
 }
 
+
 //------------------------------------------------------------------------------
 //	Saves the user port input in _sPort
 //	Parameters:
@@ -178,14 +179,24 @@ void Interpreter::setTextToSend(string sTextToSend)
 }
 
 
-
+//------------------------------------------------------------------------------
+//	Saves the user transfer text mode input in _iTransTextMode
+//	Parameters:
+//	 IN:
+//		- int iTransTextMode -> user GUI input
+//------------------------------------------------------------------------------
 void Interpreter::setTransTextMode(int iTransTextMode)
 {
 	this->_iTransTextMode = iTransTextMode;
 }
 
 
-
+//------------------------------------------------------------------------------
+//	Saves the user input for how many times a test wil be repeated in _iRepeater
+//	Parameters:
+//	 IN:
+//		- string sRepeater -> user GUI input
+//------------------------------------------------------------------------------
 void Interpreter::setRepeater(string sRepeater)
 {
 	if (sRepeater != "0")
@@ -536,6 +547,13 @@ int Interpreter::checkInputConfigData()
 }
 
 
+//------------------------------------------------------------------------------
+//	Checks the given baud rate
+//	Parameters:
+//	 IN:
+//		- int iBaudrate -> the baud rate
+//Return: the baud rate or error
+//------------------------------------------------------------------------------
 int Interpreter::checkBaudrate(int iBaudrate)
 {
 	if (iBaudrate == DEFAULT_VALUE)
@@ -561,29 +579,34 @@ int Interpreter::checkBaudrate(int iBaudrate)
 }
 
 
+//------------------------------------------------------------------------------
+//	saves the settings to a ini file
+//	Parameters:
+//Return: if error or fail
+//------------------------------------------------------------------------------
 int Interpreter::saveToFile()
 {
 
-	string sTemp;
+	string sTempTransferTextMode, sRepeater;
 
 	switch(_iTransTextMode)
 	{
 		//1 for file
 		case ID_BT_LOAD:
-			sTemp = _sFilePath;
+			sTempTransferTextMode = _sFilePath;
 			break;
 			
 		//2 for string
 		case ID_BT_TEXT:
-			sTemp = _sTextToSend;
+			sTempTransferTextMode = _sTextToSend;
 			break;
 
 		default:
-			sTemp = "";
+			sTempTransferTextMode = "";
 			break;
 	}
 
-
+	sRepeater = tools.convertToString(_iRepeater);
 
 	iniFile.writeINIfile(_sMasPort,
 						 _sSlaPort,
@@ -595,7 +618,8 @@ int Interpreter::saveToFile()
 						 _iStopBits,
 						 _iTransfer,
 						 _iTransTextMode,
-						 sTemp,
+						 sTempTransferTextMode,
+						 sRepeater,
 						 _bLoggerState,
 						 "");
 
@@ -603,12 +627,20 @@ int Interpreter::saveToFile()
 }
 
 
-int Interpreter::loadIniFile(string sPath)
+//------------------------------------------------------------------------------
+//	Loads the given ini file settings for the port given port
+//	Parameters:
+//	 IN:
+//		- string sPath -> file path
+//		- string sPort -> com port
+//Return success or test error
+//------------------------------------------------------------------------------
+int Interpreter::loadIniFile(string sPath, string sPort)
 {
 	_testManager = new TestManager();
 	
 	_bErr = false;
-	_iError = iniFile.readINIFile(sPath);
+	_iError = iniFile.readINIFile(sPath, sPort);
 
 	if(_iError == ERROR_SUCCESS)
 	{

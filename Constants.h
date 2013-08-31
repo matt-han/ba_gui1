@@ -77,7 +77,8 @@ using namespace std;
 
 //------------------------------------------------------------------------------
 //ERROR CODES
-
+#define ERROR_CMD_SYNTAX	-1
+#define ERROR_CREATE_GUI	-2
 #define ERROR_PORT_OPEN		-3
 #define ERROR_CLOSE_PORT	-4
 #define ERROR_GET_DCB		-5		
@@ -87,7 +88,7 @@ using namespace std;
 #define ERROR_INI			-9
 #define ERROR_SET_DCB		-10
 #define ERROR_INPUT			-11
-//#define ERROR_INPUT_	-12
+#define ERROR_INPUT_		-12
 #define ERROR_FILE_NOT_OPEN -13
 #define ERROR_EMPTY_FILE	-14
 #define ERROR_CFG_HEADER	-15
@@ -108,6 +109,8 @@ using namespace std;
 #define ERROR_TRANSMITION "ERROR_TRANSMITION"
 #define DEFAULT_VALUE		-100
 #define ERROR_TODO			-666
+
+
 //------------------------------------------------------------------------------
 //Baud rates
 //can NOT trust baud rates defined in WinBase.h

@@ -243,6 +243,14 @@ int Com::getBaudrates(string sChosenPort)
 }
 
 
+//------------------------------------------------------------------------------
+//	List available baud rate for selected port
+//	Parameter
+//	 IN:
+//		- string sChosenPort -> COM port which available baud rates will be
+//								listed
+//	Return: vector with posible baud rates
+//------------------------------------------------------------------------------
 vector<string> Com::returnBaudrates(string sChosenPort)
 {
 	vBaud.clear();
@@ -409,6 +417,14 @@ int Com::translateBaudrate(string sBaud)
 }
 
 
+//------------------------------------------------------------------------------
+//	Set the timeouts for the selected baudrate
+//	Parameter
+//	 IN:
+//		- int iTimeOut -> time out calculated according to the baudrate
+//
+//	Return: error code signaling if setting the timeouts succeded
+//------------------------------------------------------------------------------
 int Com::setTimeOuts(int iTimeOut)
 {
 	// Specify time-out between charactor for receiving.
@@ -458,7 +474,15 @@ int Com::setTimeOuts(int iTimeOut)
 		return ERROR_SUCCESS;
 }
 
-
+//------------------------------------------------------------------------------
+//	Calculate the timeouts acording to the information length and baud rate
+//	Parameter
+//	 IN:
+//		- int iParity -> set parity for the port
+//		- int iStopbits -> set stopbits for the port
+//		- int iBaud -> set baud rate for the port
+//	Return: returns the calculated timeout in milisecond
+//------------------------------------------------------------------------------
 int Com::calculateTimeOut(int iParity, int iStopbits, int iBaud)
 {
 	double dPar;
@@ -493,7 +517,11 @@ int Com::calculateTimeOut(int iParity, int iStopbits, int iBaud)
 	return iTimeOutms;
 }
 
-
+//------------------------------------------------------------------------------
+//	Save the port DCB structure for the opened port
+//
+//	Return: error code signaling if loading the DCB succeded
+//------------------------------------------------------------------------------
 int Com::getDCB()
 {
 	//get original dcb
@@ -514,7 +542,10 @@ int Com::getDCB()
 		}
 }
 
-
+//------------------------------------------------------------------------------
+//	Set the port DCB structure after being edited
+//	Return: error code signaling if setting the DCB succeded
+//------------------------------------------------------------------------------
 int Com::setDCB()
 {
 	//get original dcb

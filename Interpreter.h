@@ -59,7 +59,7 @@ public:
 	int checkBaudrate(int);
 
 	int saveToFile();
-	int loadIniFile(string sPath);
+	int loadIniFile(string sPath, string sPort);
 
 private:
 //------------------------------------------------------------------------------

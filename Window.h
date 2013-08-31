@@ -49,7 +49,7 @@ public:
 	void sendTestSettings();
 	void saveTestSettings();
 
-	int loadTestSettings();
+	int loadTestSettings(string sFilePath, string sPort);
 
 
 

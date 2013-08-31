@@ -35,6 +35,17 @@
 //    return TRUE;
 //}
 
+
+
+//------------------------------------------------------------------------------
+//	own window procedure, to avoid the static problem
+//	Parameters:
+//	 IN:
+//		- UINT uMsg -> window message
+//		- WPARAM wParam -> windows default parameter
+//		- LPARAM lParam -> windows default parameter
+//	Return: converted string
+//------------------------------------------------------------------------------
 LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	LRESULT portIndex = 0;
@@ -685,7 +696,7 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 						break;
 
 					case ID_BT_LOADINI:
-						loadTestSettings();
+						loadTestSettings("","");
 						MessageBoxA(NULL, "....loaded?....\ncheck return codes!!!\n File loaded successfully, please press start", "", MB_OK);
 						break;
 
@@ -877,14 +888,18 @@ void Window::sendTestSettings()
 
 }
 
-
+//------------------------------------------------------------------------------
+//	Sends the GUI input repeater settings to the interpreter
+//------------------------------------------------------------------------------
 void Window::sendRepeater()
 {
 	GetWindowTextA(_hwnd_Repeater, _szRepeater, 5);
 	interpreter.setRepeater(_szRepeater);
 }
 
-
+//------------------------------------------------------------------------------
+//	saves the test settings to a INI file
+//------------------------------------------------------------------------------
 void Window::saveTestSettings()
 {
 	Interpreter interSaveToFile;
@@ -900,6 +915,7 @@ void Window::saveTestSettings()
 	interSaveToFile.setPortBaudRateMax(_iBaudrateMax);
 	interSaveToFile.setLoggerState(_bLoggerState);
 	interSaveToFile.setTransTextMode(_iTextToTransfer);
+	interSaveToFile.setRepeater(_szRepeater);
 	
 	switch(_iTextToTransfer)
 	{
@@ -927,29 +943,33 @@ void Window::saveTestSettings()
 }
 
 
-
-int Window::loadTestSettings()
+//------------------------------------------------------------------------------
+//	Calls loadinifile and loads the file test settings and starts testing
+//	Parameters:
+//	 IN:
+//		- string sFilePath -> file path
+//		- string sPort -> port to test
+//Return: if file is empty error
+//------------------------------------------------------------------------------
+int Window::loadTestSettings(string sFilePath, string sPort)
 {
-	string sPath = getFilePath();
+	string sPath;
+
+	if (sFilePath == "")
+		sPath = getFilePath();
+	else
+		sPath = sFilePath;
+
+
 	if (sPath != "")
 	{
-		interpreter.loadIniFile(sPath);
+		interpreter.loadIniFile(sPath, sPort);
 		
 		return ERROR_SUCCESS;
 	}
 	else
 		return ERROR_EMPTY_FILE;
 }
-
-
-
-
-
-
-
-
-
-
 
 
 

@@ -20,6 +20,7 @@
 #include <sstream>
 #include <windows.h>
 #include <time.h> 
+#include <vector>
 
 using namespace std;
 
@@ -37,6 +38,7 @@ public:
 	string printTime();
 	string parseTime(string s);
 	string delSpacesAndComents(string s);
+	vector<string> parseCmdLine(LPSTR pCmdLine);
 	void wait(int x);
 
 //------------------------------------------------------------------------------

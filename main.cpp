@@ -1,18 +1,53 @@
 
-#include "Interpreter.h"
 #include "IniFileHandler.h"
-#include "Window.h"
-#include "Com.h"
 #include "Logger.h"
+
+#include "Window.h"
+#include "Interpreter.h"
+#include "Tools.h"
 #include <windows.h>
+#include <vector>
 
-#include "PortCommunications.h"
 
+int createGUI(HINSTANCE hInstance, int nCmdShow);
+int parseCmdParameters();
+int parsePort();
+string sFilePath, sPort;
+vector<string> svParameters;
 
-int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdShow)
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR pCmdLine, int nCmdShow)
 {
 
-	Window win;
+	Logger log(true, "com");
+	int _iError = ERROR_SUCCESS;
+	
+	if (0 == strcmp(pCmdLine, "") )
+		_iError = createGUI(hInstance, nCmdShow);
+	else
+	{
+		Tools tools;
+		Interpreter interpreter;
+		svParameters = tools.parseCmdLine(pCmdLine);
+		
+		_iError = parseCmdParameters();
+		if (_iError == ERROR_SUCCESS)
+		{
+			clog << "cmd ok" << endl;
+			clog << sFilePath << endl;
+			clog << sPort << endl << endl;
+
+			//interpreter.loadIniFile(sFilePath, sPort);
+		}
+		else
+		{
+			clog << "error " << _iError << endl;
+			return _iError;
+		}
+
+		clog << "end" << endl;
+
+		return ERROR_SUCCESS;
+	}
 
 	//IniFileHandler file;
 	////------------------------------------------------------------------------------
@@ -34,12 +69,96 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdShow
 	//file.readINIFile("C:\\Users\\Matthias Hansert\\AppData\\Local\\Temp\\WN_ComPortTestFile_COM1.ini");
 	//------------------------------------------------------------------------------
 	//------------------------------------------------------------------------------
+	
+	clog << "error " << _iError << endl;
+	return _iError;
+    
+}
+
+
+//------------------------------------------------------------------------------
+//	Parse the cmd line parameters to start testing
+//	Return:error code signaling if operation succeded or sytax error
+//------------------------------------------------------------------------------
+int parseCmdParameters()
+{
+	if (svParameters.size() > 2)
+	{
+		return ERROR_CMD_SYNTAX;
+	}
+	else
+	{
+		sFilePath = svParameters.at(0);
+		
+		//is 2 parameters, then second is a port
+		if( 2 == svParameters.size() )
+		{
+			string sTemp;
+
+			sTemp = svParameters.at(1);
+
+			if(sTemp.at(0) == '/')
+			{
+				if (ERROR_SUCCESS == parsePort() )
+				{
+					sPort = sTemp.substr(1, sTemp.npos);
+					return ERROR_SUCCESS;
+				}
+				else 
+					return ERROR_CMD_SYNTAX;
+			}
+			else
+				return ERROR_CMD_SYNTAX;
+		}
+		else
+			sPort = "";
+	}
+
+	return ERROR_SUCCESS;
+}
+
+
+//------------------------------------------------------------------------------
+//	parses the given port from the cmd line
+//  Port -> /COMxxx where 0 < xxx < 257
+//	Return: _iError code signaling if operation succeded or _iError
+//------------------------------------------------------------------------------
+int parsePort()
+{
+	// sPort = /COMXXX
+	string sTemp = svParameters.at(1).substr(1, sTemp.npos);
+
+	//sTemp = COMXXX
+	if("COM" == sTemp.substr(0, 3) )
+	{
+		string sNumber = sTemp.substr(3, sTemp.npos);
+		int iNumber = strtol(sNumber.c_str(), NULL, 10);
+		
+		if (iNumber > 0 && iNumber < 257)
+			return ERROR_SUCCESS;
+	}
+
+	return ERROR_CMD_SYNTAX;
+}
+
+
+//------------------------------------------------------------------------------
+//	starts the GUI
+//	Parameters:
+//	 IN:
+//		- HINSTANCE hInstance -> handle to the instance
+//		- int nCmdShow -> format for how to show the window
+//	Return: _iError code signaling if operation succeded or _iError
+//------------------------------------------------------------------------------
+int createGUI(HINSTANCE hInstance, int nCmdShow)
+{
+	Window win;
 
 	win.sethInstance(hInstance);
 
     if (!win.Create(L"WN COM Test Tool", WS_OVERLAPPEDWINDOW))
     {
-        return -100;
+        return ERROR_CREATE_GUI;
     }
 
 //------------------------------------------------------------------------------
@@ -56,5 +175,5 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdShow
         DispatchMessage(&msg);
     }
 
-    return ERROR_SUCCESS;
+	return ERROR_SUCCESS;
 }

@@ -29,13 +29,13 @@ public:
 	void writeINIfile(string sMasterPort, string sSlavePort, int iBaud,
 					  int iBaudMax, int iTestMode, int iParity, int iProtocol,
 					  int iStopbits, int iTransfer, int iTextMode, 
-					  string sTextToTransfer, bool bLogger, string sPath);
+					  string sTextToTransfer, string sRepeater, bool bLogger, string sPath);
 
 	void writeINItransferSettings(string sMasterPort, string sSlavePort,
 								  int iTransfer, string sPath);
 	
 	//read methods
-	int readINIFile(string sFilePath);
+	int readINIFile(string sFilePath, string sPort);
 	int readPortConfig(string sPort,  string sFilePath, int index);
 	int readTransferMode(string sPort, string sFilePath, int index);
 	int readSlave(string sPort, string sFilePath, int index);
@@ -46,7 +46,7 @@ public:
 	int readBaudRate(string sPort, string sFilePath, int index);
 	int readTextToTransfer(string sPort, string sFilePath, int index);
 	int readLogger(string sPort, string sFilePath);
-
+	int readRepeater(string sPort, string sFilePath);
 	
 	
 	vector<TestStruct> getTestStructure();

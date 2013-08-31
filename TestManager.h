@@ -9,6 +9,7 @@
 #include "Logger.h"
 #include "Constants.h"
 
+#include <vector>
 
 using namespace std;
 
@@ -23,7 +24,7 @@ public:
 //Variables
 	
 	TestStruct testStruct;
-
+	vector<int> ivTestErrors;
 
 //------------------------------------------------------------------------------
 //Methods
