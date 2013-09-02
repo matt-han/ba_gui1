@@ -18,7 +18,7 @@ vector<string> svParameters;
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR pCmdLine, int nCmdShow)
 {
 
-	Logger log(true, "com");
+	//Logger log(true, "com");
 	int _iError = ERROR_SUCCESS;
 	
 	if (0 == strcmp(pCmdLine, "") )
@@ -32,19 +32,21 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR pCmdLine, int nCmdShow)
 		_iError = parseCmdParameters();
 		if (_iError == ERROR_SUCCESS)
 		{
-			clog << "cmd ok" << endl;
-			clog << sFilePath << endl;
-			clog << sPort << endl << endl;
+			//clog << "cmd ok" << endl;
+			//clog << sFilePath << endl;
+			//clog << sPort << endl << endl;
 
+			//TEST IT
+			//---------------------------------------------
 			//interpreter.loadIniFile(sFilePath, sPort);
 		}
 		else
 		{
-			clog << "error " << _iError << endl;
+			//clog << "error " << _iError << endl;
 			return _iError;
 		}
 
-		clog << "end" << endl;
+		//clog << "end" << endl;
 
 		return ERROR_SUCCESS;
 	}
@@ -70,7 +72,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR pCmdLine, int nCmdShow)
 	//------------------------------------------------------------------------------
 	//------------------------------------------------------------------------------
 	
-	clog << "error " << _iError << endl;
+	//clog << "error " << _iError << endl;
 	return _iError;
     
 }

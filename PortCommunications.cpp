@@ -39,8 +39,10 @@ void PortCommunications::setComHandle(HANDLE hCom)
 //		- DWORD dwSize -> amount of character to be read from port
 //	Return: error code signaling if operation succeded or error
 //------------------------------------------------------------------------------
-bool PortCommunications::readData(char * lpBuf, DWORD dwSize)
+bool PortCommunications::readData(char * lpBuf, DWORD dwSize, int iReadTimeOut)
 {
+	int iCounter = 0;
+	int iErr;
 	DWORD dwRead;
 	DWORD dwRes;
 
@@ -52,73 +54,95 @@ bool PortCommunications::readData(char * lpBuf, DWORD dwSize)
 	osReader.hEvent = CreateEvent(NULL, TRUE, FALSE, NULL);
 
 	if (osReader.hEvent == NULL)
-	// Error creating overlapped event; abort.
 	{
+		// Error creating overlapped event; abort.
 		clog<<"error creating overlapped event, abort"<<endl;
-		return false;
+		return FALSE;
 	}
 
-	if (!fWaitingOnRead)
+
+	do
 	{
-		// Issue read operation.
-		if (0 == ReadFile(hCom, lpBuf, dwSize, &dwRead, &osReader))
+		clog << "...Read attempt number: " << iCounter + 1 << endl;
+
+		if (!fWaitingOnRead)
 		{
-			//if not true
-			if (GetLastError() != ERROR_IO_PENDING)     // read not delayed?
-				// Error in communications; report it.
-				clog << "Read error in communications" << endl;
-			else
-				fWaitingOnRead = TRUE;
-		}
-	}
-	else
-	{    
-		// read completed immediately
-		//HandleASuccessfulRead(_lpBuf, dwRead);
-		clog << "1. read successfully finished"<<endl;
-	}
-
-
-	if (fWaitingOnRead)
-	{
-		dwRes = WaitForSingleObject(osReader.hEvent, READ_TIMEOUT);
-
-		switch(dwRes)
-		{
-			// Read completed.
-			case WAIT_OBJECT_0:
-				if (!GetOverlappedResult(hCom, &osReader, &dwRead, FALSE))
-				// Error in communications; report it.
-					clog << "error in communications" << endl;
+			// Issue read operation.
+			if (0 == ReadFile(hCom, lpBuf, dwSize, &dwRead, &osReader))
+			{
+				//if not true
+				iErr = GetLastError();
+				if (iErr != ERROR_IO_PENDING)     // read not delayed?
+					// Error in communications; report it.
+					clog << "Error reading port. System Error: " << iErr << endl;
 				else
-				{
-					// Read completed successfully.
-					//HandleASuccessfulRead(_lpBuf, dwRead);
-					clog << "2. read successfully finished" << endl;
-				}
-				//  Reset flag so that another operation can be issued.
-				fWaitingOnRead = FALSE;
-				break;
+					fWaitingOnRead = TRUE;
+			}
+		}
+		else
+		{    
+			// read completed immediately
+			CloseHandle(osReader.hEvent);
+			return TRUE;
+		}
 
-			case WAIT_TIMEOUT:
-				// Operation isn't complete yet. fWaitingOnRead flag isn't
-				// changed since I'll loop back around, and I don't want
-				// to issue another read until the first one finishes.
-				//
-				// This is a good time to do some background work.
-				tools.wait(1);
-				break;                       
 
-			default:
-				// Error in the WaitForSingleObject; abort.
-				// This indicates a problem with the OVERLAPPED structure's
-				// event handle.
-				clog << "Error while reading in the WaitForSingleObject,\n problem with the overlapped stucture handle" << endl;
-				return false;
-		}//switch
-	}//if fWaitingOnRead
+		if (fWaitingOnRead)
+		{
+			//dwRes = WaitForSingleObject(osReader.hEvent, READ_TIMEOUT);
+			dwRes = WaitForSingleObject(osReader.hEvent, iReadTimeOut);
 
-	return true;
+			switch(dwRes)
+			{
+				// Read completed.
+				case WAIT_OBJECT_0:
+					if (!GetOverlappedResult(hCom, &osReader, &dwRead, FALSE))
+					{
+						// Error in communications; report it.
+						iErr = GetLastError();
+						//fRes = FALSE;
+						clog << "Error reading port. System Error: " << iErr << endl;
+					}
+					else
+					{
+						// Read completed successfully.
+						CloseHandle(osReader.hEvent);
+						return TRUE;
+					}
+					//  Reset flag so that another read operation can be issued.
+					fWaitingOnRead = FALSE;
+					break;
+
+				case WAIT_TIMEOUT:
+					// Operation isn't complete yet. fWaitingOnRead flag isn't
+					// changed since I'll loop back around, and I don't want
+					// to issue another read until the first one finishes.
+					//
+					// This is a good time to do some background work.
+					//tools.wait(1);
+					clog << "wait_timeout"<<endl;
+					break;                       
+
+				default:
+					// Error in the WaitForSingleObject; abort.
+					// This indicates a problem with the OVERLAPPED structure's
+					// event handle.
+					clog << "Error while reading in the WaitForSingleObject,\n"
+						<< "problem with the overlapped stucture handle" << endl;
+					CloseHandle(osReader.hEvent);
+					return FALSE;
+			}//switch
+
+			
+
+		}//if fWaitingOnRead
+	
+		iCounter++;
+
+	}while(iCounter < 5);
+
+	CloseHandle(osReader.hEvent);
+	return TRUE;
 }
 
 
@@ -149,7 +173,7 @@ bool PortCommunications::writeData(const char * lpBuf, DWORD dwSize)
 
 	do
 	{
-		clog << "...Write attempt number: " << iCounter << endl;
+		clog << "...Write attempt number: " << iCounter + 1 << endl;
 	   // Issue write
 		if (!WriteFile(hCom, lpBuf, dwSize, &dwWritten, &osWrite))
 		{
@@ -187,7 +211,7 @@ bool PortCommunications::writeData(const char * lpBuf, DWORD dwSize)
 								// If I want to abort, I would just set fRes to 
 								// FALSE and return.
 
-								clog << "The write operation timed out. " << endl;
+								clog << "The write operation timed out" << endl;
 								fRes = FALSE;
 								iCounter++;
 							}

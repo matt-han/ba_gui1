@@ -40,6 +40,7 @@ public:
 	string delSpacesAndComents(string s);
 	vector<string> parseCmdLine(LPSTR pCmdLine);
 	void wait(int x);
+	void printErrorVector(bool bPrint, vector<int> ivTestErrors);
 
 //------------------------------------------------------------------------------
 //Template for vector operation "remove_if"

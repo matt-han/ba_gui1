@@ -207,3 +207,59 @@ void Tools::wait(int x)
 	}
 	clog << endl;
 }
+
+
+//------------------------------------------------------------------------------
+//	Prints the error vector to the log file or cmd line
+//	Parameters:
+//	 IN:
+//		- bool bPrint -> true for log file, false for message box
+//------------------------------------------------------------------------------
+void Tools::printErrorVector(bool bPrint, vector<int> ivTestErrors)
+{
+	if(bPrint)
+	{
+		clog << "   Test Results   " << endl;
+		clog << "__________________" << endl;
+		clog << "TestNr. | ExitCode" << endl;
+		//clog << "------------------" << endl;
+
+		for(int i = 0; i < ivTestErrors.size(); i++)
+		{
+			clog.width(7);
+			clog << i+1 << flush;
+			clog << " | " << ivTestErrors.at(i) << endl;
+
+		}
+	}
+	else
+	{
+		int iSuccess = 0, iFailure = 0;
+		 
+		string sResult  = "Number of tests : ";
+		string sSuccess = "Successful tests  : ";
+		string sFailure = "Failed tests          : ";
+			
+		for(int i = 0; i < ivTestErrors.size(); i++)
+		{
+			if( ERROR_SUCCESS == ivTestErrors.at(i) )
+				iSuccess++;
+			else
+				iFailure++;
+
+		}
+		
+		sSuccess.append(convertToString(iSuccess));
+		sSuccess.append("\n");
+		
+		sFailure.append(convertToString(iFailure));
+		//sFailure.append("\n");
+
+		sResult.append( convertToString(ivTestErrors.size()) );
+		sResult.append("\n");
+		sResult.append(sSuccess);
+		sResult.append(sFailure);
+
+		MessageBoxA(NULL, sResult.c_str(), "Test Results", MB_OK);
+	}
+}

@@ -130,7 +130,7 @@ int FixedTest::startSingleTest()
 		{
 			_iTimeOut = masterCom.calculateTimeOut(testStruct->iParity, testStruct->iStopbits, testStruct->iBaud);
 	
-			clog << "Port time out: " << _iTimeOut << endl;
+			clog << "Port time out: " << _iTimeOut << " ms" << endl;
 
 			_iError = masterCom.setTimeOuts(_iTimeOut);
 			if(_iError == ERROR_SUCCESS)
@@ -158,21 +158,21 @@ int FixedTest::startSingleTest()
 					for (unsigned int index = 0; index < vTextToSend.size();
 						 index++)
 					{
-						_iError = communicate(vTextToSend.at(index),
-												true);
+						_iError = communicate(vTextToSend.at(index), true);
 						if(_iError != ERROR_SUCCESS)
 						{
-							clog << "Error communicating"<<endl;
+							clog << "Error communicating. Error "<< _iError << endl;
 						}
+
 					}
 					clog<<"-----------------------------------------"<<endl;
 					clog << "Transmition finished"<<endl;
 					clog << tools.printTime() << flush;
 					clog<<"-----------------------------------------"<<endl;
+					
 					if (bTransmitionError == true)
 					{
 						clog<<"Error/s transmitting information"<<endl;
-						clog<<"Please check the file for exact lines"<<endl;
 						clog<<"Proceed to close ports...\n\n\n"<<endl;
 					}
 					else
@@ -247,7 +247,7 @@ int FixedTest::startDoubleTest()
 		{
 			_iTimeOut = masterCom.calculateTimeOut(testStruct->iParity, testStruct->iStopbits, testStruct->iBaud);
 	
-			clog << "Port time out: " << _iTimeOut << endl;
+			clog << "Port time out: " << _iTimeOut << " ms" << endl;
 
 			_iError = masterCom.setTimeOuts(_iTimeOut);
 			if(_iError != ERROR_SUCCESS)
@@ -283,9 +283,11 @@ int FixedTest::startDoubleTest()
 		_iError = slaveCom.getDCB();
 		if (_iError == ERROR_SUCCESS)
 		{
-			//_iTimeOut = slaveCom.calculateTimeOut(testStruct->iParity, testStruct->iStopbits, testStruct->iBaud);
+			//no need to recalculate time out, settings are the same
+			//_iTimeOut = slaveCom.calculateTimeOut(testStruct->iParity,
+			// testStruct->iStopbits, testStruct->iBaud);
 	
-			clog << "Port time out: " << _iTimeOut << endl;
+			clog << "Port time out: " << _iTimeOut << " ms" << endl;
 
 			_iError = slaveCom.setTimeOuts(_iTimeOut);
 			if(_iError != ERROR_SUCCESS)
@@ -344,7 +346,10 @@ int FixedTest::startDoubleTest()
 	
 
 	//if everything ok then communicate
-
+	clog<<"-----------------------------------------"<<endl;
+	clog << "Transmition started" << endl;
+	clog << tools.printTime()     << flush;
+	clog<<"-----------------------------------------"<<endl;
 	//----------------------------------------------------------
 	//send and recieve data
 	for (unsigned int index = 0; index < vTextToSend.size(); index++)
@@ -353,7 +358,7 @@ int FixedTest::startDoubleTest()
 		_iError = communicate(vTextToSend.at(index), false);
 		if(_iError != ERROR_SUCCESS)
 		{
-			clog << "Error communicating!!!!!!"<<endl;
+			clog << "Error communicating. Error: "<< _iError << endl;
 		}
 	}
 	
@@ -364,7 +369,6 @@ int FixedTest::startDoubleTest()
 	if (bTransmitionError == true)
 	{
 		clog<<"Error/s transmitting information"<<endl;
-		clog<<"Please check the file for exact lines"<<endl;
 		clog<<"Proceed to close ports...\n\n\n"<<endl;
 	}
 	else
@@ -374,7 +378,11 @@ int FixedTest::startDoubleTest()
 
 	masterCom.closePort();
 	slaveCom.closePort();
-	return ERROR_SUCCESS;
+
+	if (bTransmitionError == true)
+			return ERROR_TRANS_INFO;
+		else
+			return ERROR_SUCCESS;
 }
 
 
@@ -617,6 +625,8 @@ int FixedTest::startSlaveTest()
 int FixedTest::communicate(string sSendData, bool bMaster)
 {
 	bool bRead;
+	bTransmitionError = false;
+
 
 	if (bMaster)		//Single and Master mode
 	{					//if true & false then read and write to master port
@@ -635,12 +645,12 @@ int FixedTest::communicate(string sSendData, bool bMaster)
 		MessageBoxA(NULL, sSendData.c_str(), "COM 1 SENT", MB_OK);
 
 		string sTemp = getData(bRead, sSendData);
+
 		if (sTemp != ERROR_TRANSMITION)
 		{
 			if(0 == strcmp(sTemp.c_str(), sSendData.c_str()) )
 			{
 				clog << "read  was true"<<endl;
-				
 			}
 			else
 			{
@@ -658,6 +668,7 @@ int FixedTest::communicate(string sSendData, bool bMaster)
 			clog <<"read was false"<<endl;
 			clog<<"-----------------------------------------"<<endl;
 			clog<<"-----------------------------------------"<<endl;
+			bTransmitionError = true;
 			return ERROR_READ_PORT;
 		}//getData
 
@@ -667,6 +678,7 @@ int FixedTest::communicate(string sSendData, bool bMaster)
 		clog <<"write was false"<<endl;
 		clog<<"-----------------------------------------"<<endl;
 		clog<<"-----------------------------------------"<<endl;
+		bTransmitionError = true;
 		return ERROR_WRITE_PORT;
 	}//sendData
 
@@ -725,7 +737,6 @@ int FixedTest::communicateMaster(string sSendData)
 				clog << "String recieved is NOT equal to the sent string"<<endl;
 				clog << "- " << sSendData << endl;
 				clog << "- " << sTemp << endl;
-				bTransmitionError = true;
 			}
 
 			return ERROR_SUCCESS;
@@ -736,6 +747,7 @@ int FixedTest::communicateMaster(string sSendData)
 			clog <<"read was false. Error waiting  for slave's response"<<endl;
 			clog<<"-----------------------------------------"<<endl;
 			clog<<"-----------------------------------------"<<endl;
+			bTransmitionError = true;
 			return ERROR_READ_PORT;
 		}//getData
 
@@ -745,6 +757,7 @@ int FixedTest::communicateMaster(string sSendData)
 		clog <<"write was false"<<endl;
 		clog<<"-----------------------------------------"<<endl;
 		clog<<"-----------------------------------------"<<endl;
+		bTransmitionError = true;
 		return ERROR_WRITE_PORT;
 	}//sendData
 
@@ -801,6 +814,7 @@ int FixedTest::communicateSlave(string sSendData)
 			clog <<"write was false"<<endl;
 			clog<<"-----------------------------------------"<<endl;
 			clog<<"-----------------------------------------"<<endl;
+			bTransmitionError = true;
 			return ERROR_WRITE_PORT;
 		}//sendData
 		
@@ -823,6 +837,7 @@ int FixedTest::communicateSlave(string sSendData)
 		clog <<"read was false. Error waiting  for master to send information"<<endl;
 		clog<<"-----------------------------------------"<<endl;
 		clog<<"-----------------------------------------"<<endl;
+		bTransmitionError = true;
 		return ERROR_READ_PORT;
 	}//getData
 }
@@ -846,22 +861,18 @@ string FixedTest::getData(bool MasterSlave, string sSendData)
 	//MasterSlave test -> send and read reply from the same port
 	if (MasterSlave)
 	{
-		if (true == masterPortComm.readData(empfang, sSendData.size()) )
-		{
-			clog << "--> master reads buffer" << endl;
+		clog << "--> master reads buffer" << endl;
+		if (true == masterPortComm.readData(empfang, sSendData.size(), _iTimeOut) )
 			return empfang;
-		}
 		else
 			return ERROR_TRANSMITION;
 	}
 	//else Double test ->send data true master and read slave
 	else
 	{
-		if (true == slavePortComm.readData(empfang, sSendData.size()) )
-		{
-			clog << "--> slave reads buffer" << endl;
+		clog << "--> slave reads buffer" << endl;
+		if (true == slavePortComm.readData(empfang, sSendData.size(), _iTimeOut) )
 			return empfang;
-		}
 		else
 			return ERROR_TRANSMITION;
 	}

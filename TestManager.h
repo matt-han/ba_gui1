@@ -47,6 +47,7 @@ private:
 	int _iError;
 	bool _bError;
 	bool _bWobbleParity;
+	bool _bTestStarted;
 };
 
 #endif

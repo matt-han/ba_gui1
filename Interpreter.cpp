@@ -474,8 +474,11 @@ void Interpreter::handleGui()
 					_iError = _testManager->startManager();
 					if(_iError == ERROR_SUCCESS)
 					{
-						MessageBoxA(NULL, "Send and Recieve OK", "SUCCESS!!",
+						MessageBoxA(NULL, "Transmition finished", "SUCCESS!!",
 									MB_OK);
+
+						tools.printErrorVector(_testManager->testStruct.bLoggerState,
+							_testManager->ivTestErrors);
 					}
 					else
 					{

@@ -5,6 +5,7 @@
 //------------------------------------------------------------------------------
 TestManager::TestManager(void)
 {
+	_bTestStarted = false;
 }
 
 
@@ -14,13 +15,13 @@ TestManager::TestManager(void)
 //------------------------------------------------------------------------------
 TestManager::~TestManager(void)
 {
-	if(testStruct.bLoggerState)
+	if(testStruct.bLoggerState && _bTestStarted)
 	{
 		_logger->closelog(true);
-		MessageBoxA(NULL,"deleting logger","WATCH OUT", MB_OK | MB_ICONWARNING);
 		delete _logger;
 	}
 }
+
 
 //------------------------------------------------------------------------------
 //	Starts the test manager to start a fixed, wobble or automatic
@@ -148,12 +149,15 @@ int TestManager::startManager()
 	return _iError;
 }
 
+
 //------------------------------------------------------------------------------
 //	Starts fixed test
 //Return: test exit code in a vector
 //------------------------------------------------------------------------------
 int TestManager::startFixedTest()
 {
+	_bTestStarted = true;
+
 	FixedTest fixedTest(&testStruct);
 
 	//set the text to be transfered
@@ -173,11 +177,12 @@ int TestManager::startFixedTest()
 				_iError = fixedTest.startDoubleTest();
 				break;
 
-			//Master Slave
+			//Master 
 			case 2:
 				_iError = fixedTest.startMasterSlaveTest(true);
 				break;
 
+			//Slave
 			case 3:
 				_iError = fixedTest.startMasterSlaveTest(false);
 				break;
@@ -196,6 +201,7 @@ int TestManager::startFixedTest()
 //------------------------------------------------------------------------------
 int TestManager::startWobbleTest(int iBaudrate, int iParity)
 {
+	_bTestStarted = true;
 	//create for each test a new object to avoid errors
 	//WobbleTest wobble(&testStruct);
 	return ERROR_TODO;
@@ -208,5 +214,7 @@ int TestManager::startWobbleTest(int iBaudrate, int iParity)
 //------------------------------------------------------------------------------
 int TestManager::startAutomaticTest()
 {
+	_bTestStarted = true;
+
 	return ERROR_TODO;
 }

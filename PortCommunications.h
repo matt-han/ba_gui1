@@ -31,7 +31,7 @@ public:
 //------------------------------------------------------------------------------
 //Methods
 	void setComHandle(HANDLE hCom);
-	bool readData(char *lpBuf, DWORD dwSize);
+	bool readData(char *lpBuf, DWORD dwSize, int iReadTimeOut);
 	bool writeData(const char *lpBuf, DWORD dwSize);
 	int checkPortStatus();
 	//BOOL ReadFromCOMPort(unsigned char* c_Data);
