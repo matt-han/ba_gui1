@@ -1,6 +1,7 @@
 
 #include "IniFileHandler.h"
 #include "Logger.h"
+#include "WobbleTest.h"
 
 #include "Window.h"
 #include "Interpreter.h"
@@ -17,6 +18,13 @@ vector<string> svParameters;
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR pCmdLine, int nCmdShow)
 {
+
+	//WobbleTest wobble;
+	//Tools t;
+	//string s = "abc\\0d-\\0asd";
+	//string ss = t.replaceASCII(s);
+
+	//return 0;
 
 	//Logger log(true, "com");
 	int _iError = ERROR_SUCCESS;

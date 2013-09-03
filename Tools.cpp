@@ -263,3 +263,60 @@ void Tools::printErrorVector(bool bPrint, vector<int> ivTestErrors)
 		MessageBoxA(NULL, sResult.c_str(), "Test Results", MB_OK);
 	}
 }
+
+
+//------------------------------------------------------------------------------
+//	Replaces the ASCII values in the string
+//	Parameters:
+//	 IN:
+//		- string sToSend -> string read from the GUI or INI
+//------------------------------------------------------------------------------
+string Tools::replaceASCII(string sToSend)
+{
+	// example
+	// \0D -> CR
+
+	string sParsed;
+	string sTemp;
+	string sSlash = "\\";
+	int iCharVal = 0;
+
+
+
+	for(int i = 0; i < sToSend.length();)
+	{
+		//if char at i == "\\"
+		if(0 == sToSend.compare(i,1,"\\"))
+			//strcmp("\\", sToSend.at(i) )
+		{
+			sTemp = sToSend.at(i+1);
+			//sTemp.append(sToSend.at(i+2));
+			sTemp.insert(sTemp.end(), sToSend.at(i+2) );
+			//delete the 3 chars of the ASCII
+			//sToSend.erase(i,3);
+
+			//convert string with hex number to int
+			iCharVal = strtol(sTemp.c_str(), NULL, 16);
+			if(iCharVal == 0)
+			{
+				clog << "Couldn't convert " << sTemp << " to a char" << endl;
+				clog << "continue without converting " << endl;
+				return "";
+			}
+
+			//append the read&parsed char
+			sParsed.insert(sParsed.end(), char(iCharVal) );
+				//append(char(iCharVal));
+
+			i = i + 3;
+		}
+		else //append the char to the return string
+		{
+			sParsed.insert(sParsed.end(), sToSend.at(i) );
+				//append(sToSend.at(i));
+			i++;
+		}
+	}
+
+	return sParsed;
+}

@@ -3,7 +3,6 @@
 
 using namespace std;
 
-
 #include "fixedtest.h"
 
 
@@ -13,6 +12,11 @@ public:
 	WobbleTest(void);
 	~WobbleTest(void);
 	WobbleTest::WobbleTest(TestStruct *testStruct);
+
+	int test(int iPar, int iBaud);
+
+private:
+	int _iExitCode;
 };
 
 #endif

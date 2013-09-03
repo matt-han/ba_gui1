@@ -37,6 +37,7 @@ int TestManager::startManager()
 	int iBegin = 0;
 	int iEnd = 0;
 	int iTemp;
+
 	switch(testStruct.iTestMode)
 	{
 		//automatic test
@@ -90,6 +91,8 @@ int TestManager::startManager()
 			{
 				_bWobbleParity = true;
 			}
+			else
+				iPar = testStruct.iParity;
 
 
 
@@ -115,7 +118,6 @@ int TestManager::startManager()
 				}
 				else
 				{
-					iPar = testStruct.iParity;
 					_iError = startWobbleTest(iTemp, iPar);
 
 					if (_iError != ERROR_SUCCESS)
@@ -157,6 +159,7 @@ int TestManager::startManager()
 int TestManager::startFixedTest()
 {
 	_bTestStarted = true;
+	//ivTestErrors.clear();
 
 	FixedTest fixedTest(&testStruct);
 
@@ -191,6 +194,8 @@ int TestManager::startFixedTest()
 		ivTestErrors.push_back(_iError);
 	}//for
 	
+	_tools.printErrorVector(testStruct.bLoggerState, ivTestErrors);
+
 	return ERROR_SUCCESS;
 }
 
@@ -202,9 +207,45 @@ int TestManager::startFixedTest()
 int TestManager::startWobbleTest(int iBaudrate, int iParity)
 {
 	_bTestStarted = true;
+	//ivTestErrors.clear();
+	
 	//create for each test a new object to avoid errors
-	//WobbleTest wobble(&testStruct);
-	return ERROR_TODO;
+	WobbleTest wobble(&testStruct);
+
+	wobble.testStruct->iBaud   = iBaudrate;
+	wobble.testStruct->iParity = iParity;
+
+	for(int iRepeat = 0; iRepeat < testStruct.iRepeater; iRepeat++)
+	{
+		switch(testStruct.iTransfer)
+		{
+			//Single test
+			case 0:
+				_iError = wobble.startSingleTest();
+				break;
+
+			//Double Test
+			case 1:
+				_iError = wobble.startDoubleTest();
+				break;
+
+			//Master 
+			case 2:
+				_iError = wobble.startMasterSlaveTest(true);
+				break;
+
+			//Slave
+			case 3:
+				_iError = wobble.startMasterSlaveTest(false);
+				break;
+		}//switch
+
+		ivTestErrors.push_back(_iError);
+	}
+
+	_tools.printErrorVector(testStruct.bLoggerState, ivTestErrors);
+	
+	return ERROR_SUCCESS;
 }
 
 

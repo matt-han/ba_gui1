@@ -41,6 +41,7 @@ public:
 	vector<string> parseCmdLine(LPSTR pCmdLine);
 	void wait(int x);
 	void printErrorVector(bool bPrint, vector<int> ivTestErrors);
+	string replaceASCII(string sToSend);
 
 //------------------------------------------------------------------------------
 //Template for vector operation "remove_if"

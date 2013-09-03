@@ -477,8 +477,8 @@ void Interpreter::handleGui()
 						MessageBoxA(NULL, "Transmition finished", "SUCCESS!!",
 									MB_OK);
 
-						tools.printErrorVector(_testManager->testStruct.bLoggerState,
-							_testManager->ivTestErrors);
+						//tools.printErrorVector(_testManager->testStruct.bLoggerState,
+						//	_testManager->ivTestErrors);
 					}
 					else
 					{

@@ -972,6 +972,54 @@ int Window::loadTestSettings(string sFilePath, string sPort)
 }
 
 
+//------------------------------------------------------------------------------
+//	Opens a dialog window for the user to select a INI file
+//Return: file path selected by the user
+//------------------------------------------------------------------------------
+string Window::getFilePath()
+{
+
+	OPENFILENAMEA ofn;       // common dialog box structure
+	char szFile[260];       // buffer for file name
+
+	// Initialize OPENFILENAME
+	ZeroMemory(&ofn, sizeof(ofn));
+	ofn.lStructSize = sizeof(ofn);
+	ofn.hwndOwner = m_hwnd;
+	ofn.lpstrFile = szFile;
+
+	// Set lpstrFile[0] to '\0' so that GetOpenFileName does not 
+	// use the contents of szFile to initialize itself.
+	ofn.lpstrFile[0] = '\0';
+	ofn.nMaxFile = sizeof(szFile);
+	ofn.lpstrFilter = "All\0*.*\0Text\0*.TXT\0";
+	ofn.nFilterIndex = 1;
+	ofn.lpstrFileTitle = NULL;
+	ofn.nMaxFileTitle = 0;
+	ofn.lpstrInitialDir = NULL;
+	ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
+
+	// Display the Open dialog box. 
+
+	if (GetOpenFileNameA(&ofn)==TRUE)
+	{
+
+	}
+	
+		
+//		hf = CreateFileA(ofn.lpstrFile, 
+//						GENERIC_READ,
+//						0,
+//						(LPSECURITY_ATTRIBUTES) NULL,
+//						OPEN_EXISTING,
+//						FILE_ATTRIBUTE_NORMAL,
+//						(HANDLE) NULL);
+//
+	//lpstrFile contains filepath
+	return ofn.lpstrFile;
+}
+
+
 
 //------------------------------------------------------------------------------
 //	Set the path for the test file to be used
@@ -1012,47 +1060,7 @@ int Window::loadTestSettings(string sFilePath, string sPort)
 //  http://msdn.microsoft.com/en-us/library/ms646829%28v=vs.85%29.aspx#open_file
 //	Return: file path as string
 //------------------------------------------------------------------------------
-string Window::getFilePath()
-{
 
-	OPENFILENAMEA ofn;       // common dialog box structure
-	char szFile[260];       // buffer for file name
-
-	// Initialize OPENFILENAME
-	ZeroMemory(&ofn, sizeof(ofn));
-	ofn.lStructSize = sizeof(ofn);
-	ofn.hwndOwner = m_hwnd;
-	ofn.lpstrFile = szFile;
-
-	// Set lpstrFile[0] to '\0' so that GetOpenFileName does not 
-	// use the contents of szFile to initialize itself.
-	ofn.lpstrFile[0] = '\0';
-	ofn.nMaxFile = sizeof(szFile);
-	ofn.lpstrFilter = "All\0*.*\0Text\0*.TXT\0";
-	ofn.nFilterIndex = 1;
-	ofn.lpstrFileTitle = NULL;
-	ofn.nMaxFileTitle = 0;
-	ofn.lpstrInitialDir = NULL;
-	ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
-
-	// Display the Open dialog box. 
-
-	if (GetOpenFileNameA(&ofn)==TRUE)
-	{
-
-	}
-	//lpstrFile contains filepath
-		
-//		hf = CreateFileA(ofn.lpstrFile, 
-//						GENERIC_READ,
-//						0,
-//						(LPSECURITY_ATTRIBUTES) NULL,
-//						OPEN_EXISTING,
-//						FILE_ATTRIBUTE_NORMAL,
-//						(HANDLE) NULL);
-//
-	return ofn.lpstrFile;
-}
 
 
 
