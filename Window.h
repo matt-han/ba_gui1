@@ -25,15 +25,15 @@ public:
 
 //------------------------------------------------------------------------------
 //Methods
-	
-	//get
-	string getTransferFile();
-
+	//user definied message handler. NOT static
+	LRESULT HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam);
+	void sethInstance(HINSTANCE hInst);
 
 	//send variables to interpreter
 	void sendTestMode();
 	void sendParity();
 	void sendStopBits();
+	void sendDataBits();
 	void sendTransfer();
 	void sendProtocol();
 	void sendSelectedMasterPort();
@@ -44,23 +44,18 @@ public:
 	void sendLoggerState();
 	void sendTransTextMode(int iTransTextMode);
 	void sendRepeater();
-
-
 	void sendTestSettings();
+
 	void saveTestSettings();
 
 	int loadTestSettings(string sFilePath, string sPort);
 
-
-
-	void sethInstance(HINSTANCE hInst);
-
 	string getFilePath();
 	
+	//get
+	//string getTransferFile()
+	
     PCWSTR  ClassName() const { return L"WN COM Test Tool"; }
-    
-	//user definied message handler. NOT static
-	LRESULT HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
 //------------------------------------------------------------------------------
@@ -75,6 +70,7 @@ private:
 	int _ret;
 	int _iTestMode;
 	int _iParity;
+	int _iDataBits;
 	int _iStopBits;
 	int _iTransfer;
 	int _iProtocol;
@@ -89,6 +85,7 @@ private:
 	char _szTextToSend[31];
 	string _sTemp;
 	int _i;
+
 
 	//Window handles
 	HWND _hwndCB_MasPorts;

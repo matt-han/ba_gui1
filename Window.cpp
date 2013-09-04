@@ -49,18 +49,21 @@
 LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	LRESULT portIndex = 0;
-
+	LRESULT baudIndex = -1;
 	switch(uMsg)  
 	{
 		case WM_CREATE:
 
 			//set all values to default
 			_iTestMode = DEFAULT_VALUE;
-			_iParity   = DEFAULT_VALUE;
-			_iStopBits = DEFAULT_VALUE;
 			_iTransfer = DEFAULT_VALUE;
-			_iProtocol = DEFAULT_VALUE;
+			_iParity   = ODDPARITY;
+			_iStopBits = ONESTOPBIT;
+			_iDataBits = 8;
+			_iProtocol = 2;
 			_iBaudrate = DEFAULT_VALUE;
+			_iBaudrateMax = DEFAULT_VALUE;
+			
 
 			_iTextToTransfer = DEFAULT_VALUE;
 
@@ -101,6 +104,7 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 							m_hwnd,
 							(HMENU)ID_TM_FIXED,
 							NULL, NULL);
+
 //==============================================================================
 //Transfer
 			CreateWindowA("button", "Transfer",
@@ -170,6 +174,8 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 							(HMENU)ID_PAR_EVEN,
 							NULL, NULL);
 
+			CheckDlgButton(m_hwnd, ID_PAR_ODD, BST_CHECKED);
+
 //==============================================================================
 //Protocol
 			CreateWindowA("button", "Protocol",
@@ -198,6 +204,8 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 							(HMENU)ID_PRO_NONE,
 							NULL, NULL);
 
+			CheckDlgButton(m_hwnd, ID_PRO_NONE, BST_CHECKED);
+
 //==============================================================================
 //Stopbits
 			CreateWindowA("button", "StopBits",
@@ -206,26 +214,56 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 							m_hwnd, 
 							(HMENU) ID_GB_STOPBITS,
 							NULL, NULL);
-			CreateWindowA("button", " 1",
+			CreateWindowA("button", "1",
 							WS_GROUP | WS_CHILD |
 							WS_VISIBLE | BS_AUTORADIOBUTTON,
 							POS_X + 260, POS_Y2 + 20, 50, 30,
 							m_hwnd,
 							(HMENU)ID_SB_ONE,
 							NULL, NULL);
-			//CreateWindowA("button", " 1.5",
-			//				WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON,
-			//				POS_X + 10, POSYYY + 160, 50, 30,
-			//				m_hwnd,
-			//				(HMENU)ID_SB_ONE5,
-			//				NULL, NULL);
-			CreateWindowA("button", " 2",
+
+			CreateWindowA("button", "2",
 							WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON,
 							POS_X + 260, POS_Y2 + 45, 50, 30,
 							m_hwnd,
 							(HMENU)ID_SB_TWO,
 							NULL, NULL);
 
+			CheckDlgButton(m_hwnd, ID_SB_ONE, BST_CHECKED);
+
+//==============================================================================
+//Databits
+			CreateWindowA("button", "Databits",
+							WS_CHILD | WS_VISIBLE | BS_GROUPBOX,
+							POS_X + 250, POS_Y2 + 90, 110, 80,
+							m_hwnd, 
+							(HMENU) ID_GB_DATABITS,
+							NULL, NULL);
+			CreateWindowA("button", "7",
+							WS_GROUP | WS_CHILD |
+							WS_VISIBLE | BS_AUTORADIOBUTTON,
+							POS_X + 260, POS_Y2 + 110, 50, 30,
+							m_hwnd,
+							(HMENU)ID_DB_7,
+							NULL, NULL);
+
+			CreateWindowA("button", "8",
+							WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON,
+							POS_X + 260, POS_Y2 + 135, 50, 30,
+							m_hwnd,
+							(HMENU)ID_DB_8,
+							NULL, NULL);
+
+			CheckDlgButton(m_hwnd, ID_DB_8, BST_CHECKED);
+
+//==============================================================================
+//Logger
+			CreateWindowA("button", "Logger",
+					WS_VISIBLE | WS_CHILD | BS_CHECKBOX,
+					POS_X + 260, POS_Y2 + 180, 100, 35, m_hwnd,
+					(HMENU) ID_LOGGER, NULL, NULL);
+			
+			CheckDlgButton(m_hwnd, ID_LOGGER, BST_CHECKED);
 
 //==============================================================================
 //Labels
@@ -255,7 +293,6 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
                   POS_X, POS_Y + 100, 120, 30, m_hwnd,
 				  (HMENU)ID_LB_SLV, NULL, NULL);
 
-
 //------------------------------------------------------------------------------		
 //Max Baud
 			CreateWindowA("static", "MAX baud rate:", 
@@ -264,25 +301,17 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 				  (HMENU)ID_LB_MAX, NULL, NULL);
 
 //------------------------------------------------------------------------------
-//Logger
-			CreateWindowA("button", "Logger",
-					WS_VISIBLE | WS_CHILD | BS_CHECKBOX,
-					POS_X + 260, POS_Y2 + 85, 185, 35, m_hwnd,
-					(HMENU) ID_LOGGER, NULL, NULL);
-			
-			CheckDlgButton(m_hwnd, ID_LOGGER, BST_CHECKED);
-
-//------------------------------------------------------------------------------
 //Repeater
 			_hwnd_Repeater = CreateWindowA("edit", "1", 
 							  WS_VISIBLE | WS_CHILD | WS_BORDER,
-							  POS_X + 260, POS_Y2 + 120, 50, 20, m_hwnd,
+							  POS_X + 260, POS_Y2 + 215, 50, 20, m_hwnd,
 							  (HMENU)ID_LB_REPEATER, NULL, NULL);
 
 			CreateWindowA("static", "Repeater", 
                   WS_VISIBLE | WS_CHILD,
-                 POS_X + 315, POS_Y2 + 120, 60, 15, m_hwnd,
+                 POS_X + 315, POS_Y2 + 215, 60, 15, m_hwnd,
 				  NULL, NULL, NULL);
+
 //------------------------------------------------------------------------------
 //Load file
 			CreateWindowA("static", "Load file to be transfered:",
@@ -410,6 +439,12 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 //------------------------------------------------------------------------------
 //Master port
 					case ID_CB_COM_PORT:
+
+						//Delete the baud rates when new port is chosen
+						SendMessage(_hwndCB_Baud, CB_RESETCONTENT,0,0);
+						SendMessage(_hwndCB_Baud_MAX, CB_RESETCONTENT,0,0);
+
+
 						portIndex = SendMessage(_hwndCB_MasPorts,
 												CB_GETCURSEL, 0, 0);
 						_sMasPort = interpreter.comEnumerator.vPortList.at(portIndex);
@@ -419,7 +454,7 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 						if (ERROR_SUCCESS == _iError)
 						{
 							string s;
-
+							int i = 0;
 							for (vector<string>::iterator it =
 								interpreter.comEnumerator.vBaud.begin() ;
 								it != interpreter.comEnumerator.vBaud.end();
@@ -434,7 +469,7 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 								_iError2 = SendMessageA(_hwndCB_Baud_MAX, CB_ADDSTRING,
 													0, (LPARAM)s.c_str() );
 
-								if (_iError == CB_ERR)
+								if (_iError == CB_ERR || _iError2 == CB_ERR)
 								{
 									MessageBoxA(NULL, "Error updating baud rates in\n"
 													  "combobox. System Error CB_ERR",
@@ -443,7 +478,7 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 										 <<	"combo box. System Error CB_ERR"
 										 << endl;*/
 								}
-								else if ( _iError == CB_ERRSPACE)
+								else if (_iError == CB_ERRSPACE || _iError2 == CB_ERRSPACE)
 								{
 									MessageBoxA(NULL, "Error, not enough space in combo box.\n"
 													  "System Error CB_ERRSPACE",
@@ -452,7 +487,16 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 									//	 <<	"System Error CB_ERRSPACE"
 									//	 << endl;
 								}
-
+								else if (s == "9600")	//set default baud rate
+								{
+									SendMessage(_hwndCB_Baud, CB_SETCURSEL, i,0);
+									//get the baud rate string
+									_sTempBaud = "9600";
+									//translate it to the system constant
+									_iBaudrate = interpreter.comEnumerator.
+												translateBaudrate(_sTempBaud);
+								}
+								i++;
 							}
 
 							//Check if baud rates were written in the combo boxes
@@ -469,6 +513,8 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 								MessageBoxA(NULL, "Error updating the max baud rate combo box",
 													  "ERROR", MB_OK | MB_ICONWARNING);
 							}
+
+
 						}
 						else
 						{
@@ -479,12 +525,13 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 //------------------------------------------------------------------------------
 //Baudrate
 					case ID_CB_COM_BAUD:
+
 						//get the index
-						portIndex = SendMessage(_hwndCB_Baud,
+						baudIndex = SendMessage(_hwndCB_Baud,
 												CB_GETCURSEL, 0, 0);
 						//get the baud rate string
 						_sTempBaud = interpreter.comEnumerator.vBaud.at
-									 (portIndex);
+									 (baudIndex);
 						//translate it to the system constant
 						_iBaudrate = interpreter.comEnumerator.
 									  translateBaudrate(_sTempBaud);
@@ -616,14 +663,20 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 						_iStopBits = ONESTOPBIT;
 						break;
 
-					//case ID_SB_ONE5:
-					//	_iStopBits = ONE5STOPBITS;
-					//	break;
-
 					case ID_SB_TWO:
 						_iStopBits = TWOSTOPBITS;
 						break;
 
+
+//------------------------------------------------------------------------------
+//Databits
+					case ID_DB_7:
+						_iDataBits = 7;
+						break;
+
+					case ID_DB_8:
+						_iDataBits = 8;
+						break;
 //------------------------------------------------------------------------------
 //Transfer
 					case ID_MOD_SINGLE:
@@ -757,6 +810,14 @@ void Window::sendStopBits()
 
 
 //------------------------------------------------------------------------------
+//	Sends the user selected stopbit setting
+//------------------------------------------------------------------------------
+void Window::sendDataBits()
+{
+	interpreter.setDataBits(_iDataBits);
+}
+
+//------------------------------------------------------------------------------
 //	Sends the user selected transfer setting
 //------------------------------------------------------------------------------
 void Window::sendTransfer()
@@ -822,6 +883,7 @@ void Window::sendTextToSend()
 {
 	//GetWindowTextA(_hwnd_lbText, _szTextToSend, 30);
 	//clog << "\nText to send : " << _szTextToSend << endl;
+
 	interpreter.setTextToSend(_szTextToSend);
 }
 
@@ -870,6 +932,7 @@ void Window::sendTestSettings()
 	sendTestMode();
 	sendParity();
 	sendStopBits();
+	sendDataBits();
 	sendTransfer();
 	sendProtocol();
 	sendSelectedMasterPort();
@@ -907,6 +970,7 @@ void Window::saveTestSettings()
 	interSaveToFile.setTestMode(_iTestMode);
 	interSaveToFile.setParity(_iParity);
 	interSaveToFile.setStopBits(_iStopBits);
+	interSaveToFile.setDataBits(_iDataBits);
 	interSaveToFile.setTransfer(_iTransfer);
 	interSaveToFile.setProtocol(_iProtocol);
 	interSaveToFile.setSelectedMasterPort(_sMasPort);

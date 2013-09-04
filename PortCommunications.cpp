@@ -140,9 +140,19 @@ bool PortCommunications::readData(char * lpBuf, DWORD dwSize, int iReadTimeOut)
 		iCounter++;
 
 	}while(iCounter < 5);
+	
+	if(iCounter == 5)
+	{
+		CloseHandle(osReader.hEvent);
+		return FALSE;
+	}
+	else
+	{
+		CloseHandle(osReader.hEvent);
+		return TRUE;
+	}
 
-	CloseHandle(osReader.hEvent);
-	return TRUE;
+
 }
 
 

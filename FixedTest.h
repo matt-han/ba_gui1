@@ -42,6 +42,8 @@ public:
 	bool bTransmitionError;
 	char empfang[100];
 
+	vector<int> ivTestErrors;
+
 //------------------------------------------------------------------------------
 //Methods
 	void setTextVector(int iTextMode);	
@@ -66,6 +68,7 @@ private:
 
 	int _iError;
 	int _iExitCode;
+	int _iTestError;
 	int _iTimeOut;
 };
 

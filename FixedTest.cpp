@@ -155,14 +155,20 @@ int FixedTest::startSingleTest()
 					clog << "Transmition started" << endl;
 					clog << tools.printTime()     << flush;
 					clog<<"-----------------------------------------"<<endl;
+					
+					ivTestErrors.clear();
+
 					for (unsigned int index = 0; index < vTextToSend.size();
 						 index++)
 					{
-						_iError = communicate(vTextToSend.at(index), true);
-						if(_iError != ERROR_SUCCESS)
+						clog << "\n\nText line nr.: " << index+1 << endl;
+						_iTestError = communicate(vTextToSend.at(index), true);
+						if(_iTestError != ERROR_SUCCESS)
 						{
-							clog << "Error communicating. Error "<< _iError << endl;
+							clog << "Error communicating. Error "<< _iTestError
+								 << endl;
 						}
+							ivTestErrors.push_back(_iTestError);
 
 					}
 					clog<<"-----------------------------------------"<<endl;
@@ -170,6 +176,8 @@ int FixedTest::startSingleTest()
 					clog << tools.printTime() << flush;
 					clog<<"-----------------------------------------"<<endl;
 					
+					tools.printErrorVector(true, ivTestErrors);
+
 					if (bTransmitionError == true)
 					{
 						clog<<"Error/s transmitting information"<<endl;
@@ -177,7 +185,7 @@ int FixedTest::startSingleTest()
 					}
 					else
 					{
-						clog<<"Transmition finished successfully\n\n\n"<<endl;
+						clog<<"Transmition finished successfully\n"<<endl;
 					}
 					//----------------------------------------------------------
 				}	 //setDCB
@@ -214,7 +222,7 @@ int FixedTest::startSingleTest()
 		}
 
 		if (bTransmitionError == true)
-			return ERROR_TRANS_INFO;
+			return _iTestError;
 		else
 			return ERROR_SUCCESS;
 	}
@@ -355,10 +363,10 @@ int FixedTest::startDoubleTest()
 	for (unsigned int index = 0; index < vTextToSend.size(); index++)
 	{
 		//	Double mode => true, true
-		_iError = communicate(vTextToSend.at(index), false);
-		if(_iError != ERROR_SUCCESS)
+		_iTestError = communicate(vTextToSend.at(index), false);
+		if(_iTestError != ERROR_SUCCESS)
 		{
-			clog << "Error communicating. Error: "<< _iError << endl;
+			clog << "Error communicating. Error: "<< _iTestError << endl;
 		}
 	}
 	
@@ -376,11 +384,29 @@ int FixedTest::startDoubleTest()
 		clog<<"Transmition finished successfully\n\n\n"<<endl;
 	}
 
-	masterCom.closePort();
-	slaveCom.closePort();
+	
+
+	_iError = masterCom.closePort();
+	if(_iError != ERROR_SUCCESS)
+	{
+		clog << "Error closing " << masterCom.sPort << endl;
+		if (bTransmitionError == true)
+			clog << "Error in tranismition" << endl;	
+		return _iError;
+	}
+
+	_iError = slaveCom.closePort();
+	if(_iError != ERROR_SUCCESS)
+	{
+		clog << "Error closing " << masterCom.sPort << endl;
+		if (bTransmitionError == true)
+			clog << "Error in tranismition" << endl;	
+		return _iError;
+	}
+
 
 	if (bTransmitionError == true)
-			return ERROR_TRANS_INFO;
+			return _iTestError;
 		else
 			return ERROR_SUCCESS;
 }
@@ -642,7 +668,7 @@ int FixedTest::communicate(string sSendData, bool bMaster)
 	if (true == sendData(bMaster, sSendData))
 	{
 		clog <<"write was true"<<endl;
-		MessageBoxA(NULL, sSendData.c_str(), "COM 1 SENT", MB_OK);
+		MessageBoxA(NULL, sSendData.c_str(), "COM SENT", MB_OK);
 
 		string sTemp = getData(bRead, sSendData);
 
@@ -650,7 +676,8 @@ int FixedTest::communicate(string sSendData, bool bMaster)
 		{
 			if(0 == strcmp(sTemp.c_str(), sSendData.c_str()) )
 			{
-				clog << "read  was true"<<endl;
+				clog << "read was true"<<endl;
+				return ERROR_SUCCESS;
 			}
 			else
 			{
@@ -658,10 +685,8 @@ int FixedTest::communicate(string sSendData, bool bMaster)
 				clog << "- " << sSendData << endl;
 				clog << "- " << sTemp << endl;
 				bTransmitionError = true;
+				return ERROR_READ_PORT;
 			}
-
-			return ERROR_SUCCESS;
-
 		}
 		else
 		{
@@ -912,14 +937,19 @@ bool FixedTest::sendData(bool MasterSlave, string sSendData)
 //------------------------------------------------------------------------------
 void FixedTest::printTestSettings()
 {
+	int iStop = 2;
+	if(testStruct->iStopbits == ONESTOPBIT)
+		iStop = 1;
+
 	clog << "\nCommunication Settings"                     << endl;
-	clog << "-------------------------"                    << endl;
+	clog << "----------------------"                       << endl;
 	clog << " * Port        " << testStruct->sMasterPort   << endl;
 	clog << " * Baud rate   " << testStruct->iBaud         << endl;
 	clog << " * Parity      " << testStruct->iParity       << endl;
-	clog << " * Stopbits    " << testStruct->iStopbits     << endl;
+	clog << " * Stopbits    " << iStop					   << endl;
+	clog << " * Databits    " << testStruct->iDatabits	   << endl;
 	clog << " * Protocol    " << testStruct->iProtocol     << endl;
-	clog << "-------------------------\n"                  << endl;
+	clog << "----------------------\n"					   << endl;
 	//clog << "port " <<  << endl;
 	//clog << "port " <<  << endl;
 

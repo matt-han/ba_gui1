@@ -29,6 +29,7 @@ using namespace std;
 *	SB	-> StopBits
 *	LB	-> Label
 *	BT	-> Button
+*	DB	-> Databits
 */
 #define ID_LOGGER		1
 #define ID_PAR_ODD		2
@@ -69,7 +70,9 @@ using namespace std;
 #define ID_BT_SAVE		37
 #define ID_BT_LOADINI	38
 #define ID_LB_REPEATER	39
-
+#define ID_DB_7			40
+#define ID_DB_8			41
+#define ID_GB_DATABITS	42
 
 #define ID_BUT			100
 
@@ -151,9 +154,9 @@ using namespace std;
 		int iBaudrateMax;
 		int iTestMode;
 		int iParity;
-		//int iParityMax;
 		int iProtocol;
 		int iStopbits;
+		int iDatabits;
 		int iTransTextMode;
 		int iRepeater;
 		bool bLoggerState;

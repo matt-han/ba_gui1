@@ -114,7 +114,7 @@ Com::~Com(void)
 //------------------------------------------------------------------------------
 HANDLE Com::openPort(string portNumber)
 {
-	clog << "***********************************************" << endl;
+	clog << "\n**********************" << endl;
 	clog << "Trying to open " << this->sPort << endl << endl;
 
 	hCom = CreateFileA(portNumber.c_str(),  
@@ -528,8 +528,8 @@ int Com::getDCB()
 	//get original dcb
 		if (0 == GetCommState(hCom, &dcb))
 		{
-			MessageBoxW(NULL, L"Error getting Port default settings",
-							  L"ERROR", MB_OK);
+			MessageBoxA(NULL, "Error getting Port default settings",
+							  "ERROR", MB_OK);
 
 			_iError = GetLastError();
 			clog << "Error getting Port default settings´. Error : "
@@ -549,13 +549,17 @@ int Com::getDCB()
 //------------------------------------------------------------------------------
 int Com::setDCB()
 {
-	//get original dcb
+	//set original dcb
+	dcb.fParity = TRUE;
+
+
+
 		if (0 == SetCommState(hCom, &dcb))
 		{
 			_iError = GetLastError();
 			
-			MessageBoxW(NULL, L"Error setting Port dcb. For more details check "
-							  L"the log file", L"ERROR", MB_OK);
+			MessageBoxA(NULL, "Error setting Port dcb. For more details check "
+							  "the log file", "ERROR", MB_OK);
 
 			clog << "Error setting " << sPort << " dcb. System Error : "
 				 << _iError << endl;
@@ -563,7 +567,6 @@ int Com::setDCB()
 			return ERROR_SET_DCB;
 		}
 		else
-			//printDCB();
 
 		return ERROR_SUCCESS;
 }

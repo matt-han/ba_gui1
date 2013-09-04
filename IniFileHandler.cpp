@@ -40,10 +40,10 @@ IniFileHandler::~IniFileHandler(void)
 //------------------------------------------------------------------------------
 void IniFileHandler::writeINIfile(string sMasterPort, string sSlavePort, int iBaud,
 								int iBaudMax, int iTestMode, int iParity, int iProtocol,
-								int iStopbits, int iTransfer,int iTextMode,
+								int iStopbits, int iDatabits, int iTransfer,int iTextMode,
 								string sTextToTransfer, string sRepeater, bool bLogger, string sPath)
 {
-	string sBaud, sBaudMax, sParity, sProtocol, sStopbits, sLogger;
+	string sBaud, sBaudMax, sParity, sProtocol, sStopbits, sDatabits, sLogger;
 	
 	//if path is empty then create default path
 	if (sPath == "")
@@ -59,17 +59,18 @@ void IniFileHandler::writeINIfile(string sMasterPort, string sSlavePort, int iBa
 	//copy ints into strings
 	if (iTestMode != 0)
 	{
-		if (iTestMode != 0)
-		{	
-			sBaud = tools.convertToString(iBaud);
+	//if (iTestMode != 0)
+	//{	
+		sBaud = tools.convertToString(iBaud);
 			
-			if(iTestMode == 1)
-				sBaudMax = tools.convertToString(iBaudMax);
-		}
+		if(iTestMode == 1)
+			sBaudMax = tools.convertToString(iBaudMax);
+	//}
 		
 		sParity	  = parseParityToIni(iParity);
 		sProtocol = parseProtocolToIni(iProtocol);
 		sStopbits = parseStopbitsToIni(iStopbits);
+		sDatabits = parseDatabitsToIni(iDatabits);
 		
 		if(bLogger)
 			sLogger = "true";
@@ -96,8 +97,6 @@ void IniFileHandler::writeINIfile(string sMasterPort, string sSlavePort, int iBa
 										"wobble", sPath.c_str());
 			//Transfer mode + slave port if needed
 			writeINItransferSettings(sMasterPort, sSlavePort, iTransfer, sPath);
-			
-
 
 			//baudrate
 			sBaud.append("-");
@@ -114,6 +113,9 @@ void IniFileHandler::writeINIfile(string sMasterPort, string sSlavePort, int iBa
 			//Stopbits
 			WritePrivateProfileStringA(sMasterPort.c_str(),"Stopbits",
 										sStopbits.c_str(), sPath.c_str());
+			//Databits
+			WritePrivateProfileStringA(sMasterPort.c_str(),"Databits",
+										sDatabits.c_str(), sPath.c_str());
 			break;
 
 
@@ -121,6 +123,7 @@ void IniFileHandler::writeINIfile(string sMasterPort, string sSlavePort, int iBa
 		case 2:
 			WritePrivateProfileStringA(sMasterPort.c_str(),"TestMode",
 										"fixed", sPath.c_str());
+			
 			//Transfer mode + slave port if needed
 			writeINItransferSettings(sMasterPort, sSlavePort, iTransfer, sPath);
 			
@@ -136,6 +139,9 @@ void IniFileHandler::writeINIfile(string sMasterPort, string sSlavePort, int iBa
 			//Stopbits
 			WritePrivateProfileStringA(sMasterPort.c_str(),"Stopbits",
 										sStopbits.c_str(), sPath.c_str());
+			//Databits
+			WritePrivateProfileStringA(sMasterPort.c_str(),"Databits",
+										sDatabits.c_str(), sPath.c_str());
 			break;
 	}//switch
 
@@ -514,10 +520,16 @@ int IniFileHandler::readSettings(string sPort, string sFilePath, int index)
 		if (_iError == ERROR_SUCCESS)
 		{
 			_iError = readStopbits(sPort, sFilePath, index);
-			if (_iError != ERROR_SUCCESS)
+			if (_iError == ERROR_SUCCESS)
 			{
+				_iError = readDatabits(sPort, sFilePath, index);
+				if (_iError != ERROR_SUCCESS)
+				{
+					return _iError;
+				}
+			}	
+			else
 				return _iError;
-			}
 		}
 		else
 			return _iError;
@@ -618,7 +630,7 @@ int IniFileHandler::readStopbits(string sPort, string sFilePath, int index)
 {
 	int iTemp = -1;
 
-	_dwExists =GetPrivateProfileStringA(sPort.c_str(),"Stopbits",
+	_dwExists = GetPrivateProfileStringA(sPort.c_str(),"Stopbits",
 												NULL, szValue,
 												sizeof(szValue),
 												sFilePath.c_str());
@@ -645,6 +657,46 @@ int IniFileHandler::readStopbits(string sPort, string sFilePath, int index)
 	return ERROR_SUCCESS;
 }
 
+//------------------------------------------------------------------------------
+//	Reads the databits setting from the INI file
+//	Parameters:
+//	 IN:
+//		- string sPort -> COM port in the system to use for transfer
+//		- string sFilePath -> INI file path
+//		- int index -> index of the COM port for the vector
+//	Return: if success or _iError in INI file
+//------------------------------------------------------------------------------
+int IniFileHandler::readDatabits(string sPort, string sFilePath, int index)
+{
+	int iTemp = -1;
+
+	_dwExists = GetPrivateProfileStringA(sPort.c_str(),"Databits",
+												NULL, szValue,
+												sizeof(szValue),
+												sFilePath.c_str());
+	if (_dwExists != 0)
+	{
+		iTemp = parseDatabits(szValue);
+		if (iTemp != ERROR_PARSE)
+		{
+			vComPorts.at(index).iDatabits = iTemp;
+		}
+		else
+		{
+			clog << "Error in INI file. Incorrect databits for "
+				 << "port " << sPort << endl;
+			return ERROR_INI;
+		}
+	}
+	else	//_iError in ini file
+	{
+		clog << "Error in INI file. No datapbits definied for "
+				<< sPort << endl;
+		return ERROR_INI;
+	}
+	return ERROR_SUCCESS;
+}
+
 
 //------------------------------------------------------------------------------
 //	Reads the baud rate setting from the INI file
@@ -660,7 +712,7 @@ int IniFileHandler::readBaudRate(string sPort, string sFilePath, int index)
 	int iTemp = 0;
 	//Get port baudrate
 	//----------------------------------------------------------
-	_dwExists =GetPrivateProfileStringA(sPort.c_str(),"BaudRate",
+	_dwExists = GetPrivateProfileStringA(sPort.c_str(),"BaudRate",
 												NULL, szValue,
 												sizeof(szValue),
 												sFilePath.c_str());
@@ -803,7 +855,7 @@ int IniFileHandler::readRepeater(string sPort, string sFilePath)
 //------------------------------------------------------------------------------
 int IniFileHandler::parseTextToTransfer(string sPort, string sFilePath, string sTransferTextMode, int index)
 {
-	_dwExists =GetPrivateProfileStringA(sPort.c_str(),"TransferText",
+	_dwExists = GetPrivateProfileStringA(sPort.c_str(),"TransferText",
 													NULL, szValue,
 													sizeof(szValue),
 													sFilePath.c_str());
@@ -909,7 +961,7 @@ string IniFileHandler::parseProtocolToIni(int iProtocol)
 //	Parse GUI parameters to a string
 //	Parameters:
 //	 IN:
-//		- int iStopbits -> integer describing the stropbits for the transmition
+//		- int iStopbits -> integer describing the stopbits for the transmition
 //	Return: parsed GUI parameters
 //------------------------------------------------------------------------------
 string IniFileHandler::parseStopbitsToIni(int iStopbits)
@@ -921,10 +973,6 @@ string IniFileHandler::parseStopbitsToIni(int iStopbits)
 			sTemp = "1";
 			break;
 
-		case 1:
-			sTemp = "1.5";
-			break;
-
 		case 2:
 			sTemp = "2";
 			break;
@@ -934,6 +982,29 @@ string IniFileHandler::parseStopbitsToIni(int iStopbits)
 }
 
 
+//------------------------------------------------------------------------------
+//	Parse GUI parameters to a string
+//	Parameters:
+//	 IN:
+//		- int iDatabits -> integer describing the databits for the transmition
+//	Return: parsed GUI parameters
+//------------------------------------------------------------------------------
+string IniFileHandler::parseDatabitsToIni(int iDatabits)
+{
+	string sTemp = "";
+	switch(iDatabits)
+	{
+		case 7:
+			sTemp = "7";
+			break;
+
+		case 8:
+			sTemp = "8";
+			break;
+	}
+
+	return sTemp;
+}
 //------------------------------------------------------------------------------
 //	parse INI file parameter to test setting and saves it in the right struct
 //	Parameters:
@@ -1107,6 +1178,30 @@ int IniFileHandler::parseStopbits(string sStopbits)
 	return i;
 }
 
+
+//------------------------------------------------------------------------------
+//	parse INI file parameter to test setting
+//	Parameters:
+//	 IN:
+//		- string sDatabits -> transmition databits
+//	Return: databits as an integer, if fails returns parsing _iError
+//------------------------------------------------------------------------------
+int IniFileHandler::parseDatabits(string sDatabits)
+{
+	int i = ERROR_PARSE;
+
+	if (sDatabits == "7")
+		i = 7;
+	else if(sDatabits == "8")
+		i = 8;
+	else
+	{
+		clog << "Error parsing the databits. Wrong parameter." << sDatabits
+			<< "\nUse 7 or 8" << endl;
+	}
+	
+	return i;
+}
 
 //------------------------------------------------------------------------------
 //	parse INI file parameter to test setting

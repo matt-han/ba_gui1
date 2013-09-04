@@ -38,6 +38,7 @@ public:
 	void setTestMode(int);
 	void setParity(int);
 	void setStopBits(int);
+	void setDataBits(int);
 	void setTransfer(int);
 	void setProtocol(int);
 	void setSelectedMasterPort(string);
@@ -53,7 +54,7 @@ public:
 	//is void 'cos gui does not handle values!
 	void handleGui();
 	
-
+	
 
 	int checkInputConfigData();
 	int checkBaudrate(int);
@@ -70,6 +71,7 @@ private:
 	int _iTestMode;
 	int _iParity;
 	int _iStopBits;
+	int _iDataBits;
 	int _iTransfer;
 	int _iProtocol;
 	int _iInfoToTransfer;

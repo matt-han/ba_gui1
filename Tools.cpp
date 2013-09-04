@@ -214,6 +214,7 @@ void Tools::wait(int x)
 //	Parameters:
 //	 IN:
 //		- bool bPrint -> true for log file, false for message box
+//		- vector int ivTestError -> error codes from tests
 //------------------------------------------------------------------------------
 void Tools::printErrorVector(bool bPrint, vector<int> ivTestErrors)
 {
@@ -221,7 +222,7 @@ void Tools::printErrorVector(bool bPrint, vector<int> ivTestErrors)
 	{
 		clog << "   Test Results   " << endl;
 		clog << "__________________" << endl;
-		clog << "TestNr. | ExitCode" << endl;
+		clog << "LineNr. | ExitCode" << endl;
 		//clog << "------------------" << endl;
 
 		for(int i = 0; i < ivTestErrors.size(); i++)
@@ -231,6 +232,7 @@ void Tools::printErrorVector(bool bPrint, vector<int> ivTestErrors)
 			clog << " | " << ivTestErrors.at(i) << endl;
 
 		}
+		clog << endl << endl;
 	}
 	else
 	{

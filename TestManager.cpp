@@ -101,6 +101,9 @@ int TestManager::startManager()
 			{
 				iTemp = atoi(testStruct.svBaudrates.at(index).c_str());
 				
+				//for each new baud rate, reset the error vector
+				ivTestErrors.clear();
+
 				//for min max parity
 				if(_bWobbleParity)
 				{
@@ -109,7 +112,8 @@ int TestManager::startManager()
 						_iError = startWobbleTest(iTemp, iPar);
 						if (_iError != ERROR_SUCCESS)
 						{
-							clog << "Error in wobble test. Error: " << _iError << endl;
+							clog << "Error in wobble test. Error: " << _iError
+								 << endl;
 							clog << "Baudrate: " << iTemp << endl;
 							clog << "Parity:   " << iPar << endl;
 							_bError = true;
@@ -158,16 +162,19 @@ int TestManager::startManager()
 //------------------------------------------------------------------------------
 int TestManager::startFixedTest()
 {
+	FixedTest fixedTest(&testStruct);
 	_bTestStarted = true;
 	//ivTestErrors.clear();
 
-	FixedTest fixedTest(&testStruct);
+	int iRepeat = 1;
 
 	//set the text to be transfered
 	fixedTest.setTextVector(testStruct.iTransTextMode);
 
-	for(int iRepeat = 0; iRepeat < testStruct.iRepeater; iRepeat++)
+	do
 	{
+	//for(int iRepeat = 0; iRepeat < testStruct.iRepeater; iRepeat++)
+	//{
 		switch(testStruct.iTransfer)
 		{
 			//Single test
@@ -191,10 +198,20 @@ int TestManager::startFixedTest()
 				break;
 		}//switch
 
-		ivTestErrors.push_back(_iError);
-	}//for
+		//ivTestErrors.push_back(_iError);
 	
-	_tools.printErrorVector(testStruct.bLoggerState, ivTestErrors);
+	//}//for
+		if(testStruct.iRepeater != 0)
+		{
+			if(	iRepeat < testStruct.iRepeater)
+				iRepeat++;
+			else
+				break;
+		}
+
+	}while(true);
+
+	//_tools.printErrorVector(testStruct.bLoggerState, ivTestErrors);
 
 	return ERROR_SUCCESS;
 }
@@ -207,11 +224,12 @@ int TestManager::startFixedTest()
 int TestManager::startWobbleTest(int iBaudrate, int iParity)
 {
 	_bTestStarted = true;
-	//ivTestErrors.clear();
+	
 	
 	//create for each test a new object to avoid errors
 	WobbleTest wobble(&testStruct);
 
+	wobble.setTextVector(testStruct.iTransTextMode);
 	wobble.testStruct->iBaud   = iBaudrate;
 	wobble.testStruct->iParity = iParity;
 
@@ -240,10 +258,10 @@ int TestManager::startWobbleTest(int iBaudrate, int iParity)
 				break;
 		}//switch
 
-		ivTestErrors.push_back(_iError);
+		//ivTestErrors.push_back(_iError);
 	}
 
-	_tools.printErrorVector(testStruct.bLoggerState, ivTestErrors);
+	//_tools.printErrorVector(testStruct.bLoggerState, ivTestErrors);
 	
 	return ERROR_SUCCESS;
 }

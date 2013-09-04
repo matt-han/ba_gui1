@@ -8,8 +8,8 @@ Interpreter::Interpreter(void)
 {
 	_iTestMode		= DEFAULT_VALUE;
 	_iParity		= DEFAULT_VALUE;
-
 	_iStopBits		= DEFAULT_VALUE;
+	_iDataBits		= DEFAULT_VALUE;
 	_iTransfer		= DEFAULT_VALUE;
 	_iProtocol		= DEFAULT_VALUE;
 	_iBaudrate		= DEFAULT_VALUE;
@@ -67,6 +67,18 @@ void Interpreter::setParity(int iParity)
 void Interpreter::setStopBits(int iStopBits)
 {
 	this->_iStopBits = iStopBits;
+}
+
+
+//------------------------------------------------------------------------------
+//	Saves the user stopbits input in _iStopBits
+//	Parameters:
+//	 IN:
+//		- int iStopBits -> user GUI input
+//------------------------------------------------------------------------------
+void Interpreter::setDataBits(int iDataBits)
+{
+	this->_iDataBits = iDataBits;
 }
 
 
@@ -175,7 +187,9 @@ void Interpreter::setTransferFile(string sTransferFile)
 //------------------------------------------------------------------------------
 void Interpreter::setTextToSend(string sTextToSend)
 {
-	this->_sTextToSend = sTextToSend;
+	//this->_sTextToSend = sTextToSend;
+	this->_sTextToSend = tools.replaceASCII(sTextToSend);
+
 }
 
 
@@ -214,10 +228,7 @@ void Interpreter::setRepeater(string sRepeater)
 	}
 	else
 	{
-		MessageBoxA(NULL, "Error in repeater value,\n"
-						"please type an number > 0",
-						"ERROR", MB_OK | MB_ICONWARNING);
-		this->_iRepeater = DEFAULT_VALUE;
+		this->_iRepeater = 0;
 	}
 }
 
@@ -228,19 +239,20 @@ void Interpreter::setRepeater(string sRepeater)
 //------------------------------------------------------------------------------
 void Interpreter::setDefaultValues()
 {
-	_iTestMode  = DEFAULT_VALUE;
-	_iParity    = DEFAULT_VALUE;
-	_iStopBits  = DEFAULT_VALUE;
-	_iTransfer  = DEFAULT_VALUE;
-	_iProtocol  = DEFAULT_VALUE;
-	_iBaudrate  = DEFAULT_VALUE;
+	_iTestMode		= DEFAULT_VALUE;
+	_iParity		= DEFAULT_VALUE;
+	_iStopBits		= DEFAULT_VALUE;
+	_iDataBits		= DEFAULT_VALUE;
+	_iTransfer		= DEFAULT_VALUE;
+	_iProtocol		= DEFAULT_VALUE;
+	_iBaudrate		= DEFAULT_VALUE;
 	_iTransTextMode = DEFAULT_VALUE;
-	_bLoggerState = true;
+	_bLoggerState	= true;
 
-	_sMasPort      = "";
-	_sSlaPort      = "";
-	_sFilePath = "";
-	_sTextToSend   = "";
+	_sMasPort		= "";
+	_sSlaPort		= "";
+	_sFilePath		= "";
+	_sTextToSend	= "";
 }
 
 
@@ -456,8 +468,8 @@ void Interpreter::handleGui()
 				}//switch
 
 				
-				//start the manager to start testing
-				if(bErr == false || _iRepeater != DEFAULT_VALUE)
+				//start the manager to start testing if no input errors were reported
+				if(bErr == false)
 				{
 					//save the logger state, file path,
 					//repeater, textToSend and transtextmode
@@ -490,6 +502,10 @@ void Interpreter::handleGui()
 							MB_OK | MB_ICONWARNING);
 					}
 				}
+				else //bErr
+				{
+					delete _testManager;
+				}
 
 			}//if transfer mode
 		}
@@ -502,8 +518,6 @@ void Interpreter::handleGui()
 		setDefaultValues();
 	}
 
-
-	
 	delete _testManager;
 }
 
@@ -545,6 +559,17 @@ int Interpreter::checkInputConfigData()
 	}
 	else
 		_testManager->testStruct.iStopbits = _iStopBits;
+
+	//stopbits
+	if(_iDataBits == DEFAULT_VALUE)
+	{
+		MessageBoxW(NULL,L"Please select the databits",
+			L"Error", MB_OK);
+		return ERROR_INPUT;
+	}
+	else
+		_testManager->testStruct.iDatabits = _iDataBits;
+
 
 	return ERROR_SUCCESS;
 }
@@ -619,6 +644,7 @@ int Interpreter::saveToFile()
 						 _iParity,
 						 _iProtocol,
 						 _iStopBits,
+						 _iDataBits,
 						 _iTransfer,
 						 _iTransTextMode,
 						 sTempTransferTextMode,
