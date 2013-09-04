@@ -73,6 +73,9 @@ using namespace std;
 #define ID_DB_7			40
 #define ID_DB_8			41
 #define ID_GB_DATABITS	42
+#define ID_BT_STOP		43
+#define ID_BT_HELP		44
+#define ID_GB_PROTOCOL	45
 
 #define ID_BUT			100
 

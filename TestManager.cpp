@@ -6,6 +6,7 @@
 TestManager::TestManager(void)
 {
 	_bTestStarted = false;
+	bContinueTest = true;
 }
 
 
@@ -42,8 +43,6 @@ int TestManager::startManager()
 	{
 		//automatic test
 		case 0:
-			MessageBoxA(NULL, "not programmed yet", "!!!!!!!!!",
-									MB_OK);
 			_iError = startAutomaticTest();
 			break;
 
@@ -164,6 +163,7 @@ int TestManager::startFixedTest()
 {
 	FixedTest fixedTest(&testStruct);
 	_bTestStarted = true;
+
 	//ivTestErrors.clear();
 
 	int iRepeat = 1;
@@ -173,8 +173,6 @@ int TestManager::startFixedTest()
 
 	do
 	{
-	//for(int iRepeat = 0; iRepeat < testStruct.iRepeater; iRepeat++)
-	//{
 		switch(testStruct.iTransfer)
 		{
 			//Single test
@@ -200,16 +198,15 @@ int TestManager::startFixedTest()
 
 		//ivTestErrors.push_back(_iError);
 	
-	//}//for
-		if(testStruct.iRepeater != 0)
+		if(testStruct.iRepeater > 0)
 		{
 			if(	iRepeat < testStruct.iRepeater)
 				iRepeat++;
 			else
-				break;
+				bContinueTest = false;
 		}
 
-	}while(true);
+	}while(bContinueTest);
 
 	//_tools.printErrorVector(testStruct.bLoggerState, ivTestErrors);
 
@@ -224,16 +221,16 @@ int TestManager::startFixedTest()
 int TestManager::startWobbleTest(int iBaudrate, int iParity)
 {
 	_bTestStarted = true;
-	
+	int iRepeat = 1;
 	
 	//create for each test a new object to avoid errors
-	WobbleTest wobble(&testStruct);
+	FixedTest wobble(&testStruct);
 
 	wobble.setTextVector(testStruct.iTransTextMode);
 	wobble.testStruct->iBaud   = iBaudrate;
 	wobble.testStruct->iParity = iParity;
 
-	for(int iRepeat = 0; iRepeat < testStruct.iRepeater; iRepeat++)
+	do
 	{
 		switch(testStruct.iTransfer)
 		{
@@ -259,7 +256,16 @@ int TestManager::startWobbleTest(int iBaudrate, int iParity)
 		}//switch
 
 		//ivTestErrors.push_back(_iError);
-	}
+
+		if(testStruct.iRepeater > 0)
+		{
+			if(	iRepeat < testStruct.iRepeater)
+				iRepeat++;
+			else
+				bContinueTest = false;
+		}
+
+	}while(bContinueTest);
 
 	//_tools.printErrorVector(testStruct.bLoggerState, ivTestErrors);
 	
@@ -275,5 +281,45 @@ int TestManager::startAutomaticTest()
 {
 	_bTestStarted = true;
 
-	return ERROR_TODO;
+	testStruct.iParity			= ODDPARITY;
+	testStruct.iStopbits		= ONESTOPBIT;
+	testStruct.iProtocol		= 1;
+	testStruct.iBaud			= B_9600;
+	testStruct.iDatabits		= 8;
+	testStruct.iRepeater		= -1;
+	testStruct.sTextToTransfer	= DEFAULT_VALUE;
+
+
+	FixedTest automatic(&testStruct);
+
+	//ask stop button..........
+	do
+	{
+		switch(testStruct.iTransfer)
+		{
+			//Single test
+			case 0:
+				_iError = automatic.startSingleTest();
+				break;
+
+			//Double Test
+			case 1:
+				_iError = automatic.startDoubleTest();
+				break;
+
+			//Master 
+			case 2:
+				_iError = automatic.startMasterSlaveTest(true);
+				break;
+
+			//Slave
+			case 3:
+				_iError = automatic.startMasterSlaveTest(false);
+				break;
+		}//switch
+
+	}while(bContinueTest);
+
+
+	return ERROR_SUCCESS;
 }

@@ -48,9 +48,6 @@
     <ClCompile Include="FixedTest.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="AutomaticTest.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="WobbleTest.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
@@ -69,9 +66,6 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Logger.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="TestProperties.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Tools.h">
@@ -93,9 +87,6 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="FixedTest.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="AutomaticTest.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="WobbleTest.h">

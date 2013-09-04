@@ -182,7 +182,7 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 							WS_CHILD | WS_VISIBLE | BS_GROUPBOX,
 							POS_X + 120, POS_Y2, 120, 110,
 							m_hwnd, 
-							(HMENU) ID_GB_TRANSFER,
+							(HMENU) ID_GB_PROTOCOL,
 							NULL, NULL);
 			CreateWindowA("button", "XON/XOFF",
 							WS_GROUP | WS_CHILD|
@@ -416,6 +416,16 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 				POS_X + 260, POS_Y2 + 290, 100, 30, m_hwnd, (HMENU)ID_BT_LOADINI,
 				NULL, NULL);
 
+			_hwnd_Stop = CreateWindowA("button", "Stop",
+				WS_CHILD | WS_VISIBLE,
+				POS_X + 180, POS_Y2 + 325, 70, 30, m_hwnd, (HMENU)ID_BT_STOP,
+				NULL, NULL);
+
+			_hwnd_Help = CreateWindowA("button", "Help",
+				WS_CHILD | WS_VISIBLE,
+				POS_X + 100, POS_Y2 + 325, 70, 30, m_hwnd, (HMENU)ID_BT_HELP,
+				NULL, NULL);
+
 			//CreateMyTooltip(m_hwnd);
 
 
@@ -601,6 +611,26 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 						ShowWindow(GetDlgItem(m_hwnd, ID_LB_MAX), SW_HIDE);
 						ShowWindow(GetDlgItem(m_hwnd, ID_LB_MIN), SW_HIDE);
 
+						//disable second row of test parameter
+						EnableWindow(GetDlgItem(m_hwnd, ID_PAR_NONE), FALSE);
+						EnableWindow(GetDlgItem(m_hwnd, ID_PAR_ODD),  FALSE);
+						EnableWindow(GetDlgItem(m_hwnd, ID_PAR_EVEN), FALSE);
+
+						EnableWindow(GetDlgItem(m_hwnd, ID_SB_ONE), FALSE);
+						EnableWindow(GetDlgItem(m_hwnd, ID_SB_TWO),	FALSE);
+
+						EnableWindow(GetDlgItem(m_hwnd, ID_PRO_XON_OFF),  FALSE);
+						EnableWindow(GetDlgItem(m_hwnd, ID_PRO_HARDWARE), FALSE);
+						EnableWindow(GetDlgItem(m_hwnd, ID_PRO_NONE),	  FALSE);
+
+						EnableWindow(GetDlgItem(m_hwnd, ID_DB_7), FALSE);
+						EnableWindow(GetDlgItem(m_hwnd, ID_DB_8), FALSE);
+
+						EnableWindow(_hwnd_Repeater, FALSE);
+						EnableWindow(_hwnd_btnLoad,  FALSE);
+						EnableWindow(_hwnd_btnText,  FALSE);
+
+
 						//show baudrate label
 						ShowWindow(GetDlgItem(m_hwnd, ID_LB_BAUD), SW_SHOWNORMAL);
 
@@ -613,6 +643,25 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 						ShowWindow(GetDlgItem(m_hwnd, ID_LB_MAX	), SW_SHOWNORMAL);
 						ShowWindow(GetDlgItem(m_hwnd, ID_LB_MIN	), SW_SHOWNORMAL);
 
+						//disable second row of test parameter
+						EnableWindow(GetDlgItem(m_hwnd, ID_PAR_NONE), TRUE);
+						EnableWindow(GetDlgItem(m_hwnd, ID_PAR_ODD),  TRUE);
+						EnableWindow(GetDlgItem(m_hwnd, ID_PAR_EVEN), TRUE);
+
+						EnableWindow(GetDlgItem(m_hwnd, ID_SB_ONE), TRUE);
+						EnableWindow(GetDlgItem(m_hwnd, ID_SB_TWO),	TRUE);
+
+						EnableWindow(GetDlgItem(m_hwnd, ID_PRO_XON_OFF),  TRUE);
+						EnableWindow(GetDlgItem(m_hwnd, ID_PRO_HARDWARE), TRUE);
+						EnableWindow(GetDlgItem(m_hwnd, ID_PRO_NONE),	  TRUE);
+
+						EnableWindow(GetDlgItem(m_hwnd, ID_DB_7), TRUE);
+						EnableWindow(GetDlgItem(m_hwnd, ID_DB_8), TRUE);
+
+						EnableWindow(_hwnd_Repeater, TRUE);
+						EnableWindow(_hwnd_btnLoad,  TRUE);
+						EnableWindow(_hwnd_btnText,  TRUE);
+
 						//hide baudrate label
 						ShowWindow(GetDlgItem(m_hwnd, ID_LB_BAUD), SW_HIDE);
 						_iTestMode = 1;
@@ -623,6 +672,25 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 						ShowWindow(_hwndCB_Baud_MAX	, SW_HIDE);
 						ShowWindow(GetDlgItem(m_hwnd, ID_LB_MAX), SW_HIDE);
 						ShowWindow(GetDlgItem(m_hwnd, ID_LB_MIN), SW_HIDE);
+
+						//disable second row of test parameter
+						EnableWindow(GetDlgItem(m_hwnd, ID_PAR_NONE), TRUE);
+						EnableWindow(GetDlgItem(m_hwnd, ID_PAR_ODD),  TRUE);
+						EnableWindow(GetDlgItem(m_hwnd, ID_PAR_EVEN), TRUE);
+
+						EnableWindow(GetDlgItem(m_hwnd, ID_SB_ONE), TRUE);
+						EnableWindow(GetDlgItem(m_hwnd, ID_SB_TWO),	TRUE);
+
+						EnableWindow(GetDlgItem(m_hwnd, ID_PRO_XON_OFF),  TRUE);
+						EnableWindow(GetDlgItem(m_hwnd, ID_PRO_HARDWARE), TRUE);
+						EnableWindow(GetDlgItem(m_hwnd, ID_PRO_NONE),	  TRUE);
+
+						EnableWindow(GetDlgItem(m_hwnd, ID_DB_7), TRUE);
+						EnableWindow(GetDlgItem(m_hwnd, ID_DB_8), TRUE);
+
+						EnableWindow(_hwnd_Repeater, TRUE);
+						EnableWindow(_hwnd_btnLoad,  TRUE);
+						EnableWindow(_hwnd_btnText,  TRUE);
 
 						//show baudrate label
 						ShowWindow(GetDlgItem(m_hwnd, ID_LB_BAUD), SW_SHOWNORMAL);
@@ -713,8 +781,23 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 //------------------------------------------------------------------------------
 //Buttons
 					case ID_BT_START:
-						
+						EnableWindow(_hwnd_btnLoad, FALSE);
+						EnableWindow(_hwnd_btnText, FALSE);
+						EnableWindow(_hwnd_Start,   FALSE);
+						EnableWindow(_hwnd_Close,   FALSE);
+						EnableWindow(_hwnd_Save,    FALSE);
+						EnableWindow(_hwnd_LoadINI, FALSE);
+						EnableWindow(_hwnd_Help,    FALSE);
+
 						sendTestSettings();
+
+						EnableWindow(_hwnd_btnLoad, TRUE);
+						EnableWindow(_hwnd_btnText, TRUE);
+						EnableWindow(_hwnd_Start,   TRUE);
+						EnableWindow(_hwnd_Close,   TRUE);
+						EnableWindow(_hwnd_Save,    TRUE);
+						EnableWindow(_hwnd_LoadINI, TRUE);
+						EnableWindow(_hwnd_Help,    TRUE);
 						break;
 
 					case ID_BT_CLOSE:
@@ -752,6 +835,14 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 						loadTestSettings("","");
 						MessageBoxA(NULL, "....loaded?....\ncheck return codes!!!\n File loaded successfully, please press start", "", MB_OK);
 						break;
+
+					case ID_BT_STOP:
+						break;
+
+					case ID_BT_HELP:
+						break;
+
+						
 
 				}//switch
 			}//if

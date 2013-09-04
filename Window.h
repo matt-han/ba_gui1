@@ -102,6 +102,8 @@ private:
 	HWND _hwnd_Save;
 	HWND _hwnd_LoadINI;
 	HWND _hwnd_Repeater;
+	HWND _hwnd_Stop;
+	HWND _hwnd_Help;
 
 	//void CreateMyTooltip (HWND hwnd);
 	//HWND CreateToolTip(int toolID, HWND hDlg, PTSTR pszText);

@@ -187,8 +187,8 @@ int FixedTest::startSingleTest()
 					{
 						clog<<"Transmition finished successfully\n"<<endl;
 					}
-					//----------------------------------------------------------
-				}	 //setDCB
+				//----------------------------------------------------------
+				}//setDCB
 				else
 				{
 					clog << "Error setting the master port DCB" << endl;
@@ -668,7 +668,7 @@ int FixedTest::communicate(string sSendData, bool bMaster)
 	if (true == sendData(bMaster, sSendData))
 	{
 		clog <<"write was true"<<endl;
-		MessageBoxA(NULL, sSendData.c_str(), "COM SENT", MB_OK);
+		//MessageBoxA(NULL, sSendData.c_str(), "COM SENT", MB_OK);
 
 		string sTemp = getData(bRead, sSendData);
 

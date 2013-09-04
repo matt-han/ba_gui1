@@ -14,7 +14,7 @@
 //Window constants
 #define WINDOW_X	150
 #define WINDOW_Y	150
-#define WIN_HEIGHT	550
+#define WIN_HEIGHT	600
 #define WIN_WIDTH	420
 #define POS_Y		10
 #define POS_Y2		190

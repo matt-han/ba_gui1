@@ -28,9 +28,7 @@ public:
 	PortCommunications slavePortComm;
 
 	TransferFileHandler transFile;
-
 	TestStruct *testStruct;
-
 	Tools tools;
 
 	string defaultText[TEXT_LENGTH];

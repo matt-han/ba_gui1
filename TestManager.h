@@ -4,7 +4,6 @@
 
 #include "FixedTest.h"
 #include "WobbleTest.h"
-#include "AutomaticTest.h"
 #include "Tools.h"
 #include "Logger.h"
 #include "Constants.h"
@@ -25,6 +24,7 @@ public:
 	
 	TestStruct testStruct;
 	vector<int> ivTestErrors;
+	bool bContinueTest;
 
 //------------------------------------------------------------------------------
 //Methods

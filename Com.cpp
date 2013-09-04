@@ -552,8 +552,6 @@ int Com::setDCB()
 	//set original dcb
 	dcb.fParity = TRUE;
 
-
-
 		if (0 == SetCommState(hCom, &dcb))
 		{
 			_iError = GetLastError();
