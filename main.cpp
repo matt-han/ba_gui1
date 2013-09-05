@@ -26,7 +26,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR pCmdLine, int nCmdShow)
 
 	//return 0;
 
-	//Logger log(true, "com");
 	int _iError = ERROR_SUCCESS;
 	
 	if (0 == strcmp(pCmdLine, "") )

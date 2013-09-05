@@ -8,7 +8,7 @@
 #include "Constants.h"
 #include "BaseWindow.h"
 #include "Interpreter.h"
-
+#include "Tools.h"
 
 using namespace std;
 
@@ -22,7 +22,7 @@ public:
 //------------------------------------------------------------------------------
 //Variables
 	Interpreter interpreter;
-
+	Tools tools;
 //------------------------------------------------------------------------------
 //Methods
 	//user definied message handler. NOT static
@@ -84,6 +84,7 @@ private:
 	char _szRepeater[6];
 	char _szTextToSend[31];
 	string _sTemp;
+	string _sPath;
 	int _i;
 
 

@@ -11,6 +11,7 @@
 #include <vector>
 #include <Winerror.h>
 #include "Constants.h"
+#include "Tools.h"
 
 using namespace std;
 
@@ -21,6 +22,7 @@ public:
 	TransferFileHandler(void);
 	~TransferFileHandler(void);
 
+	Tools tools;
 	
 	int openFile(string sFilePath);
 	void closeFile();

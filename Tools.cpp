@@ -73,13 +73,16 @@ string Tools::convertToString(int iNumber)
 //------------------------------------------------------------------------------
 string Tools::printTime()
 {
-	struct tm *localTime;
+	//struct tm *localTime;
 	time_t Time;
 	
 	time(&Time);
-	localTime = localtime(&Time);
+	//localTime = localtime(&Time);
 	
-	return asctime(localTime);
+	//return asctime(localTime);
+	string sTemp = ctime(&Time);
+	sTemp = sTemp.erase(24,1);
+	return sTemp;
 }
 
 

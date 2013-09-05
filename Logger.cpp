@@ -63,15 +63,42 @@ int Logger::log(bool bLog, string sPort)
 			//redirect clog to opened file
 			psbuf = filestr.rdbuf();
 			clog.rdbuf(psbuf);
-			
+
+			//44
 			clog << endl << endl;
 			clog << "++++++++++++++++++++++++++++++++++++++++++++"	<< endl;
 			clog << "++++++++++++++++++++++++++++++++++++++++++++"	<< endl;
-			clog << "++  " << tools.printTime()						<< flush;
-			clog << "++  " << "WN Serial COM Port Tester"			<< endl;
-			clog << "++  " << VERSION								<< endl;
+			
+			clog << "++  " << flush;
+			clog.width(37);
+			clog.setf(ios::left, ios::adjustfield);
+			clog << tools.printTime()<< flush;
+			clog << " ++" << endl;
+
+			clog << "++  " << flush;
+			clog.width(37);
+			clog.setf(ios::left, ios::adjustfield);
+			clog << "WN Serial COM Port Tester"<< flush;
+			clog << " ++" << endl;
+			
+			clog << "++  Version " << flush;
+			clog.width(29);
+			clog.setf(ios::left, ios::adjustfield);
+			clog  << VERSION << flush;
+			clog << " ++" << endl;
+			
 			clog << "++++++++++++++++++++++++++++++++++++++++++++"	<< endl;
 			clog << "++++++++++++++++++++++++++++++++++++++++++++"	<< endl;
+
+
+			//clog << endl << endl;
+			//clog << "++++++++++++++++++++++++++++++++++++++++++++"	<< endl;
+			//clog << "++++++++++++++++++++++++++++++++++++++++++++"	<< endl;
+			//clog << "++  " << tools.printTime()		<< flush;
+			//clog << "++  WN Serial COM Port Tester             ++"	<< endl;
+			//clog << "++  Version " << VERSION						<< endl;
+			//clog << "++++++++++++++++++++++++++++++++++++++++++++"	<< endl;
+			//clog << "++++++++++++++++++++++++++++++++++++++++++++"	<< endl;
 		}
 	}
 	else

@@ -60,7 +60,7 @@ int TransferFileHandler::readTransferFile()
 	{
 		getline(inputFile, templine);
 
-		vTranferFileLines.push_back(templine);
+		vTranferFileLines.push_back(tools.replaceASCII(templine));
 	}
 
 	if (vTranferFileLines.empty())

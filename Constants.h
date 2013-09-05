@@ -107,6 +107,7 @@ using namespace std;
 #define ERROR_WAIT_MASTER	-22
 #define ERROR_BAUD_MINMAX	-23
 #define ERROR_TEST			-24
+#define ERROR_CMP_STR		-25
 
 
 

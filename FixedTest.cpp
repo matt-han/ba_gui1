@@ -77,7 +77,7 @@ void FixedTest::setTextVector(int iTextMode)
 		case DEFAULT_VALUE:
 			for (index = 0; index < TEXT_LENGTH; index ++)
 			{
-				vTextToSend.push_back(defaultText[index]);
+				vTextToSend.push_back(tools.replaceASCII(defaultText[index]));
 			}
 			break;
 
@@ -96,7 +96,7 @@ void FixedTest::setTextVector(int iTextMode)
 			break;
 
 		case ID_BT_TEXT:
-			vTextToSend.push_back(this->testStruct->sTextToTransfer);
+			vTextToSend.push_back(tools.replaceASCII(this->testStruct->sTextToTransfer));
 			break;
 	}
 
@@ -128,7 +128,8 @@ int FixedTest::startSingleTest()
 		_iError = masterCom.getDCB();
 		if (_iError == ERROR_SUCCESS)
 		{
-			_iTimeOut = masterCom.calculateTimeOut(testStruct->iParity, testStruct->iStopbits, testStruct->iBaud);
+			_iTimeOut = masterCom.calculateTimeOut(testStruct->iParity,
+							testStruct->iStopbits, testStruct->iBaud);
 	
 			clog << "Port time out: " << _iTimeOut << " ms" << endl;
 
@@ -153,7 +154,7 @@ int FixedTest::startSingleTest()
 					//send and recieve data
 					clog<<"-----------------------------------------"<<endl;
 					clog << "Transmition started" << endl;
-					clog << tools.printTime()     << flush;
+					clog << tools.printTime()     << endl;
 					clog<<"-----------------------------------------"<<endl;
 					
 					ivTestErrors.clear();
@@ -171,9 +172,9 @@ int FixedTest::startSingleTest()
 							ivTestErrors.push_back(_iTestError);
 
 					}
-					clog<<"-----------------------------------------"<<endl;
+					clog<<"\n-----------------------------------------"<<endl;
 					clog << "Transmition finished"<<endl;
-					clog << tools.printTime() << flush;
+					clog << tools.printTime() << endl;
 					clog<<"-----------------------------------------"<<endl;
 					
 					tools.printErrorVector(true, ivTestErrors);
@@ -253,7 +254,8 @@ int FixedTest::startDoubleTest()
 		_iError = masterCom.getDCB();
 		if (_iError == ERROR_SUCCESS)
 		{
-			_iTimeOut = masterCom.calculateTimeOut(testStruct->iParity, testStruct->iStopbits, testStruct->iBaud);
+			_iTimeOut = masterCom.calculateTimeOut(testStruct->iParity,
+								testStruct->iStopbits, testStruct->iBaud);
 	
 			clog << "Port time out: " << _iTimeOut << " ms" << endl;
 
@@ -356,23 +358,29 @@ int FixedTest::startDoubleTest()
 	//if everything ok then communicate
 	clog<<"-----------------------------------------"<<endl;
 	clog << "Transmition started" << endl;
-	clog << tools.printTime()     << flush;
+	clog << tools.printTime()     << endl;
 	clog<<"-----------------------------------------"<<endl;
-	//----------------------------------------------------------
+
+	ivTestErrors.clear();
+
 	//send and recieve data
 	for (unsigned int index = 0; index < vTextToSend.size(); index++)
 	{
-		//	Double mode => true, true
+		clog << "\n\nText line nr.: " << index+1 << endl;
 		_iTestError = communicate(vTextToSend.at(index), false);
 		if(_iTestError != ERROR_SUCCESS)
 		{
 			clog << "Error communicating. Error: "<< _iTestError << endl;
 		}
+
+		ivTestErrors.push_back(_iTestError);
 	}
 	
-	clog<<"-----------------------------------------"<<endl;
+	clog<<"\n-----------------------------------------"<<endl;
 	clog << "Transmition finished"<<endl;
 	clog<<"-----------------------------------------"<<endl;
+
+	tools.printErrorVector(true, ivTestErrors);
 
 	if (bTransmitionError == true)
 	{
@@ -383,8 +391,6 @@ int FixedTest::startDoubleTest()
 	{
 		clog<<"Transmition finished successfully\n\n\n"<<endl;
 	}
-
-	
 
 	_iError = masterCom.closePort();
 	if(_iError != ERROR_SUCCESS)
@@ -667,7 +673,7 @@ int FixedTest::communicate(string sSendData, bool bMaster)
 	//start sending something
 	if (true == sendData(bMaster, sSendData))
 	{
-		clog <<"write was true"<<endl;
+		clog <<"write was true\n"<<endl;
 		//MessageBoxA(NULL, sSendData.c_str(), "COM SENT", MB_OK);
 
 		string sTemp = getData(bRead, sSendData);
@@ -676,7 +682,7 @@ int FixedTest::communicate(string sSendData, bool bMaster)
 		{
 			if(0 == strcmp(sTemp.c_str(), sSendData.c_str()) )
 			{
-				clog << "read was true"<<endl;
+				clog << "read was true\n"<<endl;
 				return ERROR_SUCCESS;
 			}
 			else
@@ -685,7 +691,7 @@ int FixedTest::communicate(string sSendData, bool bMaster)
 				clog << "- " << sSendData << endl;
 				clog << "- " << sTemp << endl;
 				bTransmitionError = true;
-				return ERROR_READ_PORT;
+				return ERROR_CMP_STR;
 			}
 		}
 		else

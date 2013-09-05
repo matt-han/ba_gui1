@@ -65,10 +65,11 @@ bool PortCommunications::readData(char * lpBuf, DWORD dwSize, int iReadTimeOut)
 	{
 		clog << "...Read attempt number: " << iCounter + 1 << endl;
 
+		//if not waiting on read operation, then read
 		if (!fWaitingOnRead)
 		{
 			// Issue read operation.
-			if (0 == ReadFile(hCom, lpBuf, dwSize, &dwRead, &osReader))
+			if (!ReadFile(hCom, lpBuf, dwSize, &dwRead, &osReader))
 			{
 				//if not true
 				iErr = GetLastError();
@@ -78,13 +79,14 @@ bool PortCommunications::readData(char * lpBuf, DWORD dwSize, int iReadTimeOut)
 				else
 					fWaitingOnRead = TRUE;
 			}
+			else
+			{    
+				// read completed immediately
+				CloseHandle(osReader.hEvent);
+				return TRUE;
+			}
 		}
-		else
-		{    
-			// read completed immediately
-			CloseHandle(osReader.hEvent);
-			return TRUE;
-		}
+		
 
 
 		if (fWaitingOnRead)

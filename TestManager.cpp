@@ -163,6 +163,7 @@ int TestManager::startFixedTest()
 {
 	FixedTest fixedTest(&testStruct);
 	_bTestStarted = true;
+	bContinueTest = true;
 
 	//ivTestErrors.clear();
 
@@ -173,6 +174,9 @@ int TestManager::startFixedTest()
 
 	do
 	{
+		clog << "TEST NR. " << iRepeat << endl;
+		clog << "*********************************************" << endl;
+
 		switch(testStruct.iTransfer)
 		{
 			//Single test
@@ -221,6 +225,7 @@ int TestManager::startFixedTest()
 int TestManager::startWobbleTest(int iBaudrate, int iParity)
 {
 	_bTestStarted = true;
+	bContinueTest = true;
 	int iRepeat = 1;
 	
 	//create for each test a new object to avoid errors
@@ -232,6 +237,8 @@ int TestManager::startWobbleTest(int iBaudrate, int iParity)
 
 	do
 	{
+		clog << "TEST NR. " << iRepeat << endl;
+		clog << "*********************************************" << endl;
 		switch(testStruct.iTransfer)
 		{
 			//Single test
@@ -287,14 +294,17 @@ int TestManager::startAutomaticTest()
 	testStruct.iBaud			= B_9600;
 	testStruct.iDatabits		= 8;
 	testStruct.iRepeater		= -1;
-	testStruct.sTextToTransfer	= DEFAULT_VALUE;
+	testStruct.sTextToTransfer	= "";
+	testStruct.iTransTextMode	= DEFAULT_VALUE;
 
 
 	FixedTest automatic(&testStruct);
 
 	//ask stop button..........
-	do
-	{
+	//do
+	//{
+		clog << "TEST NR. " << iRepeat << endl;
+		clog << "*********************************************" << endl;
 		switch(testStruct.iTransfer)
 		{
 			//Single test
@@ -318,7 +328,7 @@ int TestManager::startAutomaticTest()
 				break;
 		}//switch
 
-	}while(bContinueTest);
+	//}while(bContinueTest);
 
 
 	return ERROR_SUCCESS;

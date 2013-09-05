@@ -265,19 +265,17 @@ vector<string> Com::returnBaudrates(string sChosenPort)
 			_iError = decodeBaudrates(commProp.dwSettableBaud);
 			if (ERROR_SUCCESS == _iError)
 			{
+				closePort();
 				return vBaud;
 			}
 			else
 			{
 				clog << "Error decoding baud rate" << endl;
 				
-				if (ERROR_SUCCESS == closePort())
-					return vBaud;
-				else
-				{
+				if (ERROR_SUCCESS != closePort())
 					clog << "Error closing port " << sChosenPort << endl;
-					return vBaud;
-				}
+				
+				return vBaud;
 			}
 		}
 		else
@@ -512,8 +510,8 @@ int Com::calculateTimeOut(int iParity, int iStopbits, int iBaud)
 	iTimeOutms = 1000 * dTimeOut;
 
 	//if less than 1 milisecond, make it 1 ms
-	if (iTimeOutms < 1)
-		iTimeOutms = 1;
+	if (iTimeOutms < 10)
+		iTimeOutms = 10;
 
 	return iTimeOutms;
 }

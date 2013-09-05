@@ -289,14 +289,14 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 //------------------------------------------------------------------------------		
 //Slave Port
 			CreateWindowA("static", "Slave Port\nfor Double Test:", 
-                  WS_CHILD,
+                  WS_CHILD | WS_VISIBLE,
                   POS_X, POS_Y + 100, 120, 30, m_hwnd,
 				  (HMENU)ID_LB_SLV, NULL, NULL);
 
 //------------------------------------------------------------------------------		
 //Max Baud
 			CreateWindowA("static", "MAX baud rate:", 
-                  WS_CHILD,
+                  WS_CHILD | WS_VISIBLE,
                   POS_X, POS_Y + 140, 120, 30, m_hwnd,
 				  (HMENU)ID_LB_MAX, NULL, NULL);
 
@@ -359,13 +359,13 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 			//Slave port
 			_hwndCB_SlvPorts = CreateWindowA("combobox", NULL, 
-                WS_CHILD | CBS_DROPDOWN | WS_VSCROLL,
+                WS_CHILD | WS_VISIBLE | CBS_DROPDOWN | WS_VSCROLL,
                 POS_X + 120, POS_Y + 110, 90, 120, m_hwnd, (HMENU)ID_CB_SLV_PORT,
 				NULL, NULL);
 			
 			//BAUDRATE
 			_hwndCB_Baud_MAX = CreateWindowA("combobox", NULL, 
-                WS_CHILD | CBS_DROPDOWN | WS_VSCROLL,
+                WS_CHILD | WS_VISIBLE | CBS_DROPDOWN | WS_VSCROLL,
                 POS_X + 120, POS_Y + 140, 90, 120, m_hwnd, (HMENU)ID_CB_BAUD_MAX,
 				NULL, NULL);
 
@@ -427,6 +427,13 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 				NULL, NULL);
 
 			//CreateMyTooltip(m_hwnd);
+
+			//Disable views
+			EnableWindow(GetDlgItem(m_hwnd, ID_LB_SLV), FALSE);
+			EnableWindow(GetDlgItem(m_hwnd, ID_CB_SLV_PORT), FALSE);
+
+			EnableWindow(GetDlgItem(m_hwnd, ID_LB_MAX), FALSE);
+			EnableWindow(GetDlgItem(m_hwnd, ID_CB_BAUD_MAX), FALSE);
 
 
 			break; //WN_CREATE
@@ -607,9 +614,13 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 					case ID_TM_AUTO:
 
 						//Hide min max labels and combobox
-						ShowWindow(_hwndCB_Baud_MAX	, SW_HIDE);
-						ShowWindow(GetDlgItem(m_hwnd, ID_LB_MAX), SW_HIDE);
+						EnableWindow(_hwndCB_Baud_MAX,              FALSE);
+						EnableWindow(GetDlgItem(m_hwnd, ID_LB_MAX), FALSE);
+						EnableWindow(GetDlgItem(m_hwnd, ID_CB_COM_BAUD), FALSE);
 						ShowWindow(GetDlgItem(m_hwnd, ID_LB_MIN), SW_HIDE);
+						
+						//show baudrate label
+						EnableWindow(GetDlgItem(m_hwnd, ID_LB_BAUD), FALSE);
 
 						//disable second row of test parameter
 						EnableWindow(GetDlgItem(m_hwnd, ID_PAR_NONE), FALSE);
@@ -626,22 +637,24 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 						EnableWindow(GetDlgItem(m_hwnd, ID_DB_7), FALSE);
 						EnableWindow(GetDlgItem(m_hwnd, ID_DB_8), FALSE);
 
+						EnableWindow(GetDlgItem(m_hwnd, ID_LB_TEXT), FALSE);
+
+
 						EnableWindow(_hwnd_Repeater, FALSE);
 						EnableWindow(_hwnd_btnLoad,  FALSE);
 						EnableWindow(_hwnd_btnText,  FALSE);
-
-
-						//show baudrate label
-						ShowWindow(GetDlgItem(m_hwnd, ID_LB_BAUD), SW_SHOWNORMAL);
 
 						_iTestMode = 0;
 						break;
 				
 					case ID_TM_WOBB:
 						//show min max labels and combobox
-						ShowWindow(_hwndCB_Baud_MAX	, SW_SHOWNORMAL);
-						ShowWindow(GetDlgItem(m_hwnd, ID_LB_MAX	), SW_SHOWNORMAL);
-						ShowWindow(GetDlgItem(m_hwnd, ID_LB_MIN	), SW_SHOWNORMAL);
+						EnableWindow(_hwndCB_Baud_MAX,              TRUE);
+						EnableWindow(GetDlgItem(m_hwnd, ID_LB_MAX), TRUE);
+						EnableWindow(GetDlgItem(m_hwnd, ID_CB_COM_BAUD), TRUE);
+						ShowWindow(GetDlgItem(m_hwnd, ID_LB_MIN), SW_SHOWNORMAL);
+						//hide baudrate label
+						EnableWindow(GetDlgItem(m_hwnd, ID_LB_BAUD), TRUE);
 
 						//disable second row of test parameter
 						EnableWindow(GetDlgItem(m_hwnd, ID_PAR_NONE), TRUE);
@@ -658,20 +671,26 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 						EnableWindow(GetDlgItem(m_hwnd, ID_DB_7), TRUE);
 						EnableWindow(GetDlgItem(m_hwnd, ID_DB_8), TRUE);
 
+						EnableWindow(GetDlgItem(m_hwnd, ID_LB_TEXT), TRUE);
+
 						EnableWindow(_hwnd_Repeater, TRUE);
 						EnableWindow(_hwnd_btnLoad,  TRUE);
 						EnableWindow(_hwnd_btnText,  TRUE);
 
-						//hide baudrate label
-						ShowWindow(GetDlgItem(m_hwnd, ID_LB_BAUD), SW_HIDE);
+						ID_LB_MIN;
+
 						_iTestMode = 1;
 						break;
 
 					case ID_TM_FIXED:
 						//Hide min max labels and combobox
-						ShowWindow(_hwndCB_Baud_MAX	, SW_HIDE);
-						ShowWindow(GetDlgItem(m_hwnd, ID_LB_MAX), SW_HIDE);
+						EnableWindow(_hwndCB_Baud_MAX, FALSE);
+						EnableWindow(GetDlgItem(m_hwnd, ID_LB_MAX), FALSE);
+						EnableWindow(GetDlgItem(m_hwnd, ID_CB_COM_BAUD), TRUE);
 						ShowWindow(GetDlgItem(m_hwnd, ID_LB_MIN), SW_HIDE);
+						
+						//show baudrate label
+						EnableWindow(GetDlgItem(m_hwnd, ID_LB_BAUD), TRUE);
 
 						//disable second row of test parameter
 						EnableWindow(GetDlgItem(m_hwnd, ID_PAR_NONE), TRUE);
@@ -687,13 +706,14 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 						EnableWindow(GetDlgItem(m_hwnd, ID_DB_7), TRUE);
 						EnableWindow(GetDlgItem(m_hwnd, ID_DB_8), TRUE);
+						
+						EnableWindow(GetDlgItem(m_hwnd, ID_LB_TEXT), TRUE);
 
 						EnableWindow(_hwnd_Repeater, TRUE);
 						EnableWindow(_hwnd_btnLoad,  TRUE);
 						EnableWindow(_hwnd_btnText,  TRUE);
 
-						//show baudrate label
-						ShowWindow(GetDlgItem(m_hwnd, ID_LB_BAUD), SW_SHOWNORMAL);
+						
 						_iTestMode = 2;
 						break;
 
@@ -749,31 +769,29 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 //Transfer
 					case ID_MOD_SINGLE:
 
-						ShowWindow(GetDlgItem(m_hwnd, ID_LB_SLV), SW_HIDE);
-						ShowWindow(GetDlgItem(m_hwnd, ID_CB_SLV_PORT), SW_HIDE);
+						EnableWindow(GetDlgItem(m_hwnd, ID_LB_SLV), FALSE);
+						EnableWindow(GetDlgItem(m_hwnd, ID_CB_SLV_PORT), FALSE);
 						
 						_iTransfer = 0;
 						break;
 
 					case ID_MOD_DOUBLE:
-						ShowWindow(GetDlgItem(m_hwnd, ID_LB_SLV),
-									SW_SHOWNORMAL);
-						ShowWindow(GetDlgItem(m_hwnd, ID_CB_SLV_PORT),
-									SW_SHOWNORMAL);
+						EnableWindow(GetDlgItem(m_hwnd, ID_LB_SLV), TRUE);
+						EnableWindow(GetDlgItem(m_hwnd, ID_CB_SLV_PORT),TRUE);
 
 						_iTransfer = 1;
 						break;
 				
 					case ID_MOD_MASTER:
-						ShowWindow(GetDlgItem(m_hwnd, ID_LB_SLV), SW_HIDE);
-						ShowWindow(GetDlgItem(m_hwnd, ID_CB_SLV_PORT), SW_HIDE);
+						EnableWindow(GetDlgItem(m_hwnd, ID_LB_SLV), FALSE);
+						EnableWindow(GetDlgItem(m_hwnd, ID_CB_SLV_PORT), FALSE);
 
 						_iTransfer = 2;
 						break;
 
 					case ID_MOD_SLAVE:
-						ShowWindow(GetDlgItem(m_hwnd, ID_LB_SLV), SW_HIDE);
-						ShowWindow(GetDlgItem(m_hwnd, ID_CB_SLV_PORT), SW_HIDE);
+						EnableWindow(GetDlgItem(m_hwnd, ID_LB_SLV), FALSE);
+						EnableWindow(GetDlgItem(m_hwnd, ID_CB_SLV_PORT), FALSE);
 
 						_iTransfer = 3;
 						break;
@@ -788,6 +806,7 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 						EnableWindow(_hwnd_Save,    FALSE);
 						EnableWindow(_hwnd_LoadINI, FALSE);
 						EnableWindow(_hwnd_Help,    FALSE);
+						EnableWindow(GetDlgItem(m_hwnd, ID_LB_TEXT), FALSE);
 
 						sendTestSettings();
 
@@ -798,6 +817,7 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 						EnableWindow(_hwnd_Save,    TRUE);
 						EnableWindow(_hwnd_LoadINI, TRUE);
 						EnableWindow(_hwnd_Help,    TRUE);
+						EnableWindow(GetDlgItem(m_hwnd, ID_LB_TEXT), TRUE);
 						break;
 
 					case ID_BT_CLOSE:
@@ -832,8 +852,41 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 						break;
 
 					case ID_BT_LOADINI:
-						loadTestSettings("","");
-						MessageBoxA(NULL, "....loaded?....\ncheck return codes!!!\n File loaded successfully, please press start", "", MB_OK);
+						//Disable Buttons
+						EnableWindow(_hwnd_btnLoad, FALSE);
+						EnableWindow(_hwnd_btnText, FALSE);
+						EnableWindow(_hwnd_Start,   FALSE);
+						EnableWindow(_hwnd_Close,   FALSE);
+						EnableWindow(_hwnd_Save,    FALSE);
+						EnableWindow(_hwnd_LoadINI, FALSE);
+						EnableWindow(_hwnd_Help,    FALSE);
+						EnableWindow(GetDlgItem(m_hwnd, ID_LB_TEXT), FALSE);
+
+
+						_iError = loadTestSettings("","");
+						if(_iError != ERROR_SUCCESS)
+						{
+							_sTemp = "Error loading and testing from file: \n";
+							_sTemp.append(_sPath.c_str());
+							_sTemp.append("\nError : ");
+							_sTemp.append(tools.convertToString(_iError));
+							MessageBoxA(NULL, _sTemp.c_str()  , "ERROR", MB_OK);
+							_sTemp = "";
+						}
+						else
+						{
+							MessageBoxA(NULL, "test finished successfuly", "", MB_OK);
+						}
+
+						EnableWindow(_hwnd_btnLoad, TRUE);
+						EnableWindow(_hwnd_btnText, TRUE);
+						EnableWindow(_hwnd_Start,   TRUE);
+						EnableWindow(_hwnd_Close,   TRUE);
+						EnableWindow(_hwnd_Save,    TRUE);
+						EnableWindow(_hwnd_LoadINI, TRUE);
+						EnableWindow(_hwnd_Help,    TRUE);
+						EnableWindow(GetDlgItem(m_hwnd, ID_LB_TEXT), TRUE);
+
 						break;
 
 					case ID_BT_STOP:
@@ -1070,6 +1123,8 @@ void Window::saveTestSettings()
 	interSaveToFile.setPortBaudRateMax(_iBaudrateMax);
 	interSaveToFile.setLoggerState(_bLoggerState);
 	interSaveToFile.setTransTextMode(_iTextToTransfer);
+	
+	GetWindowTextA(_hwnd_Repeater, _szRepeater, 5);
 	interSaveToFile.setRepeater(_szRepeater);
 	
 	switch(_iTextToTransfer)
@@ -1108,19 +1163,23 @@ void Window::saveTestSettings()
 //------------------------------------------------------------------------------
 int Window::loadTestSettings(string sFilePath, string sPort)
 {
-	string sPath;
+	
 
 	if (sFilePath == "")
-		sPath = getFilePath();
-	else
-		sPath = sFilePath;
-
-
-	if (sPath != "")
 	{
-		interpreter.loadIniFile(sPath, sPort);
-		
-		return ERROR_SUCCESS;
+		_sPath = getFilePath();
+		if (_sPath == "")
+			return ERROR_SUCCESS;
+	}
+	else
+		_sPath = sFilePath;
+
+
+	if (_sPath != "")
+	{
+		_iError = interpreter.loadIniFile(_sPath, sPort);
+		//if(_iError != ERROR_SUCCES)
+		return _iError;
 	}
 	else
 		return ERROR_EMPTY_FILE;

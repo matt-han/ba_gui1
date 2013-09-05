@@ -187,8 +187,8 @@ void Interpreter::setTransferFile(string sTransferFile)
 //------------------------------------------------------------------------------
 void Interpreter::setTextToSend(string sTextToSend)
 {
-	//this->_sTextToSend = sTextToSend;
-	this->_sTextToSend = tools.replaceASCII(sTextToSend);
+	this->_sTextToSend = sTextToSend;
+	//this->_sTextToSend = tools.replaceASCII(sTextToSend);
 
 }
 
@@ -702,14 +702,13 @@ int Interpreter::loadIniFile(string sPath, string sPort)
 								"Error testing port ", MB_OK);
 			}
 		}//for
+
 		if(_bErr)
 		{
 			_vIniFilePorts.clear();
 			delete _testManager;
 			return ERROR_TEST;
 		}
-
-
 	}
 	else
 	{
