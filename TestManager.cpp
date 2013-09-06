@@ -286,6 +286,7 @@ int TestManager::startWobbleTest(int iBaudrate, int iParity)
 //------------------------------------------------------------------------------
 int TestManager::startAutomaticTest()
 {
+	int iRepeat = 1;
 	_bTestStarted = true;
 
 	testStruct.iParity			= ODDPARITY;
@@ -327,7 +328,7 @@ int TestManager::startAutomaticTest()
 				_iError = automatic.startMasterSlaveTest(false);
 				break;
 		}//switch
-
+		iRepeat++;
 	//}while(bContinueTest);
 
 
