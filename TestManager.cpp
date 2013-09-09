@@ -6,7 +6,9 @@
 TestManager::TestManager(void)
 {
 	_bTestStarted = false;
-	bContinueTest = true;
+	_bContinueTest = true;
+	bStopButton = false;
+
 }
 
 
@@ -18,7 +20,7 @@ TestManager::~TestManager(void)
 {
 	if(testStruct.bLoggerState && _bTestStarted)
 	{
-		_logger->closelog(true);
+		//_logger->closelog(true);
 		delete _logger;
 	}
 }
@@ -30,6 +32,7 @@ TestManager::~TestManager(void)
 //------------------------------------------------------------------------------
 int TestManager::startManager()
 {
+
 	if(testStruct.bLoggerState)
 		_logger = new Logger(true, testStruct.sMasterPort);
 
@@ -163,7 +166,7 @@ int TestManager::startFixedTest()
 {
 	FixedTest fixedTest(&testStruct);
 	_bTestStarted = true;
-	bContinueTest = true;
+	_bContinueTest = true;
 
 	//ivTestErrors.clear();
 
@@ -207,10 +210,13 @@ int TestManager::startFixedTest()
 			if(	iRepeat < testStruct.iRepeater)
 				iRepeat++;
 			else
-				bContinueTest = false;
+				_bContinueTest = false;
 		}
+		//clog << "..............................."<<endl;
+		//clog << "_bContinueTest " << _bContinueTest << endl;
+		//clog << "bStopButton   " << bStopButton << endl;
 
-	}while(bContinueTest);
+	}while(_bContinueTest && !bStopButton);
 
 	//_tools.printErrorVector(testStruct.bLoggerState, ivTestErrors);
 
@@ -225,7 +231,7 @@ int TestManager::startFixedTest()
 int TestManager::startWobbleTest(int iBaudrate, int iParity)
 {
 	_bTestStarted = true;
-	bContinueTest = true;
+	_bContinueTest = true;
 	int iRepeat = 1;
 	
 	//create for each test a new object to avoid errors
@@ -269,10 +275,10 @@ int TestManager::startWobbleTest(int iBaudrate, int iParity)
 			if(	iRepeat < testStruct.iRepeater)
 				iRepeat++;
 			else
-				bContinueTest = false;
+				_bContinueTest = false;
 		}
 
-	}while(bContinueTest);
+	}while(_bContinueTest && !bStopButton);
 
 	//_tools.printErrorVector(testStruct.bLoggerState, ivTestErrors);
 	
@@ -329,7 +335,7 @@ int TestManager::startAutomaticTest()
 				break;
 		}//switch
 		iRepeat++;
-	//}while(bContinueTest);
+	//}while(!bStopButton);
 
 
 	return ERROR_SUCCESS;

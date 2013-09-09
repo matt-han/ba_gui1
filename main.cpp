@@ -1,54 +1,102 @@
 
 #include "IniFileHandler.h"
 #include "Logger.h"
-#include "WobbleTest.h"
+
 
 #include "Window.h"
 #include "Interpreter.h"
 #include "Tools.h"
+
 #include <windows.h>
 #include <vector>
+#include <conio.h>
+#include <thread>
 
-
+void start();
 int createGUI(HINSTANCE hInstance, int nCmdShow);
 int parseCmdParameters();
 int parsePort();
 string sFilePath, sPort;
 vector<string> svParameters;
+bool bContinue = true;
+int error;
+Tools tools;
+Interpreter interpreter;
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR pCmdLine, int nCmdShow)
 {
-
+	char c;
+	bool bStopTest = false;
+	error = ERROR_SUCCESS;
+	int _iError = ERROR_SUCCESS;
+	int iCount = 0;
 	//WobbleTest wobble;
 	//Tools t;
 	//string s = "abc\\0d-\\0asd";
 	//string ss = t.replaceASCII(s);
 
 	//return 0;
-
-	int _iError = ERROR_SUCCESS;
 	
 	if (0 == strcmp(pCmdLine, "") )
 		_iError = createGUI(hInstance, nCmdShow);
 	else
 	{
-		Tools tools;
-		Interpreter interpreter;
 		svParameters = tools.parseCmdLine(pCmdLine);
 		
 		_iError = parseCmdParameters();
 		if (_iError == ERROR_SUCCESS)
 		{
-			//clog << "cmd ok" << endl;
-			//clog << sFilePath << endl;
-			//clog << sPort << endl << endl;
+
+			if (!AllocConsole())
+				MessageBoxA(NULL,"console alloc error","",MB_OK);
+		
+			cout << "starting the thread" << endl;
+
+			thread t1 (&start);
+
+			t1.detach();
+
+			cout << "Test in progress" << endl;
+			cout << "Press ESC to stop the test" << endl;
+			
+
+			while(bContinue && !bStopTest)
+			{
+				c = getch();
+
+				//27 for esc key
+				if (c == 27)
+				{
+					interpreter.stopTest();
+					cout << "Quiting test" << endl;
+					bStopTest = true;
+					cout << "Press enter to finish" << endl;
+					//getchar();
+				}
+				iCount++;
+			}
+
+			cout << "Testing finished" << endl;
+			
+			//getchar();
+
+			FreeConsole();
+
+			return error;
 
 			//TEST IT
 			//---------------------------------------------
+			//create new thread
+			//calling function loadInifile
+
+			//ask if user pressed ESC
+			//		if user pressed -> interpreter.stopTest()
+			//else keep waiting for input or to finish
 			//interpreter.loadIniFile(sFilePath, sPort);
 		}
 		else
 		{
+			//printf ?????
 			//clog << "error " << _iError << endl;
 			return _iError;
 		}
@@ -81,8 +129,17 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR pCmdLine, int nCmdShow)
 	
 	//clog << "error " << _iError << endl;
 	return _iError;
-    
 }
+
+
+void start()
+{
+	error = interpreter.loadIniFile(sFilePath, sPort);
+	bContinue = false;
+	cout << "Press enter to finish" << endl;
+}
+
+
 
 
 //------------------------------------------------------------------------------
@@ -183,6 +240,8 @@ int createGUI(HINSTANCE hInstance, int nCmdShow)
         TranslateMessage(&msg);
         DispatchMessage(&msg);
     }
+
+//	win.joinThread();
 
 	return ERROR_SUCCESS;
 }

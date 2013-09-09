@@ -242,6 +242,12 @@ int IniFileHandler::readINIFile(string sFilePath, string sMainPort)
 	string sTemp;
 	int iPort = 0;
 
+	ifstream file(sFilePath.c_str());
+	if(!file.good())
+		return ERROR_NO_FILE;
+	else
+		file.close();
+
 
 	//if a port is given, then this is the port to test
 	if( sMainPort != "")
@@ -261,7 +267,7 @@ int IniFileHandler::readINIFile(string sFilePath, string sMainPort)
 
 
 	//try to find test settings for all possible system ports
-	for(int iCom = 1; iCom < 256; iCom++)//256 ports
+	for(int iCom = 1; iCom < 257; iCom++)//256 ports
 	{
 		sPort = "COM";
 		sTemp = tools.convertToString(iCom);

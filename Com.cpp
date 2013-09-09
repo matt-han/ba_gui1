@@ -199,7 +199,7 @@ int Com::getBaudrates(string sChosenPort)
 	{
 		if ( 0 != GetCommProperties(hCom, &commProp))
 		{
-			clog << "Get baud rate for port " << sChosenPort << endl;
+			//clog << "Get baud rate for port " << sChosenPort << endl;
 
 			_iError = decodeBaudrates(commProp.dwSettableBaud);
 			if (ERROR_SUCCESS == _iError)
@@ -329,7 +329,7 @@ int Com::decodeBaudrates(DWORD dwBitMask)
 
 	if (vBaud.size() > 0)
 	{
-		clog << vBaud.size() << " baud rates available for port" << endl;
+		//clog << vBaud.size() << " baud rates available for port" << endl;
 		return ERROR_SUCCESS;
 	}
 	else

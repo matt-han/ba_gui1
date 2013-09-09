@@ -77,6 +77,9 @@ using namespace std;
 #define ID_BT_HELP		44
 #define ID_GB_PROTOCOL	45
 
+#define ID_THREAD_MAIN	98
+#define ID_THREAD_SUB	99
+
 #define ID_BUT			100
 
 
@@ -94,7 +97,7 @@ using namespace std;
 #define ERROR_INI			-9
 #define ERROR_SET_DCB		-10
 #define ERROR_INPUT			-11
-#define ERROR_INPUT_		-12
+#define ERROR_NO_FILE		-12
 #define ERROR_FILE_NOT_OPEN -13
 #define ERROR_EMPTY_FILE	-14
 #define ERROR_CFG_HEADER	-15
@@ -106,7 +109,7 @@ using namespace std;
 #define ERROR_WAIT_SLAVE	-21
 #define ERROR_WAIT_MASTER	-22
 #define ERROR_BAUD_MINMAX	-23
-#define ERROR_TEST			-24
+#define ERROR_TEST			-24//error in one of the tests
 #define ERROR_CMP_STR		-25
 
 

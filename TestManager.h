@@ -9,6 +9,9 @@
 #include "Constants.h"
 
 #include <vector>
+//#include <thread>
+
+
 
 using namespace std;
 
@@ -24,10 +27,11 @@ public:
 	
 	TestStruct testStruct;
 	vector<int> ivTestErrors;
-	bool bContinueTest;
-
+	
+	bool bStopButton;
 //------------------------------------------------------------------------------
 //Methods
+	
 	void evaluateInput();
 
 	int startManager();
@@ -48,6 +52,9 @@ private:
 	bool _bError;
 	bool _bWobbleParity;
 	bool _bTestStarted;
+	bool _bContinueTest;
+
+	HANDLE _hSubThread;
 };
 
 #endif

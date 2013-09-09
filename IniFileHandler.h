@@ -14,6 +14,7 @@
 #include <vector>
 #include <Windows.h>
 #include <stdlib.h>
+#include <fstream>
 
 using namespace std;
 

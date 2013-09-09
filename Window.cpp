@@ -372,11 +372,11 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 			//Fill master and slave port combo boxes
 			//baudrate stays empty until user selects a port
-			interpreter.comEnumerator.enumeratePorts();
+			infoInterpreter.comEnumerator.enumeratePorts();
 
 			for (vector<string>::iterator it =
-				interpreter.comEnumerator.vPortList.begin() ;
-				 it != interpreter.comEnumerator.vPortList.end(); ++it)
+				infoInterpreter.comEnumerator.vPortList.begin() ;
+				 it != infoInterpreter.comEnumerator.vPortList.end(); ++it)
 			{
 				string s = *it;
 				SendMessageA(_hwndCB_MasPorts, CB_ADDSTRING, 0, (LPARAM) s.c_str());
@@ -435,6 +435,8 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 			EnableWindow(GetDlgItem(m_hwnd, ID_LB_MAX), FALSE);
 			EnableWindow(GetDlgItem(m_hwnd, ID_CB_BAUD_MAX), FALSE);
 
+			EnableWindow(_hwnd_Stop, FALSE);
+
 
 			break; //WN_CREATE
 
@@ -464,17 +466,17 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 						portIndex = SendMessage(_hwndCB_MasPorts,
 												CB_GETCURSEL, 0, 0);
-						_sMasPort = interpreter.comEnumerator.vPortList.at(portIndex);
+						_sMasPort = infoInterpreter.comEnumerator.vPortList.at(portIndex);
 						
 						//Get baud rate for chosen COM port
-						_iError = interpreter.comEnumerator.getBaudrates(_sMasPort);
+						_iError = infoInterpreter.comEnumerator.getBaudrates(_sMasPort);
 						if (ERROR_SUCCESS == _iError)
 						{
 							string s;
 							int i = 0;
 							for (vector<string>::iterator it =
-								interpreter.comEnumerator.vBaud.begin() ;
-								it != interpreter.comEnumerator.vBaud.end();
+								infoInterpreter.comEnumerator.vBaud.begin() ;
+								it != infoInterpreter.comEnumerator.vBaud.end();
 								++it)
 							{
 								s = *it;
@@ -510,7 +512,7 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 									//get the baud rate string
 									_sTempBaud = "9600";
 									//translate it to the system constant
-									_iBaudrate = interpreter.comEnumerator.
+									_iBaudrate =  infoInterpreter.comEnumerator.
 												translateBaudrate(_sTempBaud);
 								}
 								i++;
@@ -547,10 +549,10 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 						baudIndex = SendMessage(_hwndCB_Baud,
 												CB_GETCURSEL, 0, 0);
 						//get the baud rate string
-						_sTempBaud = interpreter.comEnumerator.vBaud.at
+						_sTempBaud = infoInterpreter.comEnumerator.vBaud.at
 									 (baudIndex);
 						//translate it to the system constant
-						_iBaudrate = interpreter.comEnumerator.
+						_iBaudrate = infoInterpreter.comEnumerator.
 									  translateBaudrate(_sTempBaud);
 
 						break;
@@ -561,10 +563,10 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 						portIndex = SendMessage(_hwndCB_Baud_MAX,
 												CB_GETCURSEL, 0, 0);
 						//get the baud rate string
-						_sTempBaud = interpreter.comEnumerator.vBaud.at
+						_sTempBaud = infoInterpreter.comEnumerator.vBaud.at
 									 (portIndex);
 						//translate it to the system constant
-						_iBaudrateMax = interpreter.comEnumerator.
+						_iBaudrateMax = infoInterpreter.comEnumerator.
 									  translateBaudrate(_sTempBaud);
 						break;
 //------------------------------------------------------------------------------
@@ -572,7 +574,7 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 					case ID_CB_SLV_PORT:
 						portIndex = SendMessage(_hwndCB_SlvPorts,
 												CB_GETCURSEL, 0, 0);
-						_sSlaPort = interpreter.comEnumerator.vPortList.at
+						_sSlaPort = infoInterpreter.comEnumerator.vPortList.at
 									(portIndex);
 				}
 
@@ -799,6 +801,7 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 //------------------------------------------------------------------------------
 //Buttons
 					case ID_BT_START:
+
 						EnableWindow(_hwnd_btnLoad, FALSE);
 						EnableWindow(_hwnd_btnText, FALSE);
 						EnableWindow(_hwnd_Start,   FALSE);
@@ -807,17 +810,17 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 						EnableWindow(_hwnd_LoadINI, FALSE);
 						EnableWindow(_hwnd_Help,    FALSE);
 						EnableWindow(GetDlgItem(m_hwnd, ID_LB_TEXT), FALSE);
+						
+						//enable stop button
+						EnableWindow(_hwnd_Stop, TRUE);
 
-						sendTestSettings();
+						_t1 = thread(&Window::sendTestSettings, this);
+						//detach the thread so it can test and main thread waits for it to finish
+						//or wait for the user to press stop
+						_t1.detach();
 
-						EnableWindow(_hwnd_btnLoad, TRUE);
-						EnableWindow(_hwnd_btnText, TRUE);
-						EnableWindow(_hwnd_Start,   TRUE);
-						EnableWindow(_hwnd_Close,   TRUE);
-						EnableWindow(_hwnd_Save,    TRUE);
-						EnableWindow(_hwnd_LoadINI, TRUE);
-						EnableWindow(_hwnd_Help,    TRUE);
-						EnableWindow(GetDlgItem(m_hwnd, ID_LB_TEXT), TRUE);
+						//sendTestSettings();
+
 						break;
 
 					case ID_BT_CLOSE:
@@ -862,9 +865,12 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 						EnableWindow(_hwnd_Help,    FALSE);
 						EnableWindow(GetDlgItem(m_hwnd, ID_LB_TEXT), FALSE);
 
+						_t1 = thread(&Window::loadTestSettings, this, "","");
+						
+						_t1.detach();
 
-						_iError = loadTestSettings("","");
-						if(_iError != ERROR_SUCCESS)
+						//_iError = loadTestSettings("","");
+						/*if(_iError != ERROR_SUCCESS)
 						{
 							_sTemp = "Error loading and testing from file: \n";
 							_sTemp.append(_sPath.c_str());
@@ -875,7 +881,7 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 						}
 						else
 						{
-							MessageBoxA(NULL, "test finished successfuly", "", MB_OK);
+							MessageBoxA(NULL, "testing finished successfuly", "", MB_OK);
 						}
 
 						EnableWindow(_hwnd_btnLoad, TRUE);
@@ -886,11 +892,35 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 						EnableWindow(_hwnd_LoadINI, TRUE);
 						EnableWindow(_hwnd_Help,    TRUE);
 						EnableWindow(GetDlgItem(m_hwnd, ID_LB_TEXT), TRUE);
-
+*/
 						break;
 
 					case ID_BT_STOP:
+						interpreter->stopTest();
+
+						//pick the text to send in the new test
+						//_iTextToTransfer = DEFAULT_VALUE;
+						//SetWindowTextA(_hwnd_lbLoad,"");
+						//SetWindowTextA(_hwnd_lbText,"");
+
+						//EnableWindow(_hwnd_btnLoad, TRUE);
+						//EnableWindow(_hwnd_btnText, TRUE);
+						//EnableWindow(_hwnd_Start,   TRUE);
+						//EnableWindow(_hwnd_Close,   TRUE);
+						//EnableWindow(_hwnd_Save,    TRUE);
+						//EnableWindow(_hwnd_LoadINI, TRUE);
+						//EnableWindow(_hwnd_Help,    TRUE);
+						//EnableWindow(GetDlgItem(m_hwnd, ID_LB_TEXT), TRUE);
+
+						////disable stop button
+						////maybe disable when sendtestsettings over(in function)?
+						//EnableWindow(_hwnd_Stop, FALSE);
+
+
 						break;
+
+
+
 
 					case ID_BT_HELP:
 						break;
@@ -906,12 +936,15 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 //==============================================================================
     case WM_DESTROY:
         PostQuitMessage(0);
-        return 0;
+        return ERROR_SUCCESS;
 
     default:
         return DefWindowProc(m_hwnd, uMsg, wParam, lParam);
     }
-    return TRUE;
+
+
+
+	return TRUE;
 }
 
 
@@ -932,7 +965,7 @@ void Window::sethInstance(HINSTANCE hInst)
 //------------------------------------------------------------------------------
 void Window::sendTestMode()
 {
-	interpreter.setTestMode(_iTestMode);
+	interpreter->setTestMode(_iTestMode);
 }
 
 
@@ -941,7 +974,7 @@ void Window::sendTestMode()
 //------------------------------------------------------------------------------
 void Window::sendParity()
 {
-	interpreter.setParity(_iParity);
+	interpreter->setParity(_iParity);
 }
 
 //------------------------------------------------------------------------------
@@ -949,7 +982,7 @@ void Window::sendParity()
 //------------------------------------------------------------------------------
 void Window::sendStopBits()
 {
-	interpreter.setStopBits(_iStopBits);
+	interpreter->setStopBits(_iStopBits);
 }
 
 
@@ -958,7 +991,7 @@ void Window::sendStopBits()
 //------------------------------------------------------------------------------
 void Window::sendDataBits()
 {
-	interpreter.setDataBits(_iDataBits);
+	interpreter->setDataBits(_iDataBits);
 }
 
 //------------------------------------------------------------------------------
@@ -966,7 +999,7 @@ void Window::sendDataBits()
 //------------------------------------------------------------------------------
 void Window::sendTransfer()
 {
-	interpreter.setTransfer(_iTransfer);
+	interpreter->setTransfer(_iTransfer);
 }
 
 
@@ -975,7 +1008,7 @@ void Window::sendTransfer()
 //------------------------------------------------------------------------------
 void Window::sendProtocol()
 {
-	interpreter.setProtocol(_iProtocol);
+	interpreter->setProtocol(_iProtocol);
 }
 
 
@@ -984,7 +1017,7 @@ void Window::sendProtocol()
 //------------------------------------------------------------------------------
 void Window::sendSelectedMasterPort()
 {
-	interpreter.setSelectedMasterPort(_sMasPort);
+	interpreter->setSelectedMasterPort(_sMasPort);
 }
 
 
@@ -993,7 +1026,7 @@ void Window::sendSelectedMasterPort()
 //------------------------------------------------------------------------------
 void Window::sendSelectedSlavePort()
 {
-	interpreter.setSelectedSlavePort(_sSlaPort);
+	interpreter->setSelectedSlavePort(_sSlaPort);
 }
 
 //------------------------------------------------------------------------------
@@ -1001,8 +1034,8 @@ void Window::sendSelectedSlavePort()
 //------------------------------------------------------------------------------
 void Window::sendPortBaudRate()
 {
-	interpreter.setPortBaudRate(_iBaudrate);
-	interpreter.setPortBaudRateMax(_iBaudrateMax);
+	interpreter->setPortBaudRate(_iBaudrate);
+	interpreter->setPortBaudRateMax(_iBaudrateMax);
 }
 
 
@@ -1016,7 +1049,7 @@ void Window::sendTransferFile()
 	//clog << "\nFile to send : "
 	//	 << _sTransferFilePath.substr(a,_sTransferFilePath.npos - a)
 	//	 << endl;
-	interpreter.setTransferFile(this->_sTransferFilePath);
+	interpreter->setTransferFile(this->_sTransferFilePath);
 }
 
 
@@ -1028,7 +1061,7 @@ void Window::sendTextToSend()
 	//GetWindowTextA(_hwnd_lbText, _szTextToSend, 30);
 	//clog << "\nText to send : " << _szTextToSend << endl;
 
-	interpreter.setTextToSend(_szTextToSend);
+	interpreter->setTextToSend(_szTextToSend);
 }
 
 
@@ -1037,7 +1070,7 @@ void Window::sendTextToSend()
 //------------------------------------------------------------------------------
 void Window::sendLoggerState()
 {
-	interpreter.setLoggerState(_bLoggerState);	
+	interpreter->setLoggerState(_bLoggerState);	
 }
 
 
@@ -1046,7 +1079,7 @@ void Window::sendLoggerState()
 //------------------------------------------------------------------------------
 void Window::sendTransTextMode(int iTransTextMode)
 {
-	interpreter.setTransTextMode(iTransTextMode);
+	interpreter->setTransTextMode(iTransTextMode);
 }
 
 
@@ -1055,6 +1088,10 @@ void Window::sendTransTextMode(int iTransTextMode)
 //------------------------------------------------------------------------------
 void Window::sendTestSettings()
 {
+	//lock_guard<mutex> locker(_mutex);
+	
+	interpreter = new Interpreter();
+
 	switch(_iTextToTransfer)
 	{
 		//1 for file
@@ -1071,6 +1108,7 @@ void Window::sendTestSettings()
 			break;
 
 	}
+
 	//send all input information to the interpreter to be decoded
 	//interpreter calls the TestManager and sets the test up
 	sendTestMode();
@@ -1085,13 +1123,33 @@ void Window::sendTestSettings()
 	sendLoggerState();
 	sendTransTextMode(_iTextToTransfer);
 	sendRepeater();
+	
 
-	interpreter.handleGui();
+	//interpreter->startT1();
+
+	interpreter->handleGui();
 
 	//pick the text to send in the new test
 	_iTextToTransfer = DEFAULT_VALUE;
 	SetWindowTextA(_hwnd_lbLoad,"");
 	SetWindowTextA(_hwnd_lbText,"");
+
+	EnableWindow(_hwnd_btnLoad, TRUE);
+	EnableWindow(_hwnd_btnText, TRUE);
+	EnableWindow(_hwnd_Start,   TRUE);
+	EnableWindow(_hwnd_Close,   TRUE);
+	EnableWindow(_hwnd_Save,    TRUE);
+	EnableWindow(_hwnd_LoadINI, TRUE);
+	EnableWindow(_hwnd_Help,    TRUE);
+	EnableWindow(GetDlgItem(m_hwnd, ID_LB_TEXT), TRUE);
+
+	//disable stop button
+	//maybe disable when sendtestsettings over(in function)?
+	EnableWindow(_hwnd_Stop, FALSE);
+
+
+	delete interpreter;
+	interpreter = NULL;
 
 }
 
@@ -1101,7 +1159,7 @@ void Window::sendTestSettings()
 void Window::sendRepeater()
 {
 	GetWindowTextA(_hwnd_Repeater, _szRepeater, 5);
-	interpreter.setRepeater(_szRepeater);
+	interpreter->setRepeater(_szRepeater);
 }
 
 //------------------------------------------------------------------------------
@@ -1147,9 +1205,10 @@ void Window::saveTestSettings()
 	_iError = interSaveToFile.saveToFile();
 	if(_iError != ERROR_SUCCESS)
 	{
-		MessageBoxA(NULL, "Error savig to ini file", "ERROR", MB_OK);
+		MessageBoxA(NULL, "Error saving to ini file", "ERROR", MB_OK);
 	}
 	
+
 }
 
 
@@ -1161,15 +1220,16 @@ void Window::saveTestSettings()
 //		- string sPort -> port to test
 //Return: if file is empty error
 //------------------------------------------------------------------------------
-int Window::loadTestSettings(string sFilePath, string sPort)
+
+
+void Window::loadTestSettings(string sFilePath, string sPort)
 {
 	
+	interpreter = new Interpreter();
 
 	if (sFilePath == "")
 	{
 		_sPath = getFilePath();
-		if (_sPath == "")
-			return ERROR_SUCCESS;
 	}
 	else
 		_sPath = sFilePath;
@@ -1177,12 +1237,42 @@ int Window::loadTestSettings(string sFilePath, string sPort)
 
 	if (_sPath != "")
 	{
-		_iError = interpreter.loadIniFile(_sPath, sPort);
+		_iError = interpreter->loadIniFile(_sPath, sPort);
 		//if(_iError != ERROR_SUCCES)
-		return _iError;
+		//delete interpreter;
+		//return _iError;
 	}
 	else
-		return ERROR_EMPTY_FILE;
+	{
+		//delete interpreter;
+		_iError = ERROR_EMPTY_FILE;
+	}
+
+	delete interpreter;
+
+	if(_iError != ERROR_SUCCESS)
+	{
+		_sTemp = "Error loading and testing from file: \n";
+		_sTemp.append(_sPath.c_str());
+		_sTemp.append("\nError : ");
+		_sTemp.append(tools.convertToString(_iError));
+		MessageBoxA(NULL, _sTemp.c_str()  , "ERROR", MB_OK);
+		_sTemp = "";
+	}
+	else
+	{
+		MessageBoxA(NULL, "testing finished successfuly", "", MB_OK);
+	}
+
+	EnableWindow(_hwnd_btnLoad, TRUE);
+	EnableWindow(_hwnd_btnText, TRUE);
+	EnableWindow(_hwnd_Start,   TRUE);
+	EnableWindow(_hwnd_Close,   TRUE);
+	EnableWindow(_hwnd_Save,    TRUE);
+	EnableWindow(_hwnd_LoadINI, TRUE);
+	EnableWindow(_hwnd_Help,    TRUE);
+	EnableWindow(GetDlgItem(m_hwnd, ID_LB_TEXT), TRUE);
+
 }
 
 
@@ -1192,6 +1282,7 @@ int Window::loadTestSettings(string sFilePath, string sPort)
 //------------------------------------------------------------------------------
 string Window::getFilePath()
 {
+	//GetSaveFileName()
 
 	OPENFILENAMEA ofn;       // common dialog box structure
 	char szFile[260];       // buffer for file name

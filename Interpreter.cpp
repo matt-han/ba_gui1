@@ -1,6 +1,11 @@
 #include "Interpreter.h"
 
 
+//void Interpreter::startT1()
+//{
+//	_t1 = thread (&Interpreter::handleGui, this);
+//}
+
 //------------------------------------------------------------------------------
 //Default constructor
 //------------------------------------------------------------------------------
@@ -23,6 +28,10 @@ Interpreter::Interpreter(void)
 	_sSlaPort = "";
 	_sFilePath = "";
 	_sTextToSend = "";
+
+	_testManager = NULL;
+
+
 }
 
 
@@ -31,6 +40,11 @@ Interpreter::Interpreter(void)
 //------------------------------------------------------------------------------
 Interpreter::~Interpreter(void)
 {
+	//if(_t1.joinable())
+	//{
+	//	MessageBoxA(NULL,"Interpreter Joining thread", "",MB_OK);
+	//	_t1.join();
+	//}
 }
 
 
@@ -468,7 +482,7 @@ void Interpreter::handleGui()
 				}//switch
 
 				
-				//start the manager to start testing if no input errors were reported
+				//start the testManager for testing if no input errors were reported
 				if(bErr == false)
 				{
 					//save the logger state, file path,
@@ -489,6 +503,7 @@ void Interpreter::handleGui()
 						MessageBoxA(NULL, "Transmition finished", "SUCCESS!!",
 									MB_OK);
 
+						tools.wait(20);
 						//tools.printErrorVector(_testManager->testStruct.bLoggerState,
 						//	_testManager->ivTestErrors);
 					}
@@ -498,13 +513,14 @@ void Interpreter::handleGui()
 						_sTemp.append(tools.convertToString(_iError));
 
 						MessageBoxA(NULL, _sTemp.c_str(),
-							"Send and Recieve failure",
+							"Send and/or Recieve failure",
 							MB_OK | MB_ICONWARNING);
 					}
 				}
 				else //bErr
 				{
 					delete _testManager;
+					_testManager = NULL;
 				}
 
 			}//if transfer mode
@@ -519,6 +535,7 @@ void Interpreter::handleGui()
 	}
 
 	delete _testManager;
+	_testManager = NULL;
 }
 
 
@@ -684,6 +701,9 @@ int Interpreter::loadIniFile(string sPath, string sPort)
 			
 			if(_testManager->testStruct.svBaudrates.empty())
 			{
+
+				delete _testManager;
+				_testManager = NULL;
 				return ERROR_BAUDRATE;
 			}
 
@@ -707,6 +727,7 @@ int Interpreter::loadIniFile(string sPath, string sPort)
 		{
 			_vIniFilePorts.clear();
 			delete _testManager;
+			_testManager = NULL;
 			return ERROR_TEST;
 		}
 	}
@@ -715,10 +736,27 @@ int Interpreter::loadIniFile(string sPath, string sPort)
 		MessageBoxA(NULL, sPath.c_str(),
 					"Error reading test file:", MB_OK);
 		delete _testManager;
+		_testManager = NULL;
 		return _iError;
 	}
 
 	_vIniFilePorts.clear();
 	delete _testManager;
+	_testManager = NULL;
 	return ERROR_SUCCESS;
+}
+
+
+//------------------------------------------------------------------------------
+//	Sets the stop test flag from the main thread
+//------------------------------------------------------------------------------
+void Interpreter::stopTest()
+{
+	if(_testManager != NULL)
+	{
+		clog << "STOP BUTTON PRESSED" << endl;
+		_testManager->bStopButton = true;
+	}
+	else
+		clog << "NO TESTMANAGER AVAILABLE" << endl;
 }

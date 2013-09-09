@@ -16,7 +16,7 @@
 #include <Windows.h>
 #include <string>
 #include <vector>
-
+#include <thread>
 
 using namespace std;
 
@@ -35,6 +35,9 @@ public:
 
 //------------------------------------------------------------------------------
 //Methods	
+
+	void startT1();
+
 	void setTestMode(int);
 	void setParity(int);
 	void setStopBits(int);
@@ -62,12 +65,16 @@ public:
 	int saveToFile();
 	int loadIniFile(string sPath, string sPort);
 
+	void stopTest();
+
 private:
 //------------------------------------------------------------------------------
 //Variables
 
 	TestManager * _testManager;
-
+	
+	//thread _t1;
+	
 	int _iTestMode;
 	int _iParity;
 	int _iStopBits;

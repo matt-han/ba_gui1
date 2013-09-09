@@ -19,6 +19,12 @@ Logger::Logger(bool bLog, string sPort)
 //------------------------------------------------------------------------------
 Logger::~Logger(void)
 {
+	clog << "closing logger" << endl;
+
+	//set clog back to default
+	clog.rdbuf(backup);
+
+	filestr.close();
 }
 
 
@@ -109,6 +115,8 @@ int Logger::log(bool bLog, string sPort)
 
 	return ERROR_SUCCESS;
 }
+
+
 //------------------------------------------------------------------------------
 //	If a log file was opened, the function closes it, and always redirects 
 //	clog to the system default
@@ -118,11 +126,11 @@ int Logger::log(bool bLog, string sPort)
 //------------------------------------------------------------------------------
 void Logger::closelog(bool bLog)
 {
-	//set clog back to default
-	clog.rdbuf(backup);
-	
-	if(bLog == true)
-	{
-		filestr.close();
-	}
+	////set clog back to default
+	//clog.rdbuf(backup);
+	//
+	//if(bLog == true)
+	//{
+	//	filestr.close();
+	//}
 }

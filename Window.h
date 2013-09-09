@@ -10,8 +10,10 @@
 #include "Interpreter.h"
 #include "Tools.h"
 
-using namespace std;
+#include <thread>
+#include <mutex>
 
+using namespace std;
 
 class Interpreter;
 //use template class BaseWindow
@@ -21,7 +23,8 @@ class Window : public BaseWindow<Window>
 public:
 //------------------------------------------------------------------------------
 //Variables
-	Interpreter interpreter;
+	Interpreter * interpreter;
+	Interpreter infoInterpreter;
 	Tools tools;
 //------------------------------------------------------------------------------
 //Methods
@@ -48,7 +51,7 @@ public:
 
 	void saveTestSettings();
 
-	int loadTestSettings(string sFilePath, string sPort);
+	void loadTestSettings(string sFilePath, string sPort);
 
 	string getFilePath();
 	
@@ -60,10 +63,12 @@ public:
 private:
 //------------------------------------------------------------------------------
 //Variables
+	thread _t1;
 
 	int _iError;
 	int _iError2;
 	int _iTextToTransfer;
+	bool _bJoinThread;
 
 	HINSTANCE _hInst;
 	UINT _status;
