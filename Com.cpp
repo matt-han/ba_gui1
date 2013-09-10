@@ -159,6 +159,7 @@ void Com::enumeratePorts()
 	//CUIntArray arrComPortNo; 
 	char szComPort[11];
 	HANDLE hPort;
+	string sPort;
  
     for (int i = 1; i <= 255; ++i)  
     {  
@@ -178,7 +179,9 @@ void Com::enumeratePorts()
         }  
         else  
         {   // COM port exist  
-			vPortList.push_back(szComPort);
+			sPort = szComPort;
+			//sPort = sPort.substr(sPort.find_first_of("C"), sPort.npos);
+			vPortList.push_back(sPort);
             CloseHandle(hCom);  
         } 
     }

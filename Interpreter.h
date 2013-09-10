@@ -62,7 +62,7 @@ public:
 	int checkInputConfigData();
 	int checkBaudrate(int);
 
-	int saveToFile();
+	int saveToFile(string sSavePath);
 	int loadIniFile(string sPath, string sPort);
 
 	void stopTest();

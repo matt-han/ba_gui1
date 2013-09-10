@@ -54,6 +54,7 @@ public:
 	void loadTestSettings(string sFilePath, string sPort);
 
 	string getFilePath();
+	string getSaveFilePath();
 	
 	//get
 	//string getTransferFile()

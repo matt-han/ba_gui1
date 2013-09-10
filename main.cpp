@@ -19,7 +19,7 @@ int parsePort();
 string sFilePath, sPort;
 vector<string> svParameters;
 bool bContinue = true;
-int error;
+int iError;
 Tools tools;
 Interpreter interpreter;
 
@@ -27,7 +27,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR pCmdLine, int nCmdShow)
 {
 	char c;
 	bool bStopTest = false;
-	error = ERROR_SUCCESS;
+	iError = ERROR_SUCCESS;
 	int _iError = ERROR_SUCCESS;
 	int iCount = 0;
 	//WobbleTest wobble;
@@ -70,7 +70,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR pCmdLine, int nCmdShow)
 					interpreter.stopTest();
 					cout << "Quiting test" << endl;
 					bStopTest = true;
-					cout << "Press enter to finish" << endl;
+					cout << "Testing stopped. Press enter to finish" << endl;
 					//getchar();
 				}
 				iCount++;
@@ -82,61 +82,28 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR pCmdLine, int nCmdShow)
 
 			FreeConsole();
 
-			return error;
-
-			//TEST IT
-			//---------------------------------------------
-			//create new thread
-			//calling function loadInifile
-
-			//ask if user pressed ESC
-			//		if user pressed -> interpreter.stopTest()
-			//else keep waiting for input or to finish
-			//interpreter.loadIniFile(sFilePath, sPort);
+			return iError;
 		}
 		else
-		{
-			//printf ?????
-			//clog << "error " << _iError << endl;
+		{//error parsing parameters
 			return _iError;
 		}
-
-		//clog << "end" << endl;
 
 		return ERROR_SUCCESS;
 	}
 
-	//IniFileHandler file;
-	////------------------------------------------------------------------------------
-	//file.writeINIfile( sPort1,"COM2", 9600, 0, 1, 0, 2, 0,"file","somefile", "");
-	//file.writeINIfile("COM2","COM2", 9600, 0, 1, 0, 2, 1, "text", "texttosend","");
-	//file.writeINIfile( sPort2,"COM2", 9600, 0, 1, 0, 2, 2, "default", "", "");
-
-	//file.writeINIfile("COM11","COM2", 9600, 1, 1, 0, 2, 0, "text", "texttosend","");
-	//file.writeINIfile("COM22","COM2", 9600, 1, 1, 0, 2, 1, "default", "", "");
-	//file.writeINIfile("COM33","COM2", 9600, 1, 1, 0, 2, 2,"file","somefile", "");
-
-	//file.writeINIfile("COM4","COM2", 9600, 2, 1, 0, 2, 0, "default", "", "");
-	//file.writeINIfile("COM5","COM2", 9600, 2, 1, 0, 2, 1,"file","somefile", "");
-	//file.writeINIfile("COM6","COM2", 9600, 2, 1, 0, 2, 2, "text", "texttosend","");
-
-	//------------------------------------------------------------------------------
-	//------------------------------------------------------------------------------
-	//file.readINIFile("C:\\Users\\m.hansertvivar\\AppData\\Local\\Temp\\WN_ComPortTestFile.ini");
-	//file.readINIFile("C:\\Users\\Matthias Hansert\\AppData\\Local\\Temp\\WN_ComPortTestFile_COM1.ini");
-	//------------------------------------------------------------------------------
-	//------------------------------------------------------------------------------
-	
-	//clog << "error " << _iError << endl;
 	return _iError;
 }
 
 
+
+
+
 void start()
 {
-	error = interpreter.loadIniFile(sFilePath, sPort);
+	iError = interpreter.loadIniFile(sFilePath, sPort);
 	bContinue = false;
-	cout << "Press enter to finish" << endl;
+	cout << "Testing finished. Press enter to finish" << endl;
 }
 
 

@@ -572,6 +572,7 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 //------------------------------------------------------------------------------
 //Slave port
 					case ID_CB_SLV_PORT:
+
 						portIndex = SendMessage(_hwndCB_SlvPorts,
 												CB_GETCURSEL, 0, 0);
 						_sSlaPort = infoInterpreter.comEnumerator.vPortList.at
@@ -851,7 +852,7 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 					case ID_BT_SAVE:
 						saveTestSettings();
-						MessageBoxA(NULL, "....saved?....\ncheck return codes!!!", "", MB_OK);
+						//MessageBoxA(NULL, "", "....saved?....\ncheck return codes!!!", MB_OK);
 						break;
 
 					case ID_BT_LOADINI:
@@ -864,6 +865,7 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 						EnableWindow(_hwnd_LoadINI, FALSE);
 						EnableWindow(_hwnd_Help,    FALSE);
 						EnableWindow(GetDlgItem(m_hwnd, ID_LB_TEXT), FALSE);
+						EnableWindow(_hwnd_Stop, TRUE);
 
 						_t1 = thread(&Window::loadTestSettings, this, "","");
 						
@@ -1167,47 +1169,61 @@ void Window::sendRepeater()
 //------------------------------------------------------------------------------
 void Window::saveTestSettings()
 {
-	Interpreter interSaveToFile;
-
-	interSaveToFile.setTestMode(_iTestMode);
-	interSaveToFile.setParity(_iParity);
-	interSaveToFile.setStopBits(_iStopBits);
-	interSaveToFile.setDataBits(_iDataBits);
-	interSaveToFile.setTransfer(_iTransfer);
-	interSaveToFile.setProtocol(_iProtocol);
-	interSaveToFile.setSelectedMasterPort(_sMasPort);
-	interSaveToFile.setSelectedSlavePort(_sSlaPort);
-	interSaveToFile.setPortBaudRate(_iBaudrate);
-	interSaveToFile.setPortBaudRateMax(_iBaudrateMax);
-	interSaveToFile.setLoggerState(_bLoggerState);
-	interSaveToFile.setTransTextMode(_iTextToTransfer);
-	
-	GetWindowTextA(_hwnd_Repeater, _szRepeater, 5);
-	interSaveToFile.setRepeater(_szRepeater);
-	
-	switch(_iTextToTransfer)
+	string sPath = getSaveFilePath();
+	string sError = "";
+	if(sPath != "")
 	{
-		//1 for file
-		case ID_BT_LOAD:
-			interSaveToFile.setTransferFile(_sTransferFilePath);
-			break;
+		
+		
+		
+		Interpreter interSaveToFile;
+
+		interSaveToFile.setTestMode(_iTestMode);
+		interSaveToFile.setTransfer(_iTransfer);
+		interSaveToFile.setPortBaudRate(_iBaudrate);
+		interSaveToFile.setSelectedMasterPort(_sMasPort);
+		interSaveToFile.setSelectedSlavePort(_sSlaPort);
+		interSaveToFile.setPortBaudRateMax(_iBaudrateMax);
+
+
+		interSaveToFile.setParity(_iParity);
+		interSaveToFile.setStopBits(_iStopBits);
+		interSaveToFile.setDataBits(_iDataBits);
+		interSaveToFile.setProtocol(_iProtocol);
+		interSaveToFile.setLoggerState(_bLoggerState);
+		interSaveToFile.setTransTextMode(_iTextToTransfer);
+	
+		GetWindowTextA(_hwnd_Repeater, _szRepeater, 5);
+		interSaveToFile.setRepeater(_szRepeater);
+	
+		switch(_iTextToTransfer)
+		{
+			//1 for file
+			case ID_BT_LOAD:
+				interSaveToFile.setTransferFile(_sTransferFilePath);
+				break;
 			
-		//2 for string
-		case ID_BT_TEXT:
-			interSaveToFile.setTextToSend(_szTextToSend);
-			break;
+			//2 for string
+			case ID_BT_TEXT:
+				interSaveToFile.setTextToSend(_szTextToSend);
+				break;
 
-		default:
-			break;
+			default:
+				break;
 
-	}
-
-	_iError = interSaveToFile.saveToFile();
-	if(_iError != ERROR_SUCCESS)
-	{
-		MessageBoxA(NULL, "Error saving to ini file", "ERROR", MB_OK);
-	}
+		}
 	
+
+		_iError = interSaveToFile.saveToFile(sPath);
+		if(_iError != ERROR_SUCCESS)
+		{
+			sError = "Error saving to ini file. Error: ";
+			sError.append(tools.convertToString(_iError));
+			MessageBoxA(NULL, sError.c_str(), "ERROR", MB_OK);
+		}
+		else
+			MessageBoxA(NULL, "Saved", "", MB_OK);
+	}//if
 
 }
 
@@ -1220,8 +1236,6 @@ void Window::saveTestSettings()
 //		- string sPort -> port to test
 //Return: if file is empty error
 //------------------------------------------------------------------------------
-
-
 void Window::loadTestSettings(string sFilePath, string sPort)
 {
 	
@@ -1272,6 +1286,8 @@ void Window::loadTestSettings(string sFilePath, string sPort)
 	EnableWindow(_hwnd_LoadINI, TRUE);
 	EnableWindow(_hwnd_Help,    TRUE);
 	EnableWindow(GetDlgItem(m_hwnd, ID_LB_TEXT), TRUE);
+	EnableWindow(_hwnd_Stop, FALSE);
+
 
 }
 
@@ -1285,7 +1301,7 @@ string Window::getFilePath()
 	//GetSaveFileName()
 
 	OPENFILENAMEA ofn;       // common dialog box structure
-	char szFile[260];       // buffer for file name
+	char szFile[MAX_PATH];   // buffer for file name
 
 	// Initialize OPENFILENAME
 	ZeroMemory(&ofn, sizeof(ofn));
@@ -1309,6 +1325,60 @@ string Window::getFilePath()
 	if (GetOpenFileNameA(&ofn)==TRUE)
 	{
 
+	}
+	
+		
+//		hf = CreateFileA(ofn.lpstrFile, 
+//						GENERIC_READ,
+//						0,
+//						(LPSECURITY_ATTRIBUTES) NULL,
+//						OPEN_EXISTING,
+//						FILE_ATTRIBUTE_NORMAL,
+//						(HANDLE) NULL);
+//
+	//lpstrFile contains filepath
+	return ofn.lpstrFile;
+}
+
+
+
+
+
+
+
+//------------------------------------------------------------------------------
+//	Opens a dialog window for the user to select a INI file
+//Return: file path selected by the user
+//------------------------------------------------------------------------------
+string Window::getSaveFilePath()
+{
+	//GetSaveFileName()
+
+	OPENFILENAMEA ofn;       // common dialog box structure
+	char szFile[MAX_PATH];   // buffer for file name
+
+	// Initialize OPENFILENAME
+	ZeroMemory(&ofn, sizeof(ofn));
+	ofn.lStructSize = sizeof(ofn);
+	ofn.hwndOwner = m_hwnd;
+	ofn.lpstrFile = szFile;
+
+	// Set lpstrFile[0] to '\0' so that GetOpenFileName does not 
+	// use the contents of szFile to initialize itself.
+	ofn.lpstrFile[0] = '\0';
+	ofn.nMaxFile = sizeof(szFile);
+	ofn.lpstrFilter = "All\0*.*\0Text\0*.TXT\0";
+	ofn.nFilterIndex = 1;
+	ofn.lpstrFileTitle = NULL;
+	ofn.nMaxFileTitle = 0;
+	ofn.lpstrInitialDir = NULL;
+	ofn.Flags = OFN_EXPLORER | OFN_HIDEREADONLY | OFN_PATHMUSTEXIST | OFN_OVERWRITEPROMPT;
+
+	// Display the Open dialog box. 
+
+	if (GetSaveFileNameA(&ofn) != TRUE)
+	{
+		return "";
 	}
 	
 		

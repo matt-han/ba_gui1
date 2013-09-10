@@ -137,12 +137,6 @@ int TestManager::startManager()
 
 				
 			}//for baudrates
-			
-			if(_bError)
-			{
-				clog << "error in double test!"<<endl;
-				_iError = ERROR_WOBBLE;
-			}
 
 			break;
 
@@ -177,7 +171,7 @@ int TestManager::startFixedTest()
 
 	do
 	{
-		clog << "TEST NR. " << iRepeat << endl;
+		clog << "\n\nTEST NR. " << iRepeat << endl;
 		clog << "*********************************************" << endl;
 
 		switch(testStruct.iTransfer)
@@ -243,7 +237,7 @@ int TestManager::startWobbleTest(int iBaudrate, int iParity)
 
 	do
 	{
-		clog << "TEST NR. " << iRepeat << endl;
+		clog << "\n\nTEST NR. " << iRepeat << endl;
 		clog << "*********************************************" << endl;
 		switch(testStruct.iTransfer)
 		{
@@ -300,17 +294,18 @@ int TestManager::startAutomaticTest()
 	testStruct.iProtocol		= 1;
 	testStruct.iBaud			= B_9600;
 	testStruct.iDatabits		= 8;
-	testStruct.iRepeater		= -1;
 	testStruct.sTextToTransfer	= "";
 	testStruct.iTransTextMode	= DEFAULT_VALUE;
 
 
 	FixedTest automatic(&testStruct);
 
+	automatic.setTextVector(testStruct.iTransTextMode);
+
 	//ask stop button..........
-	//do
-	//{
-		clog << "TEST NR. " << iRepeat << endl;
+	do
+	{
+		clog << "\n\nTEST NR. " << iRepeat << endl;
 		clog << "*********************************************" << endl;
 		switch(testStruct.iTransfer)
 		{
@@ -335,7 +330,7 @@ int TestManager::startAutomaticTest()
 				break;
 		}//switch
 		iRepeat++;
-	//}while(!bStopButton);
+	}while(!bStopButton);
 
 
 	return ERROR_SUCCESS;

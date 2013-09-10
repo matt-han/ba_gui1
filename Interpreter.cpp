@@ -629,9 +629,9 @@ int Interpreter::checkBaudrate(int iBaudrate)
 //	Parameters:
 //Return: if error or fail
 //------------------------------------------------------------------------------
-int Interpreter::saveToFile()
+int Interpreter::saveToFile(string sSavePath)
 {
-
+	int iError = ERROR_SUCCESS;
 	string sTempTransferTextMode, sRepeater;
 
 	switch(_iTransTextMode)
@@ -653,23 +653,75 @@ int Interpreter::saveToFile()
 
 	sRepeater = tools.convertToString(_iRepeater);
 
-	iniFile.writeINIfile(_sMasPort,
-						 _sSlaPort,
-						 _iBaudrate,
-						 _iBaudrateMax,
-						 _iTestMode,
-						 _iParity,
-						 _iProtocol,
-						 _iStopBits,
-						 _iDataBits,
-						 _iTransfer,
-						 _iTransTextMode,
-						 sTempTransferTextMode,
-						 sRepeater,
-						 _bLoggerState,
-						 "");
+	if(_sMasPort == "")
+	{
+		MessageBoxA(NULL, "Please choose a port to test", "ERROR", MB_OK);
+		iError = ERROR_MISSING_PAR;
+	}
+	else
+	{
+		if (_iTransfer != DEFAULT_VALUE)
+		{
+			if(_iTransfer == 1 && _sSlaPort == "")//double transmiton
+			{
+				MessageBoxA(NULL, "Please choose a slave port", "ERROR", MB_OK);
+				iError = ERROR_MISSING_PAR;
+			}
+			
+			if(_iTestMode != DEFAULT_VALUE)
+			{
+				if (_iTestMode != 0)
+				{
+					if(_iBaudrate == DEFAULT_VALUE)
+					{
+						MessageBoxA(NULL, "Please choose a baud rate", "ERROR", MB_OK);
+						iError = ERROR_MISSING_PAR;
+					}
+				
+					if(_iTestMode == 1)//wobble
+					{
+						if(_iBaudrateMax == DEFAULT_VALUE)
+						{
+							MessageBoxA(NULL, "Please choose a MAX baud rate", "ERROR", MB_OK);
+							iError = ERROR_MISSING_PAR;
+						}
+					}
+				}//testemode != 0
+			}
+			else
+			{
+				MessageBoxA(NULL, "Please choose a test mode", "ERROR", MB_OK);
+				iError = ERROR_MISSING_PAR;
+			}
+		}//if transfer
+		else
+		{
+			MessageBoxA(NULL, "Please choose a transfer mode", "ERROR", MB_OK);
+			iError = ERROR_MISSING_PAR;
+		}
+	}//else master port
 
-	return ERROR_SUCCESS;
+
+	if (iError == ERROR_SUCCESS)
+	{
+		iniFile.writeINIfile(_sMasPort,
+							 _sSlaPort,
+							 _iBaudrate,
+							 _iBaudrateMax,
+							 _iTestMode,
+							 _iParity,
+							 _iProtocol,
+							 _iStopBits,
+							 _iDataBits,
+							 _iTransfer,
+							 _iTransTextMode,
+							 sTempTransferTextMode,
+							 sRepeater,
+							 _bLoggerState,
+							 sSavePath);
+	}
+
+	return iError;
 }
 
 
@@ -707,29 +759,30 @@ int Interpreter::loadIniFile(string sPath, string sPort)
 				return ERROR_BAUDRATE;
 			}
 
-			_iError = _testManager->startManager();
+			//_iError = _testManager->startManager();
+			_testManager->startManager();
+			//if(_iError != ERROR_SUCCESS)
+			//{
+			//	_bErr = true;//handle errors
+			//	if(_bLoggerState)
+			//		clog << "Error testing port "
+			//			 << _vIniFilePorts.at(index).sMasterPort
+			//			 << ". Error " << _iError
+			//			 << endl;
+			//	else
+			//		MessageBoxA(NULL, _vIniFilePorts.at(index).sMasterPort.c_str(),
+			//					"Error testing port ", MB_OK);
+			//}
 
-			if(_iError != ERROR_SUCCESS)
-			{
-				_bErr = true;//handle errors
-				if(_bLoggerState)
-					clog << "Error testing port "
-						 << _vIniFilePorts.at(index).sMasterPort
-						 << ". Error " << _iError
-						 << endl;
-				else
-					MessageBoxA(NULL, _vIniFilePorts.at(index).sMasterPort.c_str(),
-								"Error testing port ", MB_OK);
-			}
 		}//for
 
-		if(_bErr)
-		{
-			_vIniFilePorts.clear();
-			delete _testManager;
-			_testManager = NULL;
-			return ERROR_TEST;
-		}
+		//if(_bErr)
+		//{
+		//	_vIniFilePorts.clear();
+		//	delete _testManager;
+		//	_testManager = NULL;
+		//	return ERROR_TEST;
+		//}
 	}
 	else
 	{

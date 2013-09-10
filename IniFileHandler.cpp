@@ -46,13 +46,13 @@ void IniFileHandler::writeINIfile(string sMasterPort, string sSlavePort, int iBa
 	string sBaud, sBaudMax, sParity, sProtocol, sStopbits, sDatabits, sLogger;
 	
 	//if path is empty then create default path
-	if (sPath == "")
-	{
-		sPath = getenv("TEMP");
-		sPath.append("\\WN_ComPortTestFile_");
-		sPath.append(sMasterPort);
-		sPath.append(".ini");
-	}
+	//if (sPath == "")
+	//{
+	//	sPath = getenv("TEMP");
+	//	sPath.append("\\WN_ComPortTestFile_");
+	//	sPath.append(sMasterPort);
+	//	sPath.append(".ini");
+	//}
 
 	sFilePath = sPath;
 
@@ -254,17 +254,30 @@ int IniFileHandler::readINIFile(string sFilePath, string sMainPort)
 	{
 		vComPorts.push_back(TestStruct());
 		vComPorts.at(iPort).sMasterPort = sMainPort;
+		
+		_dwExists = GetPrivateProfileStringA("COM", "TestMode", NULL,
+											szValue, sizeof(szValue),
+											sFilePath.c_str());
 
-		_iError = readPortConfig("COM", sFilePath, 0);
-		if (_iError != ERROR_SUCCESS)
+		if (0 != _dwExists)
 		{
-			clog << "Error reading port from INI file."
-				 << "Error " << _iError << endl;
+			_iError = readPortConfig("COM", sFilePath, 0);
+			if (_iError != ERROR_SUCCESS)
+			{
+				clog << "Error reading port from INI file."
+					 << "Error " << _iError << endl;
+			}
+
+			return _iError;
 		}
-
-		return _iError;
+		else
+		{
+			clog << "Could not find a test mode in the test configuration file." << endl;
+			clog << "Error in configuration file. Make sure the header is: [COM]" << endl;
+			clog << "and only [COM] test settings are given." << endl;
+			return ERROR_INI;
+		}
 	}
-
 
 	//try to find test settings for all possible system ports
 	for(int iCom = 1; iCom < 257; iCom++)//256 ports

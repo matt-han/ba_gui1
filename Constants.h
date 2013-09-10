@@ -100,21 +100,19 @@ using namespace std;
 #define ERROR_NO_FILE		-12
 #define ERROR_FILE_NOT_OPEN -13
 #define ERROR_EMPTY_FILE	-14
-#define ERROR_CFG_HEADER	-15
-#define ERROR_SYNTAX		-16
+#define ERROR_BAUD_MINMAX	-15
+#define ERROR_MISSING_PAR	-16
 #define ERROR_PARSE			-17
 #define ERROR_READ_PORT		-18
 #define ERROR_WRITE_PORT	-19
-#define ERROR_TRANS_INFO	-20
+#define ERROR_CMP_STR		-20
 #define ERROR_WAIT_SLAVE	-21
 #define ERROR_WAIT_MASTER	-22
-#define ERROR_BAUD_MINMAX	-23
-#define ERROR_TEST			-24//error in one of the tests
-#define ERROR_CMP_STR		-25
+//#define						-23
+//#define 						-24
+//#define						-25
+//#define						-26
 
-
-
-#define ERROR_WOBBLE		-50
 
 #define ERROR_TRANSMITION "ERROR_TRANSMITION"
 #define DEFAULT_VALUE		-100
@@ -183,6 +181,7 @@ using namespace std;
 			iParity			= DEFAULT_VALUE;
 			iProtocol		= DEFAULT_VALUE;
 			iStopbits		= DEFAULT_VALUE;
+			iDatabits		= DEFAULT_VALUE;
 			iTransfer		= DEFAULT_VALUE;
 			iTransTextMode  = DEFAULT_VALUE;
 			iRepeater		= DEFAULT_VALUE;
