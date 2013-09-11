@@ -108,13 +108,15 @@ using namespace std;
 #define ERROR_CMP_STR		-20
 #define ERROR_WAIT_SLAVE	-21
 #define ERROR_WAIT_MASTER	-22
-//#define						-23
-//#define 						-24
+#define	ERROR_SYNC			-23
+#define ERROR_PARSE_SLAVE	-24 //error parsing info sent by the master
 //#define						-25
 //#define						-26
 
 
-#define ERROR_TRANSMITION "ERROR_TRANSMITION"
+const char ERROR_TRANSMITION[] = "ERROR_TRANSMITION";
+//#define ERROR_TRANSMITION "ERROR_TRANSMITION
+
 #define DEFAULT_VALUE		-100
 #define ERROR_TODO			-666
 
@@ -188,6 +190,8 @@ using namespace std;
 			bLoggerState	= true;
 		}
 	};//struct
+
+
 
 
 #endif

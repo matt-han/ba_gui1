@@ -49,18 +49,9 @@ public:
 	int startDoubleTest();
 	int startMasterTest();
 	int startSlaveTest();
-	int communicate(string sSendData, bool bMaster);
 	
-	
-	int communicateMaster(string sSendData);
-	int communicateSlave(string sSendData);
-
-	bool sendData(bool MasterSlave, string sSendData);
-	string getData(bool MasterSlave, string sSendData);
-	void printTestSettings();
-	void setProtocol(int iProtocol, Com *com);
-
-
+		string createTestInformation();
+	int setTestInformation(string sTestInfo);
 
 private:
 //------------------------------------------------------------------------------
@@ -71,8 +62,25 @@ private:
 	int _iTimeOut;
 	int _iLineTimeOut;
 
+	string _ESC;
+	string _ACK;
+	string _sTestInformation;
+	
+	int communicate(string sSendData, bool bMaster);
+
+	//needed???????
+	int communicateMaster(string sSendData);
+	int communicateSlave(string sSendData);
+
+	bool sendData(bool MasterSlave, string sSendData);
+	string getData(bool MasterSlave, string sSendData);
+	void printTestSettings();
+	void setProtocol(int iProtocol, Com *com);
+	int setPortDefaultSettings(Com &com); //timeout and 96,o,8,1
+	int setPortSettings(Com &com);
 	int syncMaster();
 	int syncSlave();
+
 };
 
 #endif

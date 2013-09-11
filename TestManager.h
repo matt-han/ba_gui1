@@ -3,7 +3,6 @@
 
 
 #include "FixedTest.h"
-#include "WobbleTest.h"
 #include "Tools.h"
 #include "Logger.h"
 #include "Constants.h"
@@ -27,7 +26,7 @@ public:
 	
 	TestStruct testStruct;
 	vector<int> ivTestErrors;
-	
+	string s;
 	bool bStopButton;
 //------------------------------------------------------------------------------
 //Methods

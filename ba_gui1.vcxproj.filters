@@ -48,9 +48,6 @@
     <ClCompile Include="FixedTest.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="WobbleTest.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BaseWindow.h">
@@ -87,9 +84,6 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="FixedTest.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="WobbleTest.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>
