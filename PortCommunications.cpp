@@ -121,7 +121,6 @@ bool PortCommunications::readData(char * lpBuf, DWORD dwSize, int iReadTimeOut)
 					// to issue another read until the first one finishes.
 					//
 					// This is a good time to do some background work.
-					//tools.wait(1);
 					clog << "wait_timeout"<<endl;
 					break;                       
 

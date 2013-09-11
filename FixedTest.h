@@ -47,7 +47,7 @@ public:
 	void setTextVector(int iTextMode);	
 	int startSingleTest();
 	int startDoubleTest();
-	int startMasterSlaveTest(bool bMaster);
+	int startMasterTest();
 	int startSlaveTest();
 	int communicate(string sSendData, bool bMaster);
 	
@@ -63,11 +63,16 @@ public:
 
 
 private:
-
+//------------------------------------------------------------------------------
+//Variables
 	int _iError;
 	int _iExitCode;
 	int _iTestError;
 	int _iTimeOut;
+	int _iLineTimeOut;
+
+	int syncMaster();
+	int syncSlave();
 };
 
 #endif

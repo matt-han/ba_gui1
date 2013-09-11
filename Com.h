@@ -60,7 +60,7 @@ public:
 	void enumeratePorts();
 
 	int setTimeOuts(int iTimeOut);
-	int calculateTimeOut(int iParity, int iStopbits, int iBaud);
+	int calculateTimeOut(int iParity, int iStopbits, int iDatabits, int iBaud);
 	int getDCB();
 	int setDCB();
 	void printDCB();

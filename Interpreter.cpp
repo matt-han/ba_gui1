@@ -759,20 +759,24 @@ int Interpreter::loadIniFile(string sPath, string sPort)
 				return ERROR_BAUDRATE;
 			}
 
-			//_iError = _testManager->startManager();
-			_testManager->startManager();
-			//if(_iError != ERROR_SUCCESS)
-			//{
-			//	_bErr = true;//handle errors
-			//	if(_bLoggerState)
-			//		clog << "Error testing port "
-			//			 << _vIniFilePorts.at(index).sMasterPort
-			//			 << ". Error " << _iError
-			//			 << endl;
-			//	else
-			//		MessageBoxA(NULL, _vIniFilePorts.at(index).sMasterPort.c_str(),
-			//					"Error testing port ", MB_OK);
-			//}
+			_iError = _testManager->startManager();
+			//_testManager->startManager();
+			if(_iError != ERROR_SUCCESS)
+			{
+				_bErr = true;//handle errors
+				if(_bLoggerState)
+					clog << "Error testing port "
+						 << _vIniFilePorts.at(index).sMasterPort
+						 << ". Error " << _iError
+						 << endl;
+				else
+				{
+					string sError = _vIniFilePorts.at(index).sMasterPort;
+					sError.append(". Error : ");
+					sError.append(tools.convertToString(_iError));
+					MessageBoxA(NULL, sError.c_str(), "Error testing port", MB_OK);
+				}
+			}
 
 		}//for
 

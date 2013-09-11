@@ -244,7 +244,10 @@ int IniFileHandler::readINIFile(string sFilePath, string sMainPort)
 
 	ifstream file(sFilePath.c_str());
 	if(!file.good())
+	{
+		file.close();
 		return ERROR_NO_FILE;
+	}
 	else
 		file.close();
 

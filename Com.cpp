@@ -485,11 +485,11 @@ int Com::setTimeOuts(int iTimeOut)
 //		- int iBaud -> set baud rate for the port
 //	Return: returns the calculated timeout in milisecond
 //------------------------------------------------------------------------------
-int Com::calculateTimeOut(int iParity, int iStopbits, int iBaud)
+int Com::calculateTimeOut(int iParity, int iStopbits, int iDatabits, int iBaud)
 {
 	double dPar;
 	double dStop;
-	double dData = 8.0; //default 8 data bits per character
+	double dData;
 	int iTimeOutms = 0;
 	double dTimeOut = 0;
 	 
@@ -504,6 +504,11 @@ int Com::calculateTimeOut(int iParity, int iStopbits, int iBaud)
 	else
 		dStop = 2.0;
 
+	if(iDatabits == 8)
+		dData = 8.0;
+	else
+		dData = 7.0;
+
 	double dAnzBits = dPar + dData + dStop + 1; //+1 for startbit
 	
 	// Time out per character is equal to
@@ -513,8 +518,8 @@ int Com::calculateTimeOut(int iParity, int iStopbits, int iBaud)
 	iTimeOutms = 1000 * dTimeOut;
 
 	//if less than 1 milisecond, make it 1 ms
-	if (iTimeOutms < 10)
-		iTimeOutms = 10;
+	if (iTimeOutms < 1)
+		iTimeOutms = 1;
 
 	return iTimeOutms;
 }

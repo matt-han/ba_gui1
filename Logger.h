@@ -20,6 +20,9 @@ public:
 	~Logger(void);
 
 //------------------------------------------------------------------------------
+//Variables
+	int iError;
+//------------------------------------------------------------------------------
 //Methods
 	int log(bool bLog, string sPort);
 	void closelog(bool bLog);

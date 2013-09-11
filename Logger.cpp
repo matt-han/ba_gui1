@@ -10,7 +10,9 @@
 //------------------------------------------------------------------------------
 Logger::Logger(bool bLog, string sPort)
 {
-	log(bLog, sPort);
+	iError = ERROR_SUCCESS;
+
+	iError = log(bLog, sPort);
 }
 
 
@@ -41,27 +43,52 @@ int Logger::log(bool bLog, string sPort)
 {
 	//backup the clog system default
 	backup = clog.rdbuf();
-	
+	bool bFileExists = true;
+
+	string sDestFolder = getenv("TEMP"); 
+	string sCompName   = getenv("COMPUTERNAME");
+
+	int iCount = 1;
+
 	if(bLog == true)
 	{
-		//create file path
-		path =  getenv("TEMP");
-		path += "\\WN_COM_Port_Tester_";
-		path += sPort;
-		path += "_";
-		//temp =  tools.parseTime(tools.printTime() );
-		//path += temp;
-		path += ".txt";
+		do
+		{
+			//create file path
+			path =  sDestFolder;
+			path += "\\Serial_Port_Tester_";
+			path += sCompName;
+			path += "_";
+			path += sPort;
+			path += "_";
+			path += tools.convertToString(iCount);
+			//temp =  tools.parseTime(tools.printTime() );
+			//path += temp;
+			path += ".txt";
 
-		logPath = path.c_str();
+			//logPath = path.c_str();
+
+			//check if file exists
+			ifstream file(path.c_str());
+			
+			if(file.good())
+				iCount++;
+			else
+				bFileExists = false;
+
+			file.close();
+
+		}while(bFileExists);
+
 
 		//create/open file
-		filestr.open(logPath, ios::out | ios::app);
+		//filestr.open(logPath, ios::out | ios::app);
+		filestr.open(path.c_str(), ios::out | ios::app);
 		
 		if (!filestr.is_open())
 		{
 			_iError = GetLastError();
-			clog << "couldn't create log file" << endl;
+			clog << "couldn't create log file. System Error: " << _iError << endl;
 			return ERROR_LOG;
 		}
 		else

@@ -33,8 +33,14 @@ TestManager::~TestManager(void)
 int TestManager::startManager()
 {
 
-	if(testStruct.bLoggerState)
-		_logger = new Logger(true, testStruct.sMasterPort);
+	//always create a logger, if not required then it redirects clog to null
+	_logger = new Logger(testStruct.bLoggerState, testStruct.sMasterPort);
+	if(_logger->iError != ERROR_SUCCESS)
+	{
+		_iError = _logger->iError;
+		delete _logger;
+		return _iError;
+	}
 
 	_bError = false;
 	string sBegin, sEnd;
@@ -188,12 +194,12 @@ int TestManager::startFixedTest()
 
 			//Master 
 			case 2:
-				_iError = fixedTest.startMasterSlaveTest(true);
+				_iError = fixedTest.startMasterTest();
 				break;
 
 			//Slave
 			case 3:
-				_iError = fixedTest.startMasterSlaveTest(false);
+				_iError = fixedTest.startSlaveTest();
 				break;
 		}//switch
 
@@ -253,12 +259,12 @@ int TestManager::startWobbleTest(int iBaudrate, int iParity)
 
 			//Master 
 			case 2:
-				_iError = wobble.startMasterSlaveTest(true);
+				_iError = wobble.startMasterTest();
 				break;
 
 			//Slave
 			case 3:
-				_iError = wobble.startMasterSlaveTest(false);
+				_iError = wobble.startSlaveTest();
 				break;
 		}//switch
 
@@ -321,12 +327,12 @@ int TestManager::startAutomaticTest()
 
 			//Master 
 			case 2:
-				_iError = automatic.startMasterSlaveTest(true);
+				_iError = automatic.startMasterTest();
 				break;
 
 			//Slave
 			case 3:
-				_iError = automatic.startMasterSlaveTest(false);
+				_iError = automatic.startSlaveTest();
 				break;
 		}//switch
 		iRepeat++;

@@ -129,9 +129,9 @@ int FixedTest::startSingleTest()
 		if (_iError == ERROR_SUCCESS)
 		{
 			_iTimeOut = masterCom.calculateTimeOut(testStruct->iParity,
-							testStruct->iStopbits, testStruct->iBaud);
+							testStruct->iStopbits, testStruct->iDatabits, testStruct->iBaud);
 	
-			clog << "Port time out: " << _iTimeOut << " ms" << endl;
+			//clog << "Port time out: " << _iTimeOut << " ms" << endl;
 
 			_iError = masterCom.setTimeOuts(_iTimeOut);
 			if(_iError == ERROR_SUCCESS)
@@ -140,6 +140,7 @@ int FixedTest::startSingleTest()
 				masterCom.dcb.BaudRate = testStruct->iBaud; 
 				masterCom.dcb.Parity   = (BYTE)testStruct->iParity;
 				masterCom.dcb.StopBits = (BYTE)testStruct->iStopbits;
+				masterCom.dcb.ByteSize = (BYTE)testStruct->iDatabits;
 				
 				//set all the protocol settings
 				setProtocol(testStruct->iProtocol, &masterCom);
@@ -162,7 +163,9 @@ int FixedTest::startSingleTest()
 					for (unsigned int index = 0; index < vTextToSend.size();
 						 index++)
 					{
+						_iLineTimeOut = _iTimeOut * (vTextToSend.at(index).size()+1);
 						clog << "\n\nText line nr.: " << index+1 << endl;
+						clog << "time out: " << _iLineTimeOut << " ms" << endl;
 						_iTestError = communicate(vTextToSend.at(index), true);
 						if(_iTestError != ERROR_SUCCESS)
 						{
@@ -255,9 +258,7 @@ int FixedTest::startDoubleTest()
 		if (_iError == ERROR_SUCCESS)
 		{
 			_iTimeOut = masterCom.calculateTimeOut(testStruct->iParity,
-								testStruct->iStopbits, testStruct->iBaud);
-	
-			clog << "Port time out: " << _iTimeOut << " ms" << endl;
+								testStruct->iStopbits, testStruct->iDatabits, testStruct->iBaud);
 
 			_iError = masterCom.setTimeOuts(_iTimeOut);
 			if(_iError != ERROR_SUCCESS)
@@ -293,12 +294,6 @@ int FixedTest::startDoubleTest()
 		_iError = slaveCom.getDCB();
 		if (_iError == ERROR_SUCCESS)
 		{
-			//no need to recalculate time out, settings are the same
-			//_iTimeOut = slaveCom.calculateTimeOut(testStruct->iParity,
-			// testStruct->iStopbits, testStruct->iBaud);
-	
-			clog << "Port time out: " << _iTimeOut << " ms" << endl;
-
 			_iError = slaveCom.setTimeOuts(_iTimeOut);
 			if(_iError != ERROR_SUCCESS)
 			{
@@ -322,12 +317,14 @@ int FixedTest::startDoubleTest()
 	masterCom.dcb.BaudRate = testStruct->iBaud; 
 	masterCom.dcb.Parity   = (BYTE)testStruct->iParity;
 	masterCom.dcb.StopBits = (BYTE)testStruct->iStopbits;
+	masterCom.dcb.ByteSize = (BYTE)testStruct->iDatabits;
 	//set all the protocol settings
 	setProtocol(testStruct->iProtocol, &masterCom);
 
 	slaveCom.dcb.BaudRate = testStruct->iBaud; 
 	slaveCom.dcb.Parity   = (BYTE)testStruct->iParity;
 	slaveCom.dcb.StopBits = (BYTE)testStruct->iStopbits;
+	slaveCom.dcb.ByteSize = (BYTE)testStruct->iDatabits;
 	//set all the protocol settings
 	setProtocol(testStruct->iProtocol, &slaveCom);
 
@@ -366,7 +363,9 @@ int FixedTest::startDoubleTest()
 	//send and recieve data
 	for (unsigned int index = 0; index < vTextToSend.size(); index++)
 	{
+		_iLineTimeOut = _iTimeOut * (vTextToSend.at(index).size()+1);
 		clog << "\n\nText line nr.: " << index+1 << endl;
+		clog << "time out: " << _iLineTimeOut << " ms" << endl;
 		_iTestError = communicate(vTextToSend.at(index), false);
 		if(_iTestError != ERROR_SUCCESS)
 		{
@@ -422,115 +421,9 @@ int FixedTest::startDoubleTest()
 //	starts a single maser test
 //Returns if test succeded or transmition failure
 //------------------------------------------------------------------------------
-//implement time outs!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-int FixedTest::startMasterSlaveTest(bool bMaster)
+int FixedTest::startMasterTest()
 {
 	return ERROR_TODO;
-	//masterHCom = masterCom.openPort(masterCom.sPort);
-	//if (INVALID_HANDLE_VALUE == masterHCom)
-	//{
-	//	_iError = GetLastError();
-	//	clog << "Error opening Port " << masterCom.sPort
-	//		 << ". Invalid Handle was returned. System Error : "
-	//		 << _iError << endl;
-
-	//	return ERROR_PORT_OPEN;
-	//}
-	//else
-	//{
-	//	masterPortComm.setComHandle(masterHCom);
-
-	//	_iError = masterCom.getDCB();
-	//	if (_iError == ERROR_SUCCESS)
-	//	{
-	//		_iError = masterCom.setTimeOuts();
-	//		if(_iError == ERROR_SUCCESS)
-	//		{
-	//			//change dcb to user input
-	//			masterCom.dcb.BaudRate = testStruct->iBaud; 
-	//			masterCom.dcb.Parity   = (BYTE)testStruct->iParity;
-	//			masterCom.dcb.StopBits = (BYTE)testStruct->iStopbits;
-	//			//set all the protocol settings
-				//setProtocol(testStruct->iProtocol, &masterCom);
-
-	//			printTestSettings();
-
-	//			//set the port dcb with the new settings
-	//			_iError = masterCom.setDCB();
-	//			if(_iError == ERROR_SUCCESS)
-	//			{
-	//				
-	//				//Communication Loop
-	//				//send and recieve data
-	//				
-	//				//send info
-	//				//wait to get it back
-	//				
-	//				for (unsigned int index = 0; index < vTextToSend.size();
-	//					 index++)
-	//				{
-	//					if(bMaster)
-	//						_iError = communicateMaster(vTextToSend.at(index));
-	//					else
-	//						_iError = communicateSlave(vTextToSend.at(index));
-
-	//					if(_iError != ERROR_SUCCESS)
-	//					{
-	//						clog << "Error communicating!!!!!!"<<endl;
-	//					}
-	//				}
-	//				clog<<"-----------------------------------------"<<endl;
-	//				clog << "Transmition finished"<<endl;
-	//				clog<<"-----------------------------------------"<<endl;
-	//				if (bTransmitionError == true)
-	//				{
-	//					clog<<"Error/s transmitting information"<<endl;
-	//					clog<<"Please check the file for exact lines"<<endl;
-	//					clog<<"Proceed to close ports...\n\n\n"<<endl;
-	//				}
-	//				else
-	//				{
-	//					clog<<"Transmition finished successfully\n\n\n"<<endl;
-	//				}
-	//				//----------------------------------------------------------
-	//			}	 //setDCB
-	//			else
-	//			{
-	//				clog << "Error setting the master port DCB" << endl;
-	//				masterCom.closePort();
-	//				return _iError;
-	//			}//setDCB
-
-	//		}	 //setTimeouts
-	//		else
-	//		{
-	//			clog << "Error setting the master port timeouts" << endl;
-	//			masterCom.closePort();
-	//			return _iError;
-	//		}//setTimeouts
-
-	//	}	 //getDCB
-	//	else
-	//	{
-	//		clog << "Error getting the master port DCB" << endl;
-	//		masterCom.closePort();
-	//		return _iError;
-	//	}//getDCB
-
-	//	_iError = masterCom.closePort();
-	//	if(_iError != ERROR_SUCCESS)
-	//	{
-	//		clog << "Error closing " << masterCom.sPort << endl;
-	//		if (bTransmitionError == true)
-	//			clog << "Error in tranismition" << endl;	
-	//		return _iError;
-	//	}
-
-	//	if (bTransmitionError == true)
-	//		return ERROR_TRANS_INFO;
-	//	else
-	//		return ERROR_SUCCESS;
-	//}
 }
 
 
@@ -538,111 +431,9 @@ int FixedTest::startMasterSlaveTest(bool bMaster)
 //	starts a single slave test
 //Returns if test succeded or transmition failure
 //------------------------------------------------------------------------------
-//implement time outs!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 int FixedTest::startSlaveTest()
 {
 	return ERROR_TODO;
-	//masterHCom = masterCom.openPort(masterCom.sPort);
-	//if (INVALID_HANDLE_VALUE == masterHCom)
-	//{
-	//	_iError = GetLastError();
-	//	clog << "Error opening Port " << masterCom.sPort
-	//		 << ". Invalid Handle was returned. System Error : "
-	//		 << _iError << endl;
-
-	//	return ERROR_PORT_OPEN;
-	//}
-	//else
-	//{
-	//	masterPortComm.setComHandle(masterHCom);
-
-	//	_iError = masterCom.getDCB();
-	//	if (_iError == ERROR_SUCCESS)
-	//	{
-	//		_iError = masterCom.setTimeOuts();
-	//		if(_iError == ERROR_SUCCESS)
-	//		{
-	//			//change dcb to user input
-	//			masterCom.dcb.BaudRate = testStruct->iBaud; 
-	//			masterCom.dcb.Parity   = (BYTE)testStruct->iParity;
-	//			masterCom.dcb.StopBits = (BYTE)testStruct->iStopbits;
-	//			//set all the protocol settings
-				//setProtocol(testStruct->iProtocol, &masterCom);
-
-	//			printTestSettings();
-
-	//			//set the port dcb with the new settings
-	//			_iError = masterCom.setDCB();
-	//			if(_iError == ERROR_SUCCESS)
-	//			{
-	//				
-	//				//Communication Loop
-	//				//send and recieve data
-	//				
-	//				//send info
-	//				//wait to get it back
-	//				
-	//				for (unsigned int index = 0; index < vTextToSend.size();
-	//					 index++)
-	//				{
-	//					_iError = communicateSlave(vTextToSend.at(index));
-	//					if(_iError != ERROR_SUCCESS)
-	//					{
-	//						clog << "Error communicating!!!!!!"<<endl;
-	//					}
-	//				}
-	//				clog<<"-----------------------------------------"<<endl;
-	//				clog << "Transmition finished"<<endl;
-	//				clog<<"-----------------------------------------"<<endl;
-	//				if (bTransmitionError == true)
-	//				{
-	//					clog<<"Error/s transmitting information"<<endl;
-	//					clog<<"Please check the file for exact lines"<<endl;
-	//					clog<<"Proceed to close ports...\n\n\n"<<endl;
-	//				}
-	//				else
-	//				{
-	//					clog<<"Transmition finished successfully\n\n\n"<<endl;
-	//				}
-	//				//----------------------------------------------------------
-	//			}	 //setDCB
-	//			else
-	//			{
-	//				clog << "Error setting the master port DCB" << endl;
-	//				masterCom.closePort();
-	//				return _iError;
-	//			}//setDCB
-
-	//		}	 //setTimeouts
-	//		else
-	//		{
-	//			clog << "Error setting the master port timeouts" << endl;
-	//			masterCom.closePort();
-	//			return _iError;
-	//		}//setTimeouts
-
-	//	}	 //getDCB
-	//	else
-	//	{
-	//		clog << "Error getting the master port DCB" << endl;
-	//		masterCom.closePort();
-	//		return _iError;
-	//	}//getDCB
-
-	//	_iError = masterCom.closePort();
-	//	if(_iError != ERROR_SUCCESS)
-	//	{
-	//		clog << "Error closing " << masterCom.sPort << endl;
-	//		if (bTransmitionError == true)
-	//			clog << "Error in tranismition" << endl;	
-	//		return _iError;
-	//	}
-
-	//	if (bTransmitionError == true)
-	//		return ERROR_TRANS_INFO;
-	//	else
-	//		return ERROR_SUCCESS;
-	//}
 }
 
 
@@ -664,8 +455,8 @@ int FixedTest::communicate(string sSendData, bool bMaster)
 	{					//if true & false then read and write to master port
 		bRead = bMaster;		
 	}
-	else			//Double mode
-	{				//if true & true then write to master and read slave
+	else				//Double mode
+	{					//if true & true then write to master and read slave
 		bMaster = true;
 		bRead = !bMaster;
 	}
@@ -893,7 +684,7 @@ string FixedTest::getData(bool MasterSlave, string sSendData)
 	if (MasterSlave)
 	{
 		clog << "--> master reads buffer" << endl;
-		if (true == masterPortComm.readData(empfang, sSendData.size(), _iTimeOut) )
+		if (true == masterPortComm.readData(empfang, sSendData.size(), _iLineTimeOut) )
 			return empfang;
 		else
 			return ERROR_TRANSMITION;
@@ -902,7 +693,7 @@ string FixedTest::getData(bool MasterSlave, string sSendData)
 	else
 	{
 		clog << "--> slave reads buffer" << endl;
-		if (true == slavePortComm.readData(empfang, sSendData.size(), _iTimeOut) )
+		if (true == slavePortComm.readData(empfang, sSendData.size(), _iLineTimeOut) )
 			return empfang;
 		else
 			return ERROR_TRANSMITION;
