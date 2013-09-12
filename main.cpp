@@ -48,7 +48,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR pCmdLine, int nCmdShow)
 		{
 
 			if (!AllocConsole())
-				MessageBoxA(NULL,"console alloc error","",MB_OK);
+				MessageBoxA(NULL, "console allocation error", WINDOW_TITLE, MB_OK | MB_ICONERROR);
 		
 			cout << "starting the thread" << endl;
 
@@ -189,7 +189,8 @@ int createGUI(HINSTANCE hInstance, int nCmdShow)
 
 	win.sethInstance(hInstance);
 
-    if (!win.Create(L"WN COM Test Tool", WS_OVERLAPPEDWINDOW))
+   
+	if (!win.Create(lpcw_WINDOW_TITLE , WS_OVERLAPPEDWINDOW))
     {
         return ERROR_CREATE_GUI;
     }

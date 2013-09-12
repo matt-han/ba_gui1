@@ -12,6 +12,8 @@
 
 #include <thread>
 #include <mutex>
+#include <vector>
+
 
 using namespace std;
 
@@ -56,10 +58,11 @@ public:
 	string getFilePath();
 	string getSaveFilePath();
 	
+	void viewAllElements(BOOLEAN bView);
 	//get
 	//string getTransferFile()
 	
-    PCWSTR  ClassName() const { return L"WN COM Test Tool"; }
+	PCWSTR  ClassName() const { return L"Serial Port Tester"; }
 
 private:
 //------------------------------------------------------------------------------
@@ -93,6 +96,7 @@ private:
 	string _sPath;
 	int _i;
 
+	vector<string> _svBaud;
 
 	//Window handles
 	HWND _hwndCB_MasPorts;

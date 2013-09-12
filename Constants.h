@@ -14,6 +14,9 @@ using namespace std;
 //------------------------------------------------------------------------------
 //Version
 #define VERSION "0.70"
+//#define lpcwVersion L"0.70"
+#define WINDOW_TITLE "Serial Port Tester version 0.70"
+#define lpcw_WINDOW_TITLE L"Serial Port Tester version 0.70"
 
 
 //------------------------------------------------------------------------------
@@ -115,7 +118,7 @@ using namespace std;
 
 
 const char ERROR_TRANSMITION[] = "ERROR_TRANSMITION";
-//#define ERROR_TRANSMITION "ERROR_TRANSMITION
+//#define ERROR_TRANSMITION "ERROR_TRANSMITION"
 
 #define DEFAULT_VALUE		-100
 #define ERROR_TODO			-666

@@ -18,7 +18,7 @@ TestManager::TestManager(void)
 //------------------------------------------------------------------------------
 TestManager::~TestManager(void)
 {
-	if(testStruct.bLoggerState && _bTestStarted)
+	if(testStruct.bLoggerState || _bTestStarted)
 	{
 		//_logger->closelog(true);
 		delete _logger;
@@ -86,8 +86,8 @@ int TestManager::startManager()
 
 				if(iBegin >= iEnd)
 				{
-					MessageBoxA(NULL, "MAX baud rate has to be higher than MIN baud rate", "ERROR",
-								MB_OK);
+					MessageBoxA(NULL, "MAX baud rate has to be higher than MIN baud rate", WINDOW_TITLE,
+								MB_OK | MB_ICONERROR);
 					_iError = ERROR_BAUD_MINMAX;
 					break;
 				}

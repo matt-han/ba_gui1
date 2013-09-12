@@ -171,7 +171,7 @@ int FixedTest::startSingleTest()
 				clog << tools.printTime() << endl;
 				clog<<"-----------------------------------------"<<endl;
 					
-				tools.printErrorVector(true, ivTestErrors);
+				tools.printErrorVector(testStruct->bLoggerState, ivTestErrors);
 
 				if (bTransmitionError == true)
 				{
@@ -336,7 +336,7 @@ int FixedTest::startDoubleTest()
 	clog << "Transmition finished"<<endl;
 	clog<<"-----------------------------------------"<<endl;
 
-	tools.printErrorVector(true, ivTestErrors);
+	tools.printErrorVector(testStruct->bLoggerState, ivTestErrors);
 
 
 	//check for errors
@@ -539,7 +539,7 @@ int FixedTest::startMasterTest()
 		//			clog << tools.printTime() << endl;
 		//			clog<<"-----------------------------------------"<<endl;
 		//			
-		//			tools.printErrorVector(true, ivTestErrors);
+		//			tools.printErrorVector(testStruct->bLoggerState, ivTestErrors);
 
 		//			if (bTransmitionError == true)
 		//			{
@@ -754,6 +754,14 @@ int FixedTest::communicate(string sSendData, bool bMaster)
 	{
 		clog <<"write was true\n"<<endl;
 
+
+
+		//###########################################################################################
+		//tools.wait(2);
+		//###########################################################################################
+
+
+
 		sTemp = getData(bRead, sSendData);
 
 		if (sTemp != ERROR_TRANSMITION)
@@ -793,163 +801,6 @@ int FixedTest::communicate(string sSendData, bool bMaster)
 
 }
 
-//------------------------------------------------------------------------------
-//	Communications for master mode
-//	Parameters:
-//	 IN:
-//		- string sSendData -> text to send
-//Return: error write or read port, wait error or success
-//------------------------------------------------------------------------------
-int FixedTest::communicateMaster(string sSendData)
-{
-	string sTemp;
-	int iWait = 0;
-	_iExitCode = ERROR_SUCCESS;
-
-	//start sending something
-	if (true == sendData(true, sSendData))
-	{
-		clog <<"write was true"<<endl;
-		MessageBoxA(NULL, sSendData.c_str(), "COM 1 SENT", MB_OK);
-
-		do
-		{
-			sTemp = getData(true, sSendData);
-			if (sTemp == ERROR_TRANSMITION)
-			{
-				tools.wait(10);
-				iWait++;
-
-				if(iWait == 5)
-				{
-					clog << "Error waiting on slave's response" << endl;
-					_iExitCode = ERROR_WAIT_SLAVE;
-					break;
-				}
-			}
-			else
-				break;
-			
-		}
-		while(true);
-		
-
-		if (sTemp != ERROR_TRANSMITION && _iExitCode != ERROR_WAIT_SLAVE)
-		{
-			if(0 == strcmp(sTemp.c_str(), sSendData.c_str()) )
-			{
-				clog << "read  was true"<<endl;
-				
-			}
-			else
-			{
-				clog << "String recieved is NOT equal to the sent string"<<endl;
-				clog << "- " << sSendData << endl;
-				clog << "- " << sTemp << endl;
-			}
-
-			return ERROR_SUCCESS;
-
-		}
-		else
-		{
-			clog <<"read was false. Error waiting  for slave's response"<<endl;
-			clog<<"-----------------------------------------"<<endl;
-			clog<<"-----------------------------------------"<<endl;
-			bTransmitionError = true;
-			return ERROR_READ_PORT;
-		}//getData
-
-	}	 //sendData
-	else
-	{
-		clog <<"write was false"<<endl;
-		clog<<"-----------------------------------------"<<endl;
-		clog<<"-----------------------------------------"<<endl;
-		bTransmitionError = true;
-		return ERROR_WRITE_PORT;
-	}//sendData
-
-}
-
-
-//------------------------------------------------------------------------------
-//	Communications for slave mode
-//	Parameters:
-//	 IN:
-//		- string sSendData -> text to send
-//Return: error write or read port, wait error or success
-//------------------------------------------------------------------------------
-int FixedTest::communicateSlave(string sSendData)
-{
-	string sTemp;
-	int iWait = 0;
-	_iExitCode = ERROR_SUCCESS;
-
-	//start reading something
-	do
-	{
-		sTemp = getData(true, sSendData);
-		if (sTemp == ERROR_TRANSMITION)
-		{
-			tools.wait(10);
-			iWait++;
-
-			if(iWait == 5)
-			{
-				clog << "Error waiting on master to send information" << endl;
-				_iExitCode = ERROR_WAIT_MASTER;
-				break;
-			}
-		}
-		else
-			break;
-			
-	}
-	while(true);
-
-	
-	if(sTemp != ERROR_TRANSMITION && _iExitCode != ERROR_WAIT_MASTER)
-	{
-		if (true == sendData(true, sSendData))
-		{
-			clog <<"write was true"<<endl;
-			MessageBoxA(NULL, sSendData.c_str(), "COM 1 SENT", MB_OK);
-
-			return ERROR_SUCCESS;
-		}	 //sendData
-		else
-		{
-			clog <<"write was false"<<endl;
-			clog<<"-----------------------------------------"<<endl;
-			clog<<"-----------------------------------------"<<endl;
-			bTransmitionError = true;
-			return ERROR_WRITE_PORT;
-		}//sendData
-		
-		//NO NEED TO COMPARE; JUST SEND IT BACK
-		//if(0 == strcmp(sTemp.c_str(), sSendData.c_str()) )
-		//{
-		//	clog << "read  was true"<<endl;
-		//		
-		//}
-		//else
-		//{
-		//	clog << "String recieved is NOT equal to the sent string"<<endl;
-		//	clog << "- " << sSendData << endl;
-		//	clog << "- " << sTemp << endl;
-		//	bTransmitionError = true;
-		//}
-	}
-	else
-	{
-		clog <<"read was false. Error waiting  for master to send information"<<endl;
-		clog<<"-----------------------------------------"<<endl;
-		clog<<"-----------------------------------------"<<endl;
-		bTransmitionError = true;
-		return ERROR_READ_PORT;
-	}//getData
-}
 
 
 //------------------------------------------------------------------------------
@@ -963,33 +814,77 @@ int FixedTest::communicateSlave(string sSendData)
 //------------------------------------------------------------------------------
 string FixedTest::getData(bool MasterSlave, string sSendData)
 {
-	
+	int iCounter = 0;
+	int iError = ERROR_SUCCESS;
+
 	SecureZeroMemory(empfang, sizeof(empfang));
 	
 	//Single test -> send and read information from the same port
 	//MasterSlave test -> send and read reply from the same port
-	if (MasterSlave)
+	do
 	{
-		clog << "--> master reads buffer" << endl;
-		if (true == masterPortComm.readData(empfang, sSendData.size(), _iLineTimeOut) )
+		if (MasterSlave)
 		{
-			if(empfang == "")
-				return ERROR_TRANSMITION;
+
+			clog << "--> master reads buffer" << endl;
+			if (true == masterPortComm.readData(empfang, sSendData.size(), _iLineTimeOut) )
+			{
+				if(empfang == "")
+					iError = -44;
+				else
+					iError = ERROR_SUCCESS;
+			}
 			else
-				return empfang;
+				iError = -44;
 		}
+		//else Double test ->send data true master and read slave
 		else
-			return ERROR_TRANSMITION;
-	}
-	//else Double test ->send data true master and read slave
-	else
+		{
+			clog << "--> slave reads buffer" << endl;
+			if (true == slavePortComm.readData(empfang, sSendData.size(), _iLineTimeOut) )
+				iError = ERROR_SUCCESS;
+			else
+				iError = -44;
+		}
+		
+		if(iError == -44)
+			iCounter++;
+		else
+			break;
+
+	}while(iCounter < 5);
+	
+	
+	if(iError != ERROR_SUCCESS)
 	{
-		clog << "--> slave reads buffer" << endl;
-		if (true == slavePortComm.readData(empfang, sSendData.size(), _iLineTimeOut) )
-			return empfang;
-		else
-			return ERROR_TRANSMITION;
+		return ERROR_TRANSMITION;
 	}
+
+	return empfang;
+
+
+	//if (MasterSlave)
+	//{
+	//	clog << "--> master reads buffer" << endl;
+	//	if (true == masterPortComm.readData(empfang, sSendData.size(), _iLineTimeOut) )
+	//	{
+	//		if(empfang == "")
+	//			return ERROR_TRANSMITION;
+	//		else
+	//			return empfang;
+	//	}
+	//	else
+	//		return ERROR_TRANSMITION;
+	//}
+	////else Double test ->send data true master and read slave
+	//else
+	//{
+	//	clog << "--> slave reads buffer" << endl;
+	//	if (true == slavePortComm.readData(empfang, sSendData.size(), _iLineTimeOut) )
+	//		return empfang;
+	//	else
+	//		return ERROR_TRANSMITION;
+	//}
 }
 
 
@@ -1180,3 +1075,170 @@ int FixedTest::setTestInformation(string sTestInfo)
 
 	return ERROR_SUCCESS;
 }
+
+
+
+
+
+//##############################################################################
+//				NOT USING.......
+//##############################################################################
+
+//------------------------------------------------------------------------------
+//	Communications for master mode
+//	Parameters:
+//	 IN:
+//		- string sSendData -> text to send
+//Return: error write or read port, wait error or success
+//------------------------------------------------------------------------------
+int FixedTest::communicateMaster(string sSendData)
+{
+	string sTemp;
+	int iWait = 0;
+	_iExitCode = ERROR_SUCCESS;
+
+	//start sending something
+	if (true == sendData(true, sSendData))
+	{
+		clog <<"write was true"<<endl;
+		MessageBoxA(NULL, sSendData.c_str(), WINDOW_TITLE, MB_OK);
+
+		do
+		{
+			sTemp = getData(true, sSendData);
+			if (sTemp == ERROR_TRANSMITION)
+			{
+				tools.wait(10);
+				iWait++;
+
+				if(iWait == 5)
+				{
+					clog << "Error waiting on slave's response" << endl;
+					_iExitCode = ERROR_WAIT_SLAVE;
+					break;
+				}
+			}
+			else
+				break;
+			
+		}
+		while(true);
+		
+
+		if (sTemp != ERROR_TRANSMITION && _iExitCode != ERROR_WAIT_SLAVE)
+		{
+			if(0 == strcmp(sTemp.c_str(), sSendData.c_str()) )
+			{
+				clog << "read  was true"<<endl;
+				
+			}
+			else
+			{
+				clog << "String recieved is NOT equal to the sent string"<<endl;
+				clog << "- " << sSendData << endl;
+				clog << "- " << sTemp << endl;
+			}
+
+			return ERROR_SUCCESS;
+
+		}
+		else
+		{
+			clog <<"read was false. Error waiting  for slave's response"<<endl;
+			clog<<"-----------------------------------------"<<endl;
+			clog<<"-----------------------------------------"<<endl;
+			bTransmitionError = true;
+			return ERROR_READ_PORT;
+		}//getData
+
+	}	 //sendData
+	else
+	{
+		clog <<"write was false"<<endl;
+		clog<<"-----------------------------------------"<<endl;
+		clog<<"-----------------------------------------"<<endl;
+		bTransmitionError = true;
+		return ERROR_WRITE_PORT;
+	}//sendData
+
+}
+
+
+//------------------------------------------------------------------------------
+//	Communications for slave mode
+//	Parameters:
+//	 IN:
+//		- string sSendData -> text to send
+//Return: error write or read port, wait error or success
+//------------------------------------------------------------------------------
+int FixedTest::communicateSlave(string sSendData)
+{
+	string sTemp;
+	int iWait = 0;
+	_iExitCode = ERROR_SUCCESS;
+
+	//start reading something
+	do
+	{
+		sTemp = getData(true, sSendData);
+		if (sTemp == ERROR_TRANSMITION)
+		{
+			tools.wait(10);
+			iWait++;
+
+			if(iWait == 5)
+			{
+				clog << "Error waiting on master to send information" << endl;
+				_iExitCode = ERROR_WAIT_MASTER;
+				break;
+			}
+		}
+		else
+			break;
+			
+	}
+	while(true);
+
+	
+	if(sTemp != ERROR_TRANSMITION && _iExitCode != ERROR_WAIT_MASTER)
+	{
+		if (true == sendData(true, sSendData))
+		{
+			clog <<"write was true"<<endl;
+			MessageBoxA(NULL, sSendData.c_str(), WINDOW_TITLE, MB_OK);
+
+			return ERROR_SUCCESS;
+		}	 //sendData
+		else
+		{
+			clog <<"write was false"<<endl;
+			clog<<"-----------------------------------------"<<endl;
+			clog<<"-----------------------------------------"<<endl;
+			bTransmitionError = true;
+			return ERROR_WRITE_PORT;
+		}//sendData
+		
+		//NO NEED TO COMPARE; JUST SEND IT BACK
+		//if(0 == strcmp(sTemp.c_str(), sSendData.c_str()) )
+		//{
+		//	clog << "read  was true"<<endl;
+		//		
+		//}
+		//else
+		//{
+		//	clog << "String recieved is NOT equal to the sent string"<<endl;
+		//	clog << "- " << sSendData << endl;
+		//	clog << "- " << sTemp << endl;
+		//	bTransmitionError = true;
+		//}
+	}
+	else
+	{
+		clog <<"read was false. Error waiting  for master to send information"<<endl;
+		clog<<"-----------------------------------------"<<endl;
+		clog<<"-----------------------------------------"<<endl;
+		bTransmitionError = true;
+		return ERROR_READ_PORT;
+	}//getData
+}
+

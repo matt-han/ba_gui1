@@ -40,11 +40,6 @@ Interpreter::Interpreter(void)
 //------------------------------------------------------------------------------
 Interpreter::~Interpreter(void)
 {
-	//if(_t1.joinable())
-	//{
-	//	MessageBoxA(NULL,"Interpreter Joining thread", "",MB_OK);
-	//	_t1.join();
-	//}
 }
 
 
@@ -236,7 +231,7 @@ void Interpreter::setRepeater(string sRepeater)
 		{
 			MessageBoxA(NULL, "Error in repeater value,\n"
 							  "please type an number > 0",
-							  "ERROR", MB_OK | MB_ICONWARNING);
+							  WINDOW_TITLE, MB_OK | MB_ICONWARNING);
 			this->_iRepeater = DEFAULT_VALUE;
 		}
 	}
@@ -247,6 +242,16 @@ void Interpreter::setRepeater(string sRepeater)
 }
 
 
+//------------------------------------------------------------------------------
+//	Saves the user input for how many times a test wil be repeated in _iRepeater
+//	Parameters:
+//	 IN:
+//		- string sRepeater -> user GUI input
+//------------------------------------------------------------------------------
+void Interpreter::setBaudVector(vector<string> svBaud)
+{
+	this->_svBaudrates = svBaud;
+}
 
 //------------------------------------------------------------------------------
 //	Set the variables to the default values
@@ -267,6 +272,8 @@ void Interpreter::setDefaultValues()
 	_sSlaPort		= "";
 	_sFilePath		= "";
 	_sTextToSend	= "";
+
+	_svBaudrates.clear();
 }
 
 
@@ -292,8 +299,8 @@ void Interpreter::handleGui()
 		//if no test mode was selected -> error
 		if (_iTestMode == DEFAULT_VALUE)
 		{
-			MessageBoxW(NULL,L"Please select a test mode",
-				L"Error", MB_OK | MB_ICONWARNING);
+			MessageBoxA(NULL,"Please select a test mode",
+				WINDOW_TITLE, MB_OK | MB_ICONERROR);
 			setDefaultValues();
 		}
 		else
@@ -303,8 +310,8 @@ void Interpreter::handleGui()
 			//if no transfer mode was selected -> error
 			if (_iTransfer == DEFAULT_VALUE)
 			{
-				MessageBoxW(NULL,L"Please select a transfer mode",
-					L"Error", MB_OK | MB_ICONWARNING);
+				MessageBoxA(NULL,"Please select a transfer mode",
+					WINDOW_TITLE, MB_OK | MB_ICONERROR);
 				setDefaultValues();
 			}
 			else
@@ -325,8 +332,8 @@ void Interpreter::handleGui()
 							//if no slave port was selected -> error
 							if (_sSlaPort == "")
 							{
-								MessageBoxW(NULL,L"Please select a slave port",
-									L"Error", MB_OK | MB_ICONWARNING);
+								MessageBoxA(NULL,"Please select a slave port",
+									WINDOW_TITLE, MB_OK | MB_ICONERROR);
 								setDefaultValues();
 								break;
 							}
@@ -339,8 +346,8 @@ void Interpreter::handleGui()
 						}
 						else
 						{
-							MessageBoxW(NULL,L"Please select a transfer mode",
-										L"Error", MB_OK | MB_ICONWARNING);
+							MessageBoxA(NULL, "Please select a transfer mode",
+										WINDOW_TITLE, MB_OK | MB_ICONERROR);
 							setDefaultValues();
 							break;
 						}
@@ -362,8 +369,8 @@ void Interpreter::handleGui()
 								//if no slave port was selected -> error
 								if (_sSlaPort == "")
 								{
-									MessageBoxW(NULL,L"Please select a slave port",
-										L"Error", MB_OK | MB_ICONWARNING);
+									MessageBoxA(NULL,"Please select a slave port",
+										WINDOW_TITLE, MB_OK | MB_ICONERROR);
 									setDefaultValues();
 									bErr = true;
 									break;
@@ -382,8 +389,8 @@ void Interpreter::handleGui()
 						}
 						else
 						{
-							MessageBoxW(NULL,L"Please select a transfer mode",
-										L"Error", MB_OK | MB_ICONWARNING);
+							MessageBoxA(NULL,"Please select a transfer mode",
+										WINDOW_TITLE, MB_OK | MB_ICONERROR);
 							setDefaultValues();
 							break;
 						}
@@ -426,8 +433,8 @@ void Interpreter::handleGui()
 							//if no slave port was selected -> error
 							if (_sSlaPort == "")
 							{
-								MessageBoxW(NULL,L"Please select a slave port",
-									L"Error", MB_OK | MB_ICONWARNING);
+								MessageBoxA(NULL,"Please select a slave port",
+									WINDOW_TITLE, MB_OK | MB_ICONERROR);
 								setDefaultValues();
 								bErr = true;
 								break;
@@ -458,8 +465,8 @@ void Interpreter::handleGui()
 						}
 						else
 						{
-							MessageBoxW(NULL,L"Please select a transfer mode",
-										L"Error", MB_OK | MB_ICONWARNING);
+							MessageBoxA(NULL,"Please select a transfer mode",
+										WINDOW_TITLE, MB_OK | MB_ICONERROR);
 							setDefaultValues();
 							bErr = true;
 							break;
@@ -472,8 +479,8 @@ void Interpreter::handleGui()
 					//Port was selected but no test mode
 					//----------------------------------------------------------
 					default:
-						MessageBoxW(NULL,L"Please select a Test Mode",
-							L"Error", MB_OK | MB_ICONWARNING);
+						MessageBoxA(NULL,"Please select a Test Mode",
+							WINDOW_TITLE, MB_OK | MB_ICONERROR);
 						setDefaultValues();
 						bErr = true;
 						break;
@@ -492,6 +499,9 @@ void Interpreter::handleGui()
 					_testManager->testStruct.iRepeater = _iRepeater;
 					_testManager->testStruct.sTextToTransfer = _sTextToSend;
 					_testManager->testStruct.iTransTextMode = _iTransTextMode;
+					_testManager->testStruct.svBaudrates = _svBaudrates;
+
+
 					
 					
 					//**********************************************************
@@ -500,20 +510,18 @@ void Interpreter::handleGui()
 					_iError = _testManager->startManager();
 					if(_iError == ERROR_SUCCESS)
 					{
-						MessageBoxA(NULL, "Transmition finished", "SUCCESS!!",
+						MessageBoxA(NULL, "Transmition finished", WINDOW_TITLE,
 									MB_OK);
-
-						tools.wait(20);
 						//tools.printErrorVector(_testManager->testStruct.bLoggerState,
 						//	_testManager->ivTestErrors);
 					}
 					else
 					{
-						_sTemp = "Error : ";
+						_sTemp = "Send and/or Recieve failure\nError : ";
 						_sTemp.append(tools.convertToString(_iError));
 
 						MessageBoxA(NULL, _sTemp.c_str(),
-							"Send and/or Recieve failure",
+							WINDOW_TITLE,
 							MB_OK | MB_ICONWARNING);
 					}
 				}
@@ -528,8 +536,8 @@ void Interpreter::handleGui()
 	}
 	else
 	{
-		MessageBoxW(NULL,L"Please select the port to be tested",
-					L"Error", MB_OK | MB_ICONWARNING);
+		MessageBoxA(NULL,"Please select the port to be tested",
+					WINDOW_TITLE, MB_OK | MB_ICONERROR);
 		//Delete other values to avoid errors in new copy process
 		setDefaultValues();
 	}
@@ -550,8 +558,8 @@ int Interpreter::checkInputConfigData()
 	//parity
 	if(_iParity == DEFAULT_VALUE)
 	{
-		MessageBoxW(NULL,L"Please select the parity",
-			L"Error", MB_OK);
+		MessageBoxA(NULL,"Please select the parity",
+			WINDOW_TITLE, MB_OK | MB_ICONERROR);
 		return ERROR_INPUT;
 	}
 	else
@@ -560,8 +568,8 @@ int Interpreter::checkInputConfigData()
 	//protocol
 	if(_iProtocol == DEFAULT_VALUE)
 	{
-		MessageBoxW(NULL,L"Please select the protocol",
-			L"Error", MB_OK);
+		MessageBoxA(NULL,"Please select the protocol",
+			WINDOW_TITLE, MB_OK | MB_ICONERROR);
 		return ERROR_INPUT;
 	}
 	else
@@ -570,8 +578,8 @@ int Interpreter::checkInputConfigData()
 	//stopbits
 	if(_iStopBits == DEFAULT_VALUE)
 	{
-		MessageBoxW(NULL,L"Please select the stopbits",
-			L"Error", MB_OK);
+		MessageBoxA(NULL,"Please select the stopbits",
+			WINDOW_TITLE, MB_OK | MB_ICONERROR);
 		return ERROR_INPUT;
 	}
 	else
@@ -580,8 +588,8 @@ int Interpreter::checkInputConfigData()
 	//stopbits
 	if(_iDataBits == DEFAULT_VALUE)
 	{
-		MessageBoxW(NULL,L"Please select the databits",
-			L"Error", MB_OK);
+		MessageBoxA(NULL,"Please select the databits",
+			WINDOW_TITLE, MB_OK | MB_ICONERROR);
 		return ERROR_INPUT;
 	}
 	else
@@ -603,18 +611,18 @@ int Interpreter::checkBaudrate(int iBaudrate)
 {
 	if (iBaudrate == DEFAULT_VALUE)
 	{
-		MessageBoxW(NULL,L"Please select a baud rate",
-			L"Error", MB_OK);
+		MessageBoxA(NULL,"Please select a baud rate!!!!!!",
+			WINDOW_TITLE, MB_OK | MB_ICONERROR);
 		setDefaultValues();
 		return DEFAULT_VALUE;
 
 	}
 	else if(iBaudrate == ERROR_BAUDRATE)
 	{
-		MessageBoxW(NULL,L"Baud rate is not suported by"
-			L" this port (WinBase define error)\n"
-			L"Please choose another baud rate",
-			L"Error", MB_OK);
+		MessageBoxA(NULL,"Baud rate is not suported by"
+			" this port\n"
+			"Please choose another baud rate",
+			WINDOW_TITLE, MB_OK | MB_ICONERROR);
 		setDefaultValues();
 		return ERROR_BAUDRATE;
 
@@ -655,7 +663,7 @@ int Interpreter::saveToFile(string sSavePath)
 
 	if(_sMasPort == "")
 	{
-		MessageBoxA(NULL, "Please choose a port to test", "ERROR", MB_OK);
+		MessageBoxA(NULL, "Please choose a port to test", WINDOW_TITLE, MB_OK | MB_ICONERROR);
 		iError = ERROR_MISSING_PAR;
 	}
 	else
@@ -664,7 +672,7 @@ int Interpreter::saveToFile(string sSavePath)
 		{
 			if(_iTransfer == 1 && _sSlaPort == "")//double transmiton
 			{
-				MessageBoxA(NULL, "Please choose a slave port", "ERROR", MB_OK);
+				MessageBoxA(NULL, "Please choose a slave port", WINDOW_TITLE, MB_OK | MB_ICONERROR);
 				iError = ERROR_MISSING_PAR;
 			}
 			
@@ -674,7 +682,7 @@ int Interpreter::saveToFile(string sSavePath)
 				{
 					if(_iBaudrate == DEFAULT_VALUE)
 					{
-						MessageBoxA(NULL, "Please choose a baud rate", "ERROR", MB_OK);
+						MessageBoxA(NULL, "Please choose a baud rate", WINDOW_TITLE, MB_OK | MB_ICONERROR);
 						iError = ERROR_MISSING_PAR;
 					}
 				
@@ -682,7 +690,7 @@ int Interpreter::saveToFile(string sSavePath)
 					{
 						if(_iBaudrateMax == DEFAULT_VALUE)
 						{
-							MessageBoxA(NULL, "Please choose a MAX baud rate", "ERROR", MB_OK);
+							MessageBoxA(NULL, "Please choose a MAX baud rate", WINDOW_TITLE, MB_OK | MB_ICONERROR);
 							iError = ERROR_MISSING_PAR;
 						}
 					}
@@ -690,13 +698,13 @@ int Interpreter::saveToFile(string sSavePath)
 			}
 			else
 			{
-				MessageBoxA(NULL, "Please choose a test mode", "ERROR", MB_OK);
+				MessageBoxA(NULL, "Please choose a test mode", WINDOW_TITLE, MB_OK | MB_ICONERROR);
 				iError = ERROR_MISSING_PAR;
 			}
 		}//if transfer
 		else
 		{
-			MessageBoxA(NULL, "Please choose a transfer mode", "ERROR", MB_OK);
+			MessageBoxA(NULL, "Please choose a transfer mode", WINDOW_TITLE, MB_OK | MB_ICONERROR);
 			iError = ERROR_MISSING_PAR;
 		}
 	}//else master port
@@ -771,10 +779,11 @@ int Interpreter::loadIniFile(string sPath, string sPort)
 						 << endl;
 				else
 				{
-					string sError = _vIniFilePorts.at(index).sMasterPort;
+					string sError = "Error testing port";
+					sError.append(_vIniFilePorts.at(index).sMasterPort);
 					sError.append(". Error : ");
 					sError.append(tools.convertToString(_iError));
-					MessageBoxA(NULL, sError.c_str(), "Error testing port", MB_OK);
+					MessageBoxA(NULL, sError.c_str(), WINDOW_TITLE, MB_OK | MB_ICONERROR);
 				}
 			}
 
@@ -790,8 +799,10 @@ int Interpreter::loadIniFile(string sPath, string sPort)
 	}
 	else
 	{
-		MessageBoxA(NULL, sPath.c_str(),
-					"Error reading test file:", MB_OK);
+		string sError = "Error reading test file:\n";
+		sError.append(sPath);
+		MessageBoxA(NULL, sError.c_str(),
+					WINDOW_TITLE, MB_OK | MB_ICONERROR);
 		delete _testManager;
 		_testManager = NULL;
 		return _iError;

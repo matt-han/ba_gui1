@@ -535,7 +535,7 @@ int Com::getDCB()
 		if (0 == GetCommState(hCom, &dcb))
 		{
 			MessageBoxA(NULL, "Error getting Port default settings",
-							  "ERROR", MB_OK);
+				WINDOW_TITLE, MB_OK | MB_ICONERROR);
 
 			_iError = GetLastError();
 			clog << "Error getting Port default settings´. Error : "
@@ -562,11 +562,12 @@ int Com::setDCB()
 		{
 			_iError = GetLastError();
 			
-			MessageBoxA(NULL, "Error setting Port dcb. For more details check "
-							  "the log file", "ERROR", MB_OK);
+			MessageBoxA(NULL, "Error saving Port settings. For more details check "
+				"the log file if it was enabled", WINDOW_TITLE, MB_OK | MB_ICONERROR);
 
 			clog << "Error setting " << sPort << " dcb. System Error : "
 				 << _iError << endl;
+			clog << "Probably baud rate is not truly supported" << endl;
 
 			return ERROR_SET_DCB;
 		}

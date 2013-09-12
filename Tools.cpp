@@ -240,8 +240,8 @@ void Tools::printErrorVector(bool bPrint, vector<int> ivTestErrors)
 	else
 	{
 		int iSuccess = 0, iFailure = 0;
-		 
-		string sResult  = "Number of tests : ";
+		 string sResult  = "Test Results\n\n";
+		
 		string sSuccess = "Successful tests  : ";
 		string sFailure = "Failed tests          : ";
 			
@@ -253,7 +253,9 @@ void Tools::printErrorVector(bool bPrint, vector<int> ivTestErrors)
 				iFailure++;
 
 		}
-		
+
+		sResult.append("Number of tests : ");
+
 		sSuccess.append(convertToString(iSuccess));
 		sSuccess.append("\n");
 		
@@ -265,7 +267,7 @@ void Tools::printErrorVector(bool bPrint, vector<int> ivTestErrors)
 		sResult.append(sSuccess);
 		sResult.append(sFailure);
 
-		MessageBoxA(NULL, sResult.c_str(), "Test Results", MB_OK);
+		MessageBoxA(NULL, sResult.c_str(), WINDOW_TITLE, MB_OK);
 	}
 }
 

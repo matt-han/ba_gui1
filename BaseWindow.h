@@ -61,7 +61,7 @@ public:
 	BaseWindow() : m_hwnd(NULL) { }
 
     BOOL Create(
-        PCWSTR lpWindowName,
+        LPCWSTR lpWindowName,
         DWORD dwStyle,
         DWORD dwExStyle = 0,
         int x = WINDOW_X,
@@ -75,13 +75,13 @@ public:
 		//Window properties
         WNDCLASS wc = {0};
 		
-		wc.lpszClassName = L"WN COM Test Tool";
+		//wc.lpszClassName = L"Serial Port Tester";
 		wc.hbrBackground = GetSysColorBrush(COLOR_3DFACE);
 		wc.hCursor       = LoadCursor(0, IDC_ARROW);
 		wc.hIcon		 = LoadIcon(NULL, IDI_APPLICATION);
 		wc.lpfnWndProc   = DERIVED_TYPE::WindowProc;
         wc.hInstance     = GetModuleHandle(NULL);
-        wc.lpszClassName = ClassName();
+        wc.lpszClassName =  ClassName();
 
         RegisterClass(&wc);
 
@@ -89,7 +89,8 @@ public:
         m_hwnd = CreateWindowEx(
             dwExStyle, ClassName(), lpWindowName, dwStyle, x, y,
             nWidth, nHeight, hWndParent, hMenu, GetModuleHandle(NULL), this
-            );
+
+			);
 
         return (m_hwnd ? TRUE : FALSE);
     }//create

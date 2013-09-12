@@ -48,6 +48,10 @@ int Logger::log(bool bLog, string sPort)
 	string sDestFolder = getenv("TEMP"); 
 	string sCompName   = getenv("COMPUTERNAME");
 
+	if(0 == sPort.compare(0,1,"\\"))
+		sPort.erase(0, sPort.find_last_of("\\")+1);
+
+
 	int iCount = 1;
 
 	if(bLog == true)

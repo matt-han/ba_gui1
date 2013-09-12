@@ -329,7 +329,7 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 //------------------------------------------------------------------------------			
 //Send text
-			CreateWindowA("static", "Send text:",
+			CreateWindowA("static", "Text to send:",
 				WS_CHILD | WS_VISIBLE,
                   POS_X, POS_Y2 + 195, 190, 15, m_hwnd, NULL, NULL, NULL);
 
@@ -339,7 +339,7 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 				POS_X, POS_Y2 + 215, 240, 20, m_hwnd, (HMENU)ID_LB_TEXT,
 				NULL, NULL);
 
-			SetWindowTextA(_hwnd_lbText, "...abc...");
+			//SetWindowTextA(_hwnd_lbText, "...abc...");
 
 //==============================================================================
 //Combo boxes
@@ -492,16 +492,15 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 								{
 									MessageBoxA(NULL, "Error updating baud rates in\n"
 													  "combobox. System Error CB_ERR",
-													  "ERROR", MB_OK | MB_ICONWARNING);
+													  WINDOW_TITLE, MB_OK | MB_ICONERROR);
 									/*clog << "Error updating baud rates in"
 										 <<	"combo box. System Error CB_ERR"
 										 << endl;*/
 								}
 								else if (_iError == CB_ERRSPACE || _iError2 == CB_ERRSPACE)
 								{
-									MessageBoxA(NULL, "Error, not enough space in combo box.\n"
-													  "System Error CB_ERRSPACE",
-													  "ERROR", MB_OK | MB_ICONWARNING);
+									MessageBoxA(NULL, "Error, not enough space in combo box",
+													  WINDOW_TITLE, MB_OK | MB_ICONERROR);
 									//clog << "not enough space in combo box."
 									//	 <<	"System Error CB_ERRSPACE"
 									//	 << endl;
@@ -523,17 +522,17 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 												CB_GETCOUNT, 0, 0);
 							if (_iError == 0)
 								MessageBoxA(NULL, "Error updating the baud rate combo box",
-													  "ERROR", MB_OK | MB_ICONWARNING);
+													  WINDOW_TITLE, MB_OK | MB_ICONWARNING);
 
 							_iError2 = SendMessageA(_hwndCB_Baud_MAX,
 												CB_GETCOUNT, 0, 0);
 							if (_iError2 == 0)
 							{
 								MessageBoxA(NULL, "Error updating the max baud rate combo box",
-													  "ERROR", MB_OK | MB_ICONWARNING);
+													  WINDOW_TITLE, MB_OK | MB_ICONWARNING);
 							}
 
-
+							_svBaud = infoInterpreter.comEnumerator.vBaud;
 						}
 						else
 						{
@@ -625,7 +624,7 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 						//show baudrate label
 						EnableWindow(GetDlgItem(m_hwnd, ID_LB_BAUD), FALSE);
 
-						//disable second row of test parameter
+						//disable second row of test parameters
 						EnableWindow(GetDlgItem(m_hwnd, ID_PAR_NONE), FALSE);
 						EnableWindow(GetDlgItem(m_hwnd, ID_PAR_ODD),  FALSE);
 						EnableWindow(GetDlgItem(m_hwnd, ID_PAR_EVEN), FALSE);
@@ -803,30 +802,19 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 //Buttons
 					case ID_BT_START:
 
-						EnableWindow(_hwnd_btnLoad, FALSE);
-						EnableWindow(_hwnd_btnText, FALSE);
-						EnableWindow(_hwnd_Start,   FALSE);
-						EnableWindow(_hwnd_Close,   FALSE);
-						EnableWindow(_hwnd_Save,    FALSE);
-						EnableWindow(_hwnd_LoadINI, FALSE);
-						EnableWindow(_hwnd_Help,    FALSE);
-						EnableWindow(GetDlgItem(m_hwnd, ID_LB_TEXT), FALSE);
-						
-						//enable stop button
-						EnableWindow(_hwnd_Stop, TRUE);
+						viewAllElements(FALSE);
 
 						_t1 = thread(&Window::sendTestSettings, this);
 						//detach the thread so it can test and main thread waits for it to finish
 						//or wait for the user to press stop
 						_t1.detach();
 
-						//sendTestSettings();
 
 						break;
 
 					case ID_BT_CLOSE:
 						_ret = MessageBoxA(NULL, "Are you sure to quit?", 
-									  "Message", MB_OKCANCEL | MB_ICONSTOP);
+									  WINDOW_TITLE, MB_OKCANCEL | MB_ICONSTOP);
 						if ( _ret == IDOK)
 							SendMessage(m_hwnd, WM_CLOSE, 0, 0);
 						break;
@@ -847,78 +835,29 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 						ZeroMemory(_szTextToSend, sizeof(_szTextToSend));
 						GetWindowTextA(_hwnd_lbText, _szTextToSend, 30);
 						_iTextToTransfer = ID_BT_TEXT;
-						MessageBoxA(NULL, "Text loaded", "", MB_OK);
+						MessageBoxA(NULL, "Text loaded", WINDOW_TITLE, MB_OK);
 						break;
 
 					case ID_BT_SAVE:
 						saveTestSettings();
-						//MessageBoxA(NULL, "", "....saved?....\ncheck return codes!!!", MB_OK);
 						break;
 
 					case ID_BT_LOADINI:
+
 						//Disable Buttons
-						EnableWindow(_hwnd_btnLoad, FALSE);
-						EnableWindow(_hwnd_btnText, FALSE);
-						EnableWindow(_hwnd_Start,   FALSE);
-						EnableWindow(_hwnd_Close,   FALSE);
-						EnableWindow(_hwnd_Save,    FALSE);
-						EnableWindow(_hwnd_LoadINI, FALSE);
-						EnableWindow(_hwnd_Help,    FALSE);
-						EnableWindow(GetDlgItem(m_hwnd, ID_LB_TEXT), FALSE);
-						EnableWindow(_hwnd_Stop, TRUE);
+						viewAllElements(FALSE);
 
 						_t1 = thread(&Window::loadTestSettings, this, "","");
 						
 						_t1.detach();
-
-						//_iError = loadTestSettings("","");
-						/*if(_iError != ERROR_SUCCESS)
-						{
-							_sTemp = "Error loading and testing from file: \n";
-							_sTemp.append(_sPath.c_str());
-							_sTemp.append("\nError : ");
-							_sTemp.append(tools.convertToString(_iError));
-							MessageBoxA(NULL, _sTemp.c_str()  , "ERROR", MB_OK);
-							_sTemp = "";
-						}
-						else
-						{
-							MessageBoxA(NULL, "testing finished successfuly", "", MB_OK);
-						}
-
-						EnableWindow(_hwnd_btnLoad, TRUE);
-						EnableWindow(_hwnd_btnText, TRUE);
-						EnableWindow(_hwnd_Start,   TRUE);
-						EnableWindow(_hwnd_Close,   TRUE);
-						EnableWindow(_hwnd_Save,    TRUE);
-						EnableWindow(_hwnd_LoadINI, TRUE);
-						EnableWindow(_hwnd_Help,    TRUE);
-						EnableWindow(GetDlgItem(m_hwnd, ID_LB_TEXT), TRUE);
-*/
 						break;
 
+
 					case ID_BT_STOP:
+
+						EnableWindow(_hwnd_Stop, FALSE);
+
 						interpreter->stopTest();
-
-						//pick the text to send in the new test
-						//_iTextToTransfer = DEFAULT_VALUE;
-						//SetWindowTextA(_hwnd_lbLoad,"");
-						//SetWindowTextA(_hwnd_lbText,"");
-
-						//EnableWindow(_hwnd_btnLoad, TRUE);
-						//EnableWindow(_hwnd_btnText, TRUE);
-						//EnableWindow(_hwnd_Start,   TRUE);
-						//EnableWindow(_hwnd_Close,   TRUE);
-						//EnableWindow(_hwnd_Save,    TRUE);
-						//EnableWindow(_hwnd_LoadINI, TRUE);
-						//EnableWindow(_hwnd_Help,    TRUE);
-						//EnableWindow(GetDlgItem(m_hwnd, ID_LB_TEXT), TRUE);
-
-						////disable stop button
-						////maybe disable when sendtestsettings over(in function)?
-						//EnableWindow(_hwnd_Stop, FALSE);
-
-
 						break;
 
 
@@ -1126,8 +1065,9 @@ void Window::sendTestSettings()
 	sendTransTextMode(_iTextToTransfer);
 	sendRepeater();
 	
-
-	//interpreter->startT1();
+	//if wobble send the vector containing the baudrates
+	if(this->_iTestMode == 1)
+		interpreter->setBaudVector(_svBaud);
 
 	interpreter->handleGui();
 
@@ -1136,19 +1076,8 @@ void Window::sendTestSettings()
 	SetWindowTextA(_hwnd_lbLoad,"");
 	SetWindowTextA(_hwnd_lbText,"");
 
-	EnableWindow(_hwnd_btnLoad, TRUE);
-	EnableWindow(_hwnd_btnText, TRUE);
-	EnableWindow(_hwnd_Start,   TRUE);
-	EnableWindow(_hwnd_Close,   TRUE);
-	EnableWindow(_hwnd_Save,    TRUE);
-	EnableWindow(_hwnd_LoadINI, TRUE);
-	EnableWindow(_hwnd_Help,    TRUE);
-	EnableWindow(GetDlgItem(m_hwnd, ID_LB_TEXT), TRUE);
 
-	//disable stop button
-	//maybe disable when sendtestsettings over(in function)?
-	EnableWindow(_hwnd_Stop, FALSE);
-
+	viewAllElements(TRUE);
 
 	delete interpreter;
 	interpreter = NULL;
@@ -1219,10 +1148,10 @@ void Window::saveTestSettings()
 		{
 			sError = "Error saving to ini file. Error: ";
 			sError.append(tools.convertToString(_iError));
-			MessageBoxA(NULL, sError.c_str(), "ERROR", MB_OK);
+			MessageBoxA(NULL, sError.c_str(), WINDOW_TITLE, MB_OK | MB_ICONERROR);
 		}
 		else
-			MessageBoxA(NULL, "Saved", "", MB_OK);
+			MessageBoxA(NULL, "Saved", WINDOW_TITLE, MB_OK);
 	}//if
 
 }
@@ -1252,13 +1181,9 @@ void Window::loadTestSettings(string sFilePath, string sPort)
 	if (_sPath != "")
 	{
 		_iError = interpreter->loadIniFile(_sPath, sPort);
-		//if(_iError != ERROR_SUCCES)
-		//delete interpreter;
-		//return _iError;
 	}
 	else
 	{
-		//delete interpreter;
 		_iError = ERROR_EMPTY_FILE;
 	}
 
@@ -1270,24 +1195,16 @@ void Window::loadTestSettings(string sFilePath, string sPort)
 		_sTemp.append(_sPath.c_str());
 		_sTemp.append("\nError : ");
 		_sTemp.append(tools.convertToString(_iError));
-		MessageBoxA(NULL, _sTemp.c_str()  , "ERROR", MB_OK);
+		MessageBoxA(NULL, _sTemp.c_str() , WINDOW_TITLE, MB_OK);
 		_sTemp = "";
 	}
 	else
 	{
-		MessageBoxA(NULL, "testing finished successfuly", "", MB_OK);
+		MessageBoxA(NULL, "testing finished", WINDOW_TITLE, MB_OK);
 	}
 
-	EnableWindow(_hwnd_btnLoad, TRUE);
-	EnableWindow(_hwnd_btnText, TRUE);
-	EnableWindow(_hwnd_Start,   TRUE);
-	EnableWindow(_hwnd_Close,   TRUE);
-	EnableWindow(_hwnd_Save,    TRUE);
-	EnableWindow(_hwnd_LoadINI, TRUE);
-	EnableWindow(_hwnd_Help,    TRUE);
-	EnableWindow(GetDlgItem(m_hwnd, ID_LB_TEXT), TRUE);
-	EnableWindow(_hwnd_Stop, FALSE);
 
+	viewAllElements(TRUE);
 
 }
 
@@ -1395,6 +1312,57 @@ string Window::getSaveFilePath()
 }
 
 
+void Window::viewAllElements(BOOLEAN bView)
+{
+	//Buttons
+	EnableWindow(_hwnd_btnLoad,  bView);
+	EnableWindow(_hwnd_btnText,  bView);
+	EnableWindow(_hwnd_Start,    bView);
+	EnableWindow(_hwnd_Close,    bView);
+	EnableWindow(_hwnd_Save,     bView);
+	EnableWindow(_hwnd_LoadINI,  bView);
+	EnableWindow(_hwnd_Help,     bView);
+	EnableWindow(_hwnd_Repeater, bView);
+	EnableWindow(_hwnd_btnLoad,  bView);
+	EnableWindow(_hwnd_btnText,  bView);
+
+	//stop button always oposite
+	EnableWindow(_hwnd_Stop, !bView);
+
+	//first row of parameters
+	//test mode
+	EnableWindow(GetDlgItem(m_hwnd, ID_TM_AUTO),  bView);
+	EnableWindow(GetDlgItem(m_hwnd, ID_TM_WOBB),  bView);
+	EnableWindow(GetDlgItem(m_hwnd, ID_TM_FIXED), bView);
+
+	//transfer mode
+	EnableWindow(GetDlgItem(m_hwnd, ID_MOD_SINGLE), bView);
+	EnableWindow(GetDlgItem(m_hwnd, ID_MOD_DOUBLE), bView);
+	EnableWindow(GetDlgItem(m_hwnd, ID_MOD_MASTER), bView);
+	EnableWindow(GetDlgItem(m_hwnd, ID_MOD_SLAVE),  bView);
+	//second row of test parameters
+	//parity
+	EnableWindow(GetDlgItem(m_hwnd, ID_PAR_NONE), bView);
+	EnableWindow(GetDlgItem(m_hwnd, ID_PAR_ODD),  bView);
+	EnableWindow(GetDlgItem(m_hwnd, ID_PAR_EVEN), bView);
+
+	//stopbits
+	EnableWindow(GetDlgItem(m_hwnd, ID_SB_ONE), bView);
+	EnableWindow(GetDlgItem(m_hwnd, ID_SB_TWO),	bView);
+
+	//protocol
+	EnableWindow(GetDlgItem(m_hwnd, ID_PRO_XON_OFF),  bView);
+	EnableWindow(GetDlgItem(m_hwnd, ID_PRO_HARDWARE), bView);
+	EnableWindow(GetDlgItem(m_hwnd, ID_PRO_NONE),	  bView);
+
+	//databits
+	EnableWindow(GetDlgItem(m_hwnd, ID_DB_7), bView);
+	EnableWindow(GetDlgItem(m_hwnd, ID_DB_8), bView);
+
+	//text to send
+	EnableWindow(GetDlgItem(m_hwnd, ID_LB_TEXT), bView);
+
+}
 
 //------------------------------------------------------------------------------
 //	Set the path for the test file to be used

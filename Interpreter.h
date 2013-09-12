@@ -53,6 +53,7 @@ public:
 	void setTextToSend(string);
 	void setTransTextMode(int);
 	void setRepeater(string);
+	void setBaudVector(vector<string>);
 	void setDefaultValues();
 	//is void 'cos gui does not handle values!
 	void handleGui();
