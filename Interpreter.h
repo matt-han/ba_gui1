@@ -49,6 +49,7 @@ public:
 	void setPortBaudRate(int);
 	void setPortBaudRateMax(int);
 	void setLoggerState(bool);
+	void setStopOnError(bool);
 	void setTransferFile(string);
 	void setTextToSend(string);
 	void setTransTextMode(int);
@@ -92,6 +93,7 @@ private:
 	string _sFilePath;
 	string _sTextToSend;
 	bool _bLoggerState;
+	bool _bStopOnError;
 	bool _bErr;
 	vector<string> _svBaudrates;
 	vector<TestStruct> _vIniFilePorts;

@@ -67,6 +67,7 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 			_iTextToTransfer = DEFAULT_VALUE;
 
+			_bStopOnError		= false;
 			_bLoggerState		= true;
 			_sMasPort			="";
 			_sSlaPort			="";
@@ -260,10 +261,24 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 //Logger
 			CreateWindowA("button", "Logger",
 					WS_VISIBLE | WS_CHILD | BS_CHECKBOX,
-					POS_X + 260, POS_Y2 + 180, 100, 35, m_hwnd,
+					POS_X + 260, POS_Y2 + 180, 80, 30, m_hwnd,
 					(HMENU) ID_LOGGER, NULL, NULL);
 			
 			CheckDlgButton(m_hwnd, ID_LOGGER, BST_CHECKED);
+
+//Stop on first error Stop on 1. Error
+			CreateWindowA("button", "",
+					WS_VISIBLE | WS_CHILD | BS_CHECKBOX,
+					POS_X + 260, POS_Y2 + 240, 10, 10, m_hwnd,
+					(HMENU) ID_STOP_ON_ERR, NULL, NULL);
+			CreateWindowA("static", "Stop on", 
+                  WS_CHILD | WS_VISIBLE,
+                  POS_X + 275, POS_Y2 + 240, 60, 15, m_hwnd, NULL, NULL, NULL);
+			CreateWindowA("static", "1. Error", 
+                  WS_CHILD | WS_VISIBLE,
+                  POS_X + 275, POS_Y2 + 258, 60, 15, m_hwnd, NULL, NULL, NULL);
+
+			CheckDlgButton(m_hwnd, ID_STOP_ON_ERR, BST_UNCHECKED);
 
 //==============================================================================
 //Labels
@@ -612,6 +627,29 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 						break;
 
 //------------------------------------------------------------------------------
+//Stop on 1. error				
+					case ID_STOP_ON_ERR:
+						_status = IsDlgButtonChecked(m_hwnd, ID_STOP_ON_ERR);
+
+						//if checked
+						if (BST_INDETERMINATE == _status)
+							_bStopOnError = false;
+						else if (BST_CHECKED == _status)
+						{
+							//then it was checked, so uncheck it and set to false
+							CheckDlgButton(m_hwnd, ID_STOP_ON_ERR, BST_UNCHECKED);
+							_bStopOnError = false;
+						}
+						else if (BST_UNCHECKED == _status)
+						{
+							//it was unchecked, so check it and set to true
+							CheckDlgButton(m_hwnd, ID_STOP_ON_ERR, BST_CHECKED);
+							_bStopOnError = true;
+
+						}
+						break;
+						
+//------------------------------------------------------------------------------
 //Test Mode
 					case ID_TM_AUTO:
 
@@ -625,22 +663,7 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 						EnableWindow(GetDlgItem(m_hwnd, ID_LB_BAUD), FALSE);
 
 						//disable second row of test parameters
-						EnableWindow(GetDlgItem(m_hwnd, ID_PAR_NONE), FALSE);
-						EnableWindow(GetDlgItem(m_hwnd, ID_PAR_ODD),  FALSE);
-						EnableWindow(GetDlgItem(m_hwnd, ID_PAR_EVEN), FALSE);
-
-						EnableWindow(GetDlgItem(m_hwnd, ID_SB_ONE), FALSE);
-						EnableWindow(GetDlgItem(m_hwnd, ID_SB_TWO),	FALSE);
-
-						EnableWindow(GetDlgItem(m_hwnd, ID_PRO_XON_OFF),  FALSE);
-						EnableWindow(GetDlgItem(m_hwnd, ID_PRO_HARDWARE), FALSE);
-						EnableWindow(GetDlgItem(m_hwnd, ID_PRO_NONE),	  FALSE);
-
-						EnableWindow(GetDlgItem(m_hwnd, ID_DB_7), FALSE);
-						EnableWindow(GetDlgItem(m_hwnd, ID_DB_8), FALSE);
-
-						EnableWindow(GetDlgItem(m_hwnd, ID_LB_TEXT), FALSE);
-
+						viewPortElements(FALSE);
 
 						EnableWindow(_hwnd_Repeater, FALSE);
 						EnableWindow(_hwnd_btnLoad,  FALSE);
@@ -659,21 +682,7 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 						EnableWindow(GetDlgItem(m_hwnd, ID_LB_BAUD), TRUE);
 
 						//disable second row of test parameter
-						EnableWindow(GetDlgItem(m_hwnd, ID_PAR_NONE), TRUE);
-						EnableWindow(GetDlgItem(m_hwnd, ID_PAR_ODD),  TRUE);
-						EnableWindow(GetDlgItem(m_hwnd, ID_PAR_EVEN), TRUE);
-
-						EnableWindow(GetDlgItem(m_hwnd, ID_SB_ONE), TRUE);
-						EnableWindow(GetDlgItem(m_hwnd, ID_SB_TWO),	TRUE);
-
-						EnableWindow(GetDlgItem(m_hwnd, ID_PRO_XON_OFF),  TRUE);
-						EnableWindow(GetDlgItem(m_hwnd, ID_PRO_HARDWARE), TRUE);
-						EnableWindow(GetDlgItem(m_hwnd, ID_PRO_NONE),	  TRUE);
-
-						EnableWindow(GetDlgItem(m_hwnd, ID_DB_7), TRUE);
-						EnableWindow(GetDlgItem(m_hwnd, ID_DB_8), TRUE);
-
-						EnableWindow(GetDlgItem(m_hwnd, ID_LB_TEXT), TRUE);
+						viewPortElements(TRUE);
 
 						EnableWindow(_hwnd_Repeater, TRUE);
 						EnableWindow(_hwnd_btnLoad,  TRUE);
@@ -695,21 +704,8 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 						EnableWindow(GetDlgItem(m_hwnd, ID_LB_BAUD), TRUE);
 
 						//disable second row of test parameter
-						EnableWindow(GetDlgItem(m_hwnd, ID_PAR_NONE), TRUE);
-						EnableWindow(GetDlgItem(m_hwnd, ID_PAR_ODD),  TRUE);
-						EnableWindow(GetDlgItem(m_hwnd, ID_PAR_EVEN), TRUE);
+						viewPortElements(TRUE);
 
-						EnableWindow(GetDlgItem(m_hwnd, ID_SB_ONE), TRUE);
-						EnableWindow(GetDlgItem(m_hwnd, ID_SB_TWO),	TRUE);
-
-						EnableWindow(GetDlgItem(m_hwnd, ID_PRO_XON_OFF),  TRUE);
-						EnableWindow(GetDlgItem(m_hwnd, ID_PRO_HARDWARE), TRUE);
-						EnableWindow(GetDlgItem(m_hwnd, ID_PRO_NONE),	  TRUE);
-
-						EnableWindow(GetDlgItem(m_hwnd, ID_DB_7), TRUE);
-						EnableWindow(GetDlgItem(m_hwnd, ID_DB_8), TRUE);
-						
-						EnableWindow(GetDlgItem(m_hwnd, ID_LB_TEXT), TRUE);
 
 						EnableWindow(_hwnd_Repeater, TRUE);
 						EnableWindow(_hwnd_btnLoad,  TRUE);
@@ -1011,6 +1007,15 @@ void Window::sendTextToSend()
 //------------------------------------------------------------------------------
 void Window::sendLoggerState()
 {
+	interpreter->setStopOnError(_bStopOnError);	
+}
+
+
+//------------------------------------------------------------------------------
+//	Sends the state of the stop on firts error checkbox
+//------------------------------------------------------------------------------
+void Window::sendStopOnError()
+{
 	interpreter->setLoggerState(_bLoggerState);	
 }
 
@@ -1062,6 +1067,7 @@ void Window::sendTestSettings()
 	sendSelectedSlavePort();
 	sendPortBaudRate();
 	sendLoggerState();
+	sendStopOnError();
 	sendTransTextMode(_iTextToTransfer);
 	sendRepeater();
 	
@@ -1120,6 +1126,7 @@ void Window::saveTestSettings()
 		interSaveToFile.setDataBits(_iDataBits);
 		interSaveToFile.setProtocol(_iProtocol);
 		interSaveToFile.setLoggerState(_bLoggerState);
+		interSaveToFile.setStopOnError(_bStopOnError);	
 		interSaveToFile.setTransTextMode(_iTextToTransfer);
 	
 		GetWindowTextA(_hwnd_Repeater, _szRepeater, 5);
@@ -1340,7 +1347,23 @@ void Window::viewAllElements(BOOLEAN bView)
 	EnableWindow(GetDlgItem(m_hwnd, ID_MOD_DOUBLE), bView);
 	EnableWindow(GetDlgItem(m_hwnd, ID_MOD_MASTER), bView);
 	EnableWindow(GetDlgItem(m_hwnd, ID_MOD_SLAVE),  bView);
+
 	//second row of test parameters
+	viewPortElements(bView);
+
+	//logger
+	EnableWindow(GetDlgItem(m_hwnd, ID_LOGGER),  bView);
+	//stop on 1. error
+	EnableWindow(GetDlgItem(m_hwnd, ID_STOP_ON_ERR),  bView);
+
+	
+
+}
+
+
+
+void Window::viewPortElements(BOOLEAN bView)
+{
 	//parity
 	EnableWindow(GetDlgItem(m_hwnd, ID_PAR_NONE), bView);
 	EnableWindow(GetDlgItem(m_hwnd, ID_PAR_ODD),  bView);
@@ -1363,7 +1386,6 @@ void Window::viewAllElements(BOOLEAN bView)
 	EnableWindow(GetDlgItem(m_hwnd, ID_LB_TEXT), bView);
 
 }
-
 //------------------------------------------------------------------------------
 //	Set the path for the test file to be used
 //	Return: string with the file path

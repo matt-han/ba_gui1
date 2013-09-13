@@ -11,7 +11,7 @@
 Logger::Logger(bool bLog, string sPort)
 {
 	iError = ERROR_SUCCESS;
-
+	backup = NULL;
 	iError = log(bLog, sPort);
 }
 
@@ -24,7 +24,8 @@ Logger::~Logger(void)
 	clog << "closing logger" << endl;
 
 	//set clog back to default
-	clog.rdbuf(backup);
+	if(backup != NULL)
+		clog.rdbuf(backup);
 
 	filestr.close();
 }

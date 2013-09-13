@@ -47,6 +47,7 @@ public:
 	void sendTransferFile();
 	void sendTextToSend();
 	void sendLoggerState();
+	void sendStopOnError();
 	void sendTransTextMode(int iTransTextMode);
 	void sendRepeater();
 	void sendTestSettings();
@@ -59,6 +60,7 @@ public:
 	string getSaveFilePath();
 	
 	void viewAllElements(BOOLEAN bView);
+	void viewPortElements(BOOLEAN bView);
 	//get
 	//string getTransferFile()
 	
@@ -86,6 +88,7 @@ private:
 	int _iBaudrate;
 	int _iBaudrateMax;
 	bool _bLoggerState;
+	bool _bStopOnError;
 	string _sMasPort;
 	string _sSlaPort;
 	string _sTransferFilePath;

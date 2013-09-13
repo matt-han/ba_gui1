@@ -160,6 +160,11 @@ int FixedTest::startSingleTest()
 					{
 						clog << "Error communicating. Error "<< _iTestError
 								<< endl;
+						if(testStruct->bStopOnError == true)
+						{
+							masterCom.closePort();
+							return _iError;
+						}
 					}
 					
 					ivTestErrors.push_back(_iTestError);
@@ -327,6 +332,12 @@ int FixedTest::startDoubleTest()
 		if(_iTestError != ERROR_SUCCESS)
 		{
 			clog << "Error communicating. Error: "<< _iTestError << endl;
+			if(testStruct->bStopOnError == true)
+			{
+				masterCom.closePort();
+				slaveCom.closePort();
+				return _iError;
+			}
 		}
 
 		ivTestErrors.push_back(_iTestError);
@@ -735,37 +746,33 @@ int FixedTest::startSlaveTest()
 //------------------------------------------------------------------------------
 int FixedTest::communicate(string sSendData, bool bMaster)
 {
-	bool bRead;
+//	bool bRead;
 	bTransmitionError = false;
 	string sTemp = "";
 
-	if (bMaster)		//Single and Master mode
-	{					//if true & false then read and write to master port
-		bRead = bMaster;		
-	}
-	else				//Double mode
-	{					//if true & true then write to master and read slave
-		bMaster = true;
-		bRead = !bMaster;
-	}
+	//if (bMaster)		//Single and Master mode
+	//{					//if true & false then read and write to master port
+	//	bRead = bMaster;		
+	//}
+	//else				//Double mode
+	//{					//if true & true then write to master and read slave
+	//	//bMaster = true;
+	//	//bRead = !bMaster;
+	//	bRead = bMaster;
+	//}
 
-	//start sending something
+	//send the data
 	if (true == sendData(bMaster, sSendData))
 	{
 		clog <<"write was true\n"<<endl;
 
-
-
-		//###########################################################################################
-		//tools.wait(2);
-		//###########################################################################################
-
-
-
-		sTemp = getData(bRead, sSendData);
+		//read the data
+		sTemp = getData(bMaster, sSendData);
 
 		if (sTemp != ERROR_TRANSMITION)
 		{
+			clog << "sSendData " << sSendData << endl;
+			clog << "sTemp     " << sTemp << endl;
 			if(0 == strcmp(sTemp.c_str(), sSendData.c_str()) )
 			{
 				clog << "read was true\n"<<endl;
@@ -821,21 +828,16 @@ string FixedTest::getData(bool MasterSlave, string sSendData)
 	
 	//Single test -> send and read information from the same port
 	//MasterSlave test -> send and read reply from the same port
-	do
-	{
+	//do
+	//{
 		if (MasterSlave)
 		{
 
 			clog << "--> master reads buffer" << endl;
 			if (true == masterPortComm.readData(empfang, sSendData.size(), _iLineTimeOut) )
-			{
-				if(empfang == "")
-					iError = -44;
-				else
-					iError = ERROR_SUCCESS;
-			}
+				iError = ERROR_SUCCESS;
 			else
-				iError = -44;
+				iError = ERROR_READ_PORT;
 		}
 		//else Double test ->send data true master and read slave
 		else
@@ -844,23 +846,21 @@ string FixedTest::getData(bool MasterSlave, string sSendData)
 			if (true == slavePortComm.readData(empfang, sSendData.size(), _iLineTimeOut) )
 				iError = ERROR_SUCCESS;
 			else
-				iError = -44;
+				iError = ERROR_READ_PORT;
 		}
 		
-		if(iError == -44)
-			iCounter++;
-		else
-			break;
+		//if(iError == ERROR_READ_PORT)
+		//	iCounter++;
+		//else
+		//	break;
 
-	}while(iCounter < 5);
+	//}while(iCounter < 5);
 	
 	
 	if(iError != ERROR_SUCCESS)
-	{
 		return ERROR_TRANSMITION;
-	}
-
-	return empfang;
+	else
+		return empfang;
 
 
 	//if (MasterSlave)

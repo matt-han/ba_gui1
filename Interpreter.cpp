@@ -11,27 +11,7 @@
 //------------------------------------------------------------------------------
 Interpreter::Interpreter(void)
 {
-	_iTestMode		= DEFAULT_VALUE;
-	_iParity		= DEFAULT_VALUE;
-	_iStopBits		= DEFAULT_VALUE;
-	_iDataBits		= DEFAULT_VALUE;
-	_iTransfer		= DEFAULT_VALUE;
-	_iProtocol		= DEFAULT_VALUE;
-	_iBaudrate		= DEFAULT_VALUE;
-	_iBaudrateMax	= DEFAULT_VALUE;
-	_iRepeater		= DEFAULT_VALUE;
-	_iTransTextMode = DEFAULT_VALUE;
-
-	_bLoggerState = true;
-
-	_sMasPort = "";
-	_sSlaPort = "";
-	_sFilePath = "";
-	_sTextToSend = "";
-
-	_testManager = NULL;
-
-
+	setDefaultValues();
 }
 
 
@@ -177,6 +157,19 @@ void Interpreter::setLoggerState(bool bLoggerState)
 
 
 //------------------------------------------------------------------------------
+//	Saves if the user wishes to stop on the first transmition error
+//	Parameters:
+//	 IN:
+//		- bool _bStopOnError -> user GUI input
+//------------------------------------------------------------------------------
+void Interpreter::setLoggerState(bool bStopOnError)
+{
+	this->_bStopOnError = bStopOnError;
+}
+
+
+
+//------------------------------------------------------------------------------
 //	Saves the user transfer file path input in _sFilePath
 //	Parameters:
 //	 IN:
@@ -265,8 +258,14 @@ void Interpreter::setDefaultValues()
 	_iTransfer		= DEFAULT_VALUE;
 	_iProtocol		= DEFAULT_VALUE;
 	_iBaudrate		= DEFAULT_VALUE;
+	_iBaudrateMax	= DEFAULT_VALUE;
+	_iRepeater		= DEFAULT_VALUE;
 	_iTransTextMode = DEFAULT_VALUE;
+
+	
+	
 	_bLoggerState	= true;
+	_bStopOnError   = false;
 
 	_sMasPort		= "";
 	_sSlaPort		= "";
@@ -274,6 +273,8 @@ void Interpreter::setDefaultValues()
 	_sTextToSend	= "";
 
 	_svBaudrates.clear();
+
+	_testManager = NULL;
 }
 
 
@@ -495,6 +496,7 @@ void Interpreter::handleGui()
 					//save the logger state, file path,
 					//repeater, textToSend and transtextmode
 					_testManager->testStruct.bLoggerState = _bLoggerState;
+					_testManager->testStruct.bStopOnError = _bStopOnError;
 					_testManager->testStruct.sFilePath = _sFilePath;
 					_testManager->testStruct.iRepeater = _iRepeater;
 					_testManager->testStruct.sTextToTransfer = _sTextToSend;

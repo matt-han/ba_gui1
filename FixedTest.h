@@ -10,6 +10,7 @@
 #include <vector>
 
 #define TEXT_LENGTH 8
+#define BUFFER_LENGTH 100
 using namespace std;
 
 
@@ -38,7 +39,7 @@ public:
 	HANDLE slaveHCom;
 	
 	bool bTransmitionError;
-	char empfang[100];
+	char empfang[BUFFER_LENGTH];
 
 	vector<int> ivTestErrors;
 

@@ -79,6 +79,7 @@ using namespace std;
 #define ID_BT_STOP		43
 #define ID_BT_HELP		44
 #define ID_GB_PROTOCOL	45
+#define ID_STOP_ON_ERR	56
 
 #define ID_THREAD_MAIN	98
 #define ID_THREAD_SUB	99
@@ -170,6 +171,7 @@ const char ERROR_TRANSMITION[] = "ERROR_TRANSMITION";
 		int iTransTextMode;
 		int iRepeater;
 		bool bLoggerState;
+		bool bStopOnError;
 
 		vector<string> svBaudrates;
 
@@ -191,6 +193,7 @@ const char ERROR_TRANSMITION[] = "ERROR_TRANSMITION";
 			iTransTextMode  = DEFAULT_VALUE;
 			iRepeater		= DEFAULT_VALUE;
 			bLoggerState	= true;
+			bStopOnError	= false;
 		}
 	};//struct
 

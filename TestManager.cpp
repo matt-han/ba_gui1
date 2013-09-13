@@ -8,7 +8,7 @@ TestManager::TestManager(void)
 	_bTestStarted = false;
 	_bContinueTest = true;
 	bStopButton = false;
-
+	_logger = NULL;
 }
 
 
@@ -18,11 +18,13 @@ TestManager::TestManager(void)
 //------------------------------------------------------------------------------
 TestManager::~TestManager(void)
 {
-	if(testStruct.bLoggerState || _bTestStarted)
-	{
-		//_logger->closelog(true);
+	//if(testStruct.bLoggerState || _bTestStarted)
+	//{
+	//	//_logger->closelog(true);
+	//	delete _logger;
+	//}
+	if(_logger != NULL)
 		delete _logger;
-	}
 }
 
 
@@ -205,17 +207,13 @@ int TestManager::startFixedTest()
 
 		//ivTestErrors.push_back(_iError);
 	
-		if(testStruct.iRepeater > 0)
-		{
-			if(	iRepeat < testStruct.iRepeater)
-				iRepeat++;
-			else
-				_bContinueTest = false;
-		}
+		if(	iRepeat == testStruct.iRepeater)
+			_bContinueTest = false;
+
 		//clog << "..............................."<<endl;
 		//clog << "_bContinueTest " << _bContinueTest << endl;
 		//clog << "bStopButton   " << bStopButton << endl;
-
+		iRepeat++;
 	}while(_bContinueTest && !bStopButton);
 
 	//_tools.printErrorVector(testStruct.bLoggerState, ivTestErrors);
@@ -270,14 +268,10 @@ int TestManager::startWobbleTest(int iBaudrate, int iParity)
 
 		//ivTestErrors.push_back(_iError);
 
-		if(testStruct.iRepeater > 0)
-		{
-			if(	iRepeat < testStruct.iRepeater)
-				iRepeat++;
-			else
-				_bContinueTest = false;
-		}
+		if(	iRepeat == testStruct.iRepeater)
+			_bContinueTest = false;
 
+		iRepeat++;
 	}while(_bContinueTest && !bStopButton);
 
 	//_tools.printErrorVector(testStruct.bLoggerState, ivTestErrors);
