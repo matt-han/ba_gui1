@@ -277,6 +277,7 @@ void Tools::printErrorVector(bool bPrint, vector<int> ivTestErrors)
 //	Parameters:
 //	 IN:
 //		- string sToSend -> string read from the GUI or INI
+// Returns the input string with parsed ASCII characters
 //------------------------------------------------------------------------------
 string Tools::replaceASCII(string sToSend)
 {
@@ -326,4 +327,124 @@ string Tools::replaceASCII(string sToSend)
 	}
 
 	return sParsed;
+}
+
+
+//------------------------------------------------------------------------------
+//	Replaces the error code with an text explanaition
+//	Parameters:
+//	 IN:
+//		- int iError  -> error code
+// Returns the error code explanaition / meaning
+//------------------------------------------------------------------------------
+string Tools::errorCodeParser(int iError)
+{
+	string sError;
+	switch(iError)
+	{
+		case ERROR_CMD_SYNTAX:
+			sError = "Wrong command line syntax. Please check the command line (spaces in the file path?)";
+			break;
+
+		case ERROR_CREATE_GUI:
+			sError = "Error creating GUI, programm aborted";
+			break;
+
+		case ERROR_PORT_OPEN:
+			sError = "Could not open the given COM Port. Is other program using the port?";
+			break;
+
+		case ERROR_CLOSE_PORT:
+			sError = "Could not close the given COM Port. Is other program using the port? See log file, if available, for more information";
+			break;
+
+		case ERROR_GET_DCB:
+			sError = "Could not get the DCB structure from the opened port. See log file, if available, for more information";
+			break;
+
+		case ERROR_BAUDRATE:
+			sError = "Error getting or decoding Baud rates for opened port. See log file, if available, for more information";
+			break;
+
+		case ERROR_SET_TIMEOUTS:
+			sError =  "Error setting the timeouts for the chosen baud rate in the opened port. See log file, if available, for more information";
+			break;
+
+		case ERROR_LOG:
+			sError =  "Error creating log file. Do you have write permissions?";
+			break;
+
+		case ERROR_INI:
+			sError =  "Error in test configuration file. Please see log file, if available, for more information on the error";
+			break;
+
+		case ERROR_SET_DCB:
+			sError = "Error setting the edited DCB structure for the opened Port. Probably incopatible settings. See log file, if available, for more information";
+			break;
+
+		case ERROR_INPUT:
+			sError =  "A parameter in the GUI is incorrect. Please see pop up windows for more information";
+			break;
+
+		case ERROR_NO_FILE:
+			sError = "Test configuration file given does not exist or is empty";
+			break;
+
+		case ERROR_FILE_NOT_OPEN:
+			sError = "File to transfer in test could not be open";
+			break;
+
+		case ERROR_EMPTY_FILE:
+			sError = "File to transfer in test is empty. Please select another file";
+			break;
+
+		case ERROR_BAUD_MINMAX:
+			sError = "MAX baud rate has to be higher than the MIN baud rate. Please edit the test configuration file or the GUI input";
+			break;
+
+		case ERROR_MISSING_PAR:
+			sError = "Missing parameter to save the test configuration file. Please see pop up windows for more information";
+			break;
+
+		case ERROR_PARSE:
+			sError = "Error parsing a parameter read from the test configuration file. For more information on which parameter caused the error, see log file, if available.";
+			break;
+
+		case ERROR_READ_PORT:
+			sError = "Error reading from port while testing. See log file, if available, for more information on the error.";
+			break;
+
+		case ERROR_WRITE_PORT:
+			sError = "Error writing to the port while testing. See log file, if available, for more information on the error.";
+			break;
+
+		case ERROR_CMP_STR:
+			sError = "Send and recieved strings in test are not equal. See log file, if available, for more details";
+			break;
+
+		case ERROR_WAIT_SLAVE:
+			sError = "TO DO";
+			break;
+
+		case ERROR_WAIT_MASTER:
+			sError = "TO DO";
+			break;
+
+		case ERROR_SYNC:
+			sError = "TO DO";
+			break;
+
+		case ERROR_PARSE_SLAVE:
+			sError = "TO DO";
+			break;
+
+		default:
+			sError = "Unknow error code. Maybe a windows system error code? Error : ";
+			sError.append(convertToString(iError));
+			break;
+
+	}
+
+	return sError;
+
 }

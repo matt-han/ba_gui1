@@ -35,15 +35,17 @@ IniFileHandler::~IniFileHandler(void)
 //		- int iTextMode	-> text mode to transfer
 //		- string sTextToTransfer -> default text, input text or input file
 //		- bool bLoggerStatur -> true for logfile, false for no logging
+//		- bool bStopOnError -> true for stop, false continue and report
 //		- string sRepeater	-> hoy many times each test is repeated
 //		- string sPath -> path where to save the ini test file
 //------------------------------------------------------------------------------
 void IniFileHandler::writeINIfile(string sMasterPort, string sSlavePort, int iBaud,
 								int iBaudMax, int iTestMode, int iParity, int iProtocol,
 								int iStopbits, int iDatabits, int iTransfer,int iTextMode,
-								string sTextToTransfer, string sRepeater, bool bLogger, string sPath)
+								string sTextToTransfer, string sRepeater, bool bLogger, bool bStopOnError,
+								string sPath)
 {
-	string sBaud, sBaudMax, sParity, sProtocol, sStopbits, sDatabits, sLogger;
+	string sBaud, sBaudMax, sParity, sProtocol, sStopbits, sDatabits, sLogger, sStopOnError;
 	
 	//if path is empty then create default path
 	//if (sPath == "")
@@ -76,6 +78,11 @@ void IniFileHandler::writeINIfile(string sMasterPort, string sSlavePort, int iBa
 			sLogger = "true";
 		else
 			sLogger = "false";
+
+		if(bStopOnError)
+			sStopOnError = "true";
+		else
+			sStopOnError = "false";
 	}
 
 
@@ -173,6 +180,10 @@ void IniFileHandler::writeINIfile(string sMasterPort, string sSlavePort, int iBa
 	//Logger
 	WritePrivateProfileStringA(sMasterPort.c_str(),"Logger",
 										sLogger.c_str(), sPath.c_str());
+
+	//Stop on firt error
+	WritePrivateProfileStringA(sMasterPort.c_str(),"StopOnFirstError",
+										sStopOnError.c_str(), sPath.c_str());
 
 	//Repeater
 	WritePrivateProfileStringA(sMasterPort.c_str(),"Repeater",
@@ -425,6 +436,18 @@ int IniFileHandler::readPortConfig(string sPort, string sFilePath, int index)
 				vComPorts.at(index).bLoggerState = true;
 			else
 				vComPorts.at(index).bLoggerState = false;
+		}
+		else
+			return _iError;
+
+		//stop on first error
+		_iError = readStopOnError(sPort, sFilePath.c_str());
+		if(_iError != ERROR_INI)
+		{
+			if(_iError == 0)
+				vComPorts.at(index).bStopOnError = true;
+			else
+				vComPorts.at(index).bStopOnError = false;
 		}
 		else
 			return _iError;
@@ -820,6 +843,44 @@ int IniFileHandler::readLogger(string sPort, string sFilePath)
 			return ERROR_INI;
 	}
 }
+
+
+//------------------------------------------------------------------------------
+//	Reads the log  setting from the INI file
+//	Parameters:
+//	 IN:
+//		- string sPort -> COM port in the system to use for transfer
+//		- string sFilePath -> INI file path
+//		- int index -> index of the COM port for the vector
+//	Return: if success or _iError in INI file
+//------------------------------------------------------------------------------
+int IniFileHandler::readStopOnError(string sPort, string sFilePath)
+{
+	_dwExists = GetPrivateProfileStringA(sPort.c_str(),"StopOnFirstError",
+												NULL, szValue,
+												sizeof(szValue),
+												sFilePath.c_str());
+	if (_dwExists != 0)
+	{
+		if(0 == strcmp(szValue,"true"))
+			return 0;				//for true
+		else if(0 == strcmp(szValue,"false"))
+			return 1;				// for false
+		else
+		{
+			clog << "Error in INI file. StopOnFirstError mode has to be either true or false in "
+			 << sPort << endl;
+			return ERROR_INI;
+		}
+	}
+	else
+	{
+		clog << "Error in INI file. No logging mode definied for "
+			 << sPort << endl;
+			return ERROR_INI;
+	}
+}
+
 
 
 //------------------------------------------------------------------------------

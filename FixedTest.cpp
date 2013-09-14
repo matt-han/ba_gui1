@@ -744,7 +744,7 @@ int FixedTest::startSlaveTest()
 //		- bool bMaster	-> determine if master or slave
 //Return: if write error, read error or success
 //------------------------------------------------------------------------------
-int FixedTest::communicate(string sSendData, bool bMaster)
+int FixedTest::communicate(string sSendData, bool bMaster) 
 {
 //	bool bRead;
 	bTransmitionError = false;
@@ -834,7 +834,7 @@ string FixedTest::getData(bool MasterSlave, string sSendData)
 		{
 
 			clog << "--> master reads buffer" << endl;
-			if (true == masterPortComm.readData(empfang, sSendData.size(), _iLineTimeOut) )
+			if (true == masterPortComm.readData(empfang, sSendData.size()) )
 				iError = ERROR_SUCCESS;
 			else
 				iError = ERROR_READ_PORT;
@@ -843,7 +843,7 @@ string FixedTest::getData(bool MasterSlave, string sSendData)
 		else
 		{
 			clog << "--> slave reads buffer" << endl;
-			if (true == slavePortComm.readData(empfang, sSendData.size(), _iLineTimeOut) )
+			if (true == slavePortComm.readData(empfang, sSendData.size()) )
 				iError = ERROR_SUCCESS;
 			else
 				iError = ERROR_READ_PORT;

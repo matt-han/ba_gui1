@@ -39,7 +39,7 @@ void PortCommunications::setComHandle(HANDLE hCom)
 //		- DWORD dwSize -> amount of character to be read from port
 //	Return: error code signaling if operation succeded or error
 //------------------------------------------------------------------------------
-bool PortCommunications::readData(char * lpBuf, DWORD dwSize, int iReadTimeOut)
+bool PortCommunications::readData(char * lpBuf, DWORD dwSize)
 {
 //	int iCounter = 0;
 //	int iErr;
@@ -212,13 +212,7 @@ bool PortCommunications::readData(char * lpBuf, DWORD dwSize, int iReadTimeOut)
 				CloseHandle(osReader.hEvent);
 				return TRUE;
 			}
-		}
-		
-
-
-		
-		//dwRes = WaitForSingleObject(osReader.hEvent, READ_TIMEOUT);
-	
+		}	
 
 	
 		if (osReader.hEvent == NULL)
@@ -227,7 +221,7 @@ bool PortCommunications::readData(char * lpBuf, DWORD dwSize, int iReadTimeOut)
 			return FALSE;
 		}
 
-		dwRes = WaitForSingleObject(osReader.hEvent, 500); //INFINITE);
+		dwRes = WaitForSingleObject(osReader.hEvent, WAIT_FOR_READ_OBJ);
 		
 		switch(dwRes)
 		{
@@ -284,12 +278,13 @@ bool PortCommunications::readData(char * lpBuf, DWORD dwSize, int iReadTimeOut)
 					
 				//clog << "wait_timeout"<<endl;
 				iCounter++;
-				clog << "operation isnt complete yet, carry on..."<<endl;
 				if(iCounter == 5)
 				{
 					clog << "to many timeouts. ABORT" << endl;
 					return FALSE;
 				}
+				clog << "operation isnt complete yet, carry on..."<<endl;
+
 				break;                       
 
 			default:

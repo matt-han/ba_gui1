@@ -93,7 +93,10 @@ int Logger::log(bool bLog, string sPort)
 		if (!filestr.is_open())
 		{
 			_iError = GetLastError();
-			clog << "couldn't create log file. System Error: " << _iError << endl;
+			string sError = "couldn't create log file. System Error: ";
+			sError.append(tools.convertToString(_iError));
+			MessageBoxA(NULL, sError.c_str(), WINDOW_TITLE, MB_OK | MB_ICONERROR );
+			cout << sError << endl;
 			return ERROR_LOG;
 		}
 		else

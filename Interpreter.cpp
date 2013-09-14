@@ -162,7 +162,7 @@ void Interpreter::setLoggerState(bool bLoggerState)
 //	 IN:
 //		- bool _bStopOnError -> user GUI input
 //------------------------------------------------------------------------------
-void Interpreter::setLoggerState(bool bStopOnError)
+void Interpreter::setStopOnError(bool bStopOnError)
 {
 	this->_bStopOnError = bStopOnError;
 }
@@ -728,6 +728,7 @@ int Interpreter::saveToFile(string sSavePath)
 							 sTempTransferTextMode,
 							 sRepeater,
 							 _bLoggerState,
+							 _bStopOnError,
 							 sSavePath);
 	}
 

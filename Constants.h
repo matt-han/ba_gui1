@@ -12,9 +12,11 @@
 using namespace std;
 
 //------------------------------------------------------------------------------
+//Constants
+#define WAIT_FOR_READ_OBJ 500
+
 //Version
 #define VERSION "0.70"
-//#define lpcwVersion L"0.70"
 #define WINDOW_TITLE "Serial Port Tester version 0.70"
 #define lpcw_WINDOW_TITLE L"Serial Port Tester version 0.70"
 
@@ -196,6 +198,7 @@ const char ERROR_TRANSMITION[] = "ERROR_TRANSMITION";
 			bStopOnError	= false;
 		}
 	};//struct
+
 
 
 

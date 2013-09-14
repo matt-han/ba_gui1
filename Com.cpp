@@ -273,7 +273,7 @@ vector<string> Com::returnBaudrates(string sChosenPort)
 			}
 			else
 			{
-				clog << "Error decoding baud rate" << endl;
+				clog << "Error decoding baud rates" << endl;
 				
 				if (ERROR_SUCCESS != closePort())
 					clog << "Error closing port " << sChosenPort << endl;
@@ -470,7 +470,8 @@ int Com::setTimeOuts(int iTimeOut)
 		//set the parameter to the open port
 		if (!SetCommTimeouts(hCom, &timeouts))
 		{
-			clog << "Error setting the timeouts" << endl;
+			_iError = GetLastError();
+			clog << "Error setting the timeouts. System error : " << _iError << endl;
 			return ERROR_SET_TIMEOUTS;
 		}
 		return ERROR_SUCCESS;
@@ -538,7 +539,7 @@ int Com::getDCB()
 				WINDOW_TITLE, MB_OK | MB_ICONERROR);
 
 			_iError = GetLastError();
-			clog << "Error getting Port default settings´. Error : "
+			clog << "Error getting Port default settings. Error : "
 				 << _iError << endl;
 
 			return ERROR_GET_DCB;
@@ -567,7 +568,7 @@ int Com::setDCB()
 
 			clog << "Error setting " << sPort << " dcb. System Error : "
 				 << _iError << endl;
-			clog << "Probably baud rate is not truly supported" << endl;
+			clog << "Probably baud rate is not truly supported. Check with \"mode com\'x\'\" in the command line" << endl;
 
 			return ERROR_SET_DCB;
 		}
