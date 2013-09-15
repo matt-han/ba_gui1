@@ -209,7 +209,7 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 //==============================================================================
 //Stopbits
-			CreateWindowA("button", "StopBits",
+			CreateWindowA("button", "Stopbits",
 							WS_CHILD | WS_VISIBLE | BS_GROUPBOX,
 							POS_X + 250, POS_Y2, 110, 80,
 							m_hwnd, 
@@ -878,8 +878,6 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
     default:
         return DefWindowProc(m_hwnd, uMsg, wParam, lParam);
     }
-
-
 
 	return TRUE;
 }
