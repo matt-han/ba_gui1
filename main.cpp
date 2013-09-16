@@ -1,6 +1,8 @@
-
+//test headers
 #include "IniFileHandler.h"
 #include "Logger.h"
+#include "FixedTest.h"
+#include "Com.h"
 
 
 #include "Window.h"
@@ -30,13 +32,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR pCmdLine, int nCmdShow)
 	iError = ERROR_SUCCESS;
 	int _iError = ERROR_SUCCESS;
 	int iCount = 0;
-	//WobbleTest wobble;
-	//Tools t;
-	//string s = "abc\\0d-\\0asd";
-	//string ss = t.replaceASCII(s);
 
-	//return 0;
-	
+
 	if (0 == strcmp(pCmdLine, "") )
 		_iError = createGUI(hInstance, nCmdShow);
 	else
@@ -88,8 +85,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR pCmdLine, int nCmdShow)
 		{//error parsing parameters
 			return _iError;
 		}
-
-		return ERROR_SUCCESS;
 	}
 
 	return _iError;
@@ -189,15 +184,11 @@ int createGUI(HINSTANCE hInstance, int nCmdShow)
 
 	win.sethInstance(hInstance);
 
-   
 	if (!win.Create(lpcw_WINDOW_TITLE , WS_OVERLAPPEDWINDOW))
     {
         return ERROR_CREATE_GUI;
     }
 
-//------------------------------------------------------------------------------
-//	Message Loop
-//------------------------------------------------------------------------------
     ShowWindow(win.window(), nCmdShow);
 
     // Run the message loop.
@@ -208,8 +199,6 @@ int createGUI(HINSTANCE hInstance, int nCmdShow)
         TranslateMessage(&msg);
         DispatchMessage(&msg);
     }
-
-//	win.joinThread();
 
 	return ERROR_SUCCESS;
 }

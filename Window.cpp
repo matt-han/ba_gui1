@@ -394,6 +394,7 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 				 it != infoInterpreter.comEnumerator.vPortList.end(); ++it)
 			{
 				string s = *it;
+				s = s.substr(s.find_first_of("C"), s.npos);
 				SendMessageA(_hwndCB_MasPorts, CB_ADDSTRING, 0, (LPARAM) s.c_str());
 				SendMessageA(_hwndCB_SlvPorts, CB_ADDSTRING, 0, (LPARAM) s.c_str());
 			}
@@ -1151,8 +1152,9 @@ void Window::saveTestSettings()
 		_iError = interSaveToFile.saveToFile(sPath);
 		if(_iError != ERROR_SUCCESS)
 		{
-			sError = "Error saving to ini file. Error: ";
-			sError.append(tools.convertToString(_iError));
+			sError = "Error saving to ini file.\n";
+			//sError.append(tools.convertToString(_iError));
+			sError.append(tools.errorCodeParser(_iError));
 			MessageBoxA(NULL, sError.c_str(), WINDOW_TITLE, MB_OK | MB_ICONERROR);
 		}
 		else
@@ -1198,8 +1200,8 @@ void Window::loadTestSettings(string sFilePath, string sPort)
 	{
 		_sTemp = "Error loading and testing from file: \n";
 		_sTemp.append(_sPath.c_str());
-		_sTemp.append("\nError : ");
-		_sTemp.append(tools.convertToString(_iError));
+		_sTemp.append("\n");
+		_sTemp.append(tools.errorCodeParser(_iError));
 		MessageBoxA(NULL, _sTemp.c_str() , WINDOW_TITLE, MB_OK);
 		_sTemp = "";
 	}

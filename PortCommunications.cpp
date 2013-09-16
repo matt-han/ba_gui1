@@ -181,15 +181,12 @@ bool PortCommunications::readData(char * lpBuf, DWORD dwSize)
 		return FALSE;
 	}
 
-
-		//clog << "...Read attempt number: " << iCounter + 1 << endl;
 	while(true)
 	{
 		//if not waiting on read operation, then read
 		if (!fWaitingOnRead)
 		{
 			// Issue read operation.
-			clog << "Read Calling details: " << hCom << endl;
 			if (!ReadFile(hCom, ourBuf, dwSize, NULL, &osReader))
 			{
 				//if not true
@@ -201,7 +198,7 @@ bool PortCommunications::readData(char * lpBuf, DWORD dwSize)
 				}
 				else
 				{
-					clog << "operation not completed yet. ourBuf ->" << ourBuf << endl;
+					clog << "\noperation not completed yet. buffer ->" << ourBuf << endl;
 					fWaitingOnRead = TRUE;
 				}
 			}
@@ -237,12 +234,7 @@ bool PortCommunications::readData(char * lpBuf, DWORD dwSize)
 					return FALSE;
 				}
 
-					// Read completed successfully.
-					//CloseHandle(osReader.hEvent);
-
-
-
-				clog << "---- getoverlapped was ok" << endl;
+				clog << "GetOverlappedResult was ok" << endl;
 				
 				if(dwRead == 0)
 				{
@@ -256,7 +248,7 @@ bool PortCommunications::readData(char * lpBuf, DWORD dwSize)
 				
 				memcpy(ourPtr,ourBuf,dwRead);
 				ourPtr+=dwRead;
-				clog << "operation completed . dwRead " << dwRead << " dwSize " << dwSize << " ourBuf " << ourBuf << endl;
+				clog << "read operation completed" << endl;// . dwRead " << dwRead << " dwSize " << dwSize << " ourBuf " << ourBuf << endl;
 				ourCount-=dwRead;
 					
 				if(ourCount<=0) 
@@ -280,7 +272,7 @@ bool PortCommunications::readData(char * lpBuf, DWORD dwSize)
 				iCounter++;
 				if(iCounter == 5)
 				{
-					clog << "to many timeouts. ABORT" << endl;
+					clog << "to many object timeouts. ABORT" << endl;
 					return FALSE;
 				}
 				clog << "operation isnt complete yet, carry on..."<<endl;

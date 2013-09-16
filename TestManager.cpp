@@ -123,7 +123,7 @@ int TestManager::startManager()
 						if (_iError != ERROR_SUCCESS)
 						{
 							clog << "Error in wobble test. Error: " << _iError
-								 << endl;
+								<< "\n" << _tools.errorCodeParser(_iError) << endl;
 							clog << "Baudrate: " << iTemp << endl;
 							clog << "Parity:   " << iPar << endl;
 							_bError = true;
@@ -136,7 +136,8 @@ int TestManager::startManager()
 
 					if (_iError != ERROR_SUCCESS)
 					{
-						clog << "Error in wobble test. Error: " << _iError << endl;
+						clog << "Error in wobble test. Error: " << _iError 
+							 << "\n" << _tools.errorCodeParser(_iError) << endl;
 						clog << "Baudrate: " << iTemp << endl;
 						clog << "Parity:   " << iPar << endl;
 						_bError = true;
@@ -167,10 +168,8 @@ int TestManager::startManager()
 int TestManager::startFixedTest()
 {
 	FixedTest fixedTest(&testStruct);
-	_bTestStarted = true;
+	_bTestStarted  = true;
 	_bContinueTest = true;
-
-	//ivTestErrors.clear();
 
 	int iRepeat = 1;
 
@@ -196,6 +195,7 @@ int TestManager::startFixedTest()
 
 			//Master 
 			case 2:
+				_tools.wait(20);
 				_iError = fixedTest.startMasterTest();
 				break;
 
@@ -204,19 +204,12 @@ int TestManager::startFixedTest()
 				_iError = fixedTest.startSlaveTest();
 				break;
 		}//switch
-
-		//ivTestErrors.push_back(_iError);
 	
 		if(	iRepeat == testStruct.iRepeater)
 			_bContinueTest = false;
 
-		//clog << "..............................."<<endl;
-		//clog << "_bContinueTest " << _bContinueTest << endl;
-		//clog << "bStopButton   " << bStopButton << endl;
 		iRepeat++;
 	}while(_bContinueTest && !bStopButton);
-
-	//_tools.printErrorVector(testStruct.bLoggerState, ivTestErrors);
 
 	return ERROR_SUCCESS;
 }
@@ -228,7 +221,7 @@ int TestManager::startFixedTest()
 //------------------------------------------------------------------------------
 int TestManager::startWobbleTest(int iBaudrate, int iParity)
 {
-	_bTestStarted = true;
+	_bTestStarted  = true;
 	_bContinueTest = true;
 	int iRepeat = 1;
 	
@@ -266,15 +259,11 @@ int TestManager::startWobbleTest(int iBaudrate, int iParity)
 				break;
 		}//switch
 
-		//ivTestErrors.push_back(_iError);
-
 		if(	iRepeat == testStruct.iRepeater)
 			_bContinueTest = false;
 
 		iRepeat++;
 	}while(_bContinueTest && !bStopButton);
-
-	//_tools.printErrorVector(testStruct.bLoggerState, ivTestErrors);
 	
 	return ERROR_SUCCESS;
 }
@@ -287,7 +276,8 @@ int TestManager::startWobbleTest(int iBaudrate, int iParity)
 int TestManager::startAutomaticTest()
 {
 	int iRepeat = 1;
-	_bTestStarted = true;
+	_bTestStarted  = true;
+	_bContinueTest = true;
 
 	testStruct.iParity			= ODDPARITY;
 	testStruct.iStopbits		= ONESTOPBIT;
@@ -329,9 +319,13 @@ int TestManager::startAutomaticTest()
 				_iError = automatic.startSlaveTest();
 				break;
 		}//switch
-		iRepeat++;
-	}while(!bStopButton);
 
+		iRepeat++;
+
+		if(testStruct.bStopOnError && _iError != ERROR_SUCCESS)
+			_bContinueTest = false;
+
+	}while(_bContinueTest && !bStopButton);
 
 	return ERROR_SUCCESS;
 }

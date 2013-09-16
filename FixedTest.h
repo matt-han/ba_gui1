@@ -62,16 +62,16 @@ private:
 	int _iTestError;
 	int _iTimeOut;
 	int _iLineTimeOut;
+	//for slave test
+	int _iTextLength;
+	int _iLineNumber;
 
 	string _ESC;
 	string _ACK;
-	string _sTestInformation;
 	
 	int communicate(string sSendData, bool bMaster);
 
-	//needed???????
-	int communicateMaster(string sSendData);
-	int communicateSlave(string sSendData);
+
 
 	bool sendData(bool MasterSlave, string sSendData);
 	string getData(bool MasterSlave, string sSendData);
@@ -81,6 +81,17 @@ private:
 	int setPortSettings(Com &com);
 	int syncMaster();
 	int syncSlave();
+
+	string createHeader(int iLineNumber, int iTextLength);
+	int parseHeader(string sHeader);
+
+	int sendAndSync(string sHeader);
+	int getandSync();
+//	int sendTestSettings(string sTestInformation);
+
+//needed???????
+	int communicateMaster(string sSendData);
+	int communicateSlave(string sSendData);
 
 };
 

@@ -326,24 +326,22 @@ void Interpreter::handleGui()
 					//needs transfer mode, master/slave port and logger settings
 					//----------------------------------------------------------
 					case 0:
-
-						//if needed get the slave port
-						if(_iTransfer == 1)
+						if (_iTransfer >= 0 && _iTransfer <= 3)
 						{
-							//if no slave port was selected -> error
-							if (_sSlaPort == "")
+							//if needed get the slave port
+							if(_iTransfer == 1)
 							{
-								MessageBoxA(NULL,"Please select a slave port",
-									WINDOW_TITLE, MB_OK | MB_ICONERROR);
-								setDefaultValues();
-								break;
+								//if no slave port was selected -> error
+								if (_sSlaPort == "")
+								{
+									MessageBoxA(NULL,"Please select a slave port",
+										WINDOW_TITLE, MB_OK | MB_ICONERROR);
+									setDefaultValues();
+									break;
+								}
+								else
+									_testManager->testStruct.sSlavePort = _sSlaPort;
 							}
-							else
-								_testManager->testStruct.sSlavePort = _sSlaPort;
-						}
-						else if (_iTransfer == 0)
-						{
-							break;
 						}
 						else
 						{
@@ -353,7 +351,7 @@ void Interpreter::handleGui()
 							break;
 						}
 						break;
-					//case 0
+					// end case 0
 					//----------------------------------------------------------
 
 
@@ -379,13 +377,15 @@ void Interpreter::handleGui()
 								else
 									_testManager->testStruct.sSlavePort = _sSlaPort;
 							}
-
-							//check parity, protocol and stopbits
-							if(ERROR_INPUT == checkInputConfigData())
+							else if(_iTransfer != 3) //if not slave mode
 							{
-								setDefaultValues();
-								bErr = true;
-								break;
+								//check parity, protocol and stopbits
+								if(ERROR_INPUT == checkInputConfigData())
+								{
+									setDefaultValues();
+									bErr = true;
+									break;
+								}
 							}
 						}
 						else
@@ -395,66 +395,10 @@ void Interpreter::handleGui()
 							setDefaultValues();
 							break;
 						}
-
-						//get the baud rates
-						//MIN
-						_iTemp = checkBaudrate(_iBaudrate);
-						if (_iTemp != DEFAULT_VALUE || _iTemp != ERROR_BAUDRATE)
-							_testManager->testStruct.iBaud = _iBaudrate;
-						else
+						if(_iTransfer != 3) //if not slave mode
 						{
-							bErr = true;
-							break;
-						}
-						//MAX
-						_iTemp = checkBaudrate(_iBaudrateMax);
-						if (_iTemp != DEFAULT_VALUE || _iTemp != ERROR_BAUDRATE)
-							_testManager->testStruct.iBaudrateMax = _iBaudrateMax;
-						else
-						{
-							bErr = true;
-							break;
-						}
-
-						_testManager->testStruct.svBaudrates = this->comEnumerator.vBaud;
-						
-						break;
-					//case 1
-					//----------------------------------------------------------
-
-
-					//Fixed test
-					//get all GUI settings
-					//----------------------------------------------------------
-					case 2:
-						//wenn double or master slave
-						//if needed get the slave port
-						if(_iTransfer == 1)
-						{
-							//if no slave port was selected -> error
-							if (_sSlaPort == "")
-							{
-								MessageBoxA(NULL,"Please select a slave port",
-									WINDOW_TITLE, MB_OK | MB_ICONERROR);
-								setDefaultValues();
-								bErr = true;
-								break;
-							}
-							else
-								_testManager->testStruct.sSlavePort = _sSlaPort;
-						}
-					
-						if (_iTransfer >= 0 && _iTransfer <= 3)
-						{
-							//check parity, protocol and stopbits
-							if(ERROR_INPUT == checkInputConfigData())
-							{
-								setDefaultValues();
-								bErr = true;
-								break;
-							}
-							
-							//check baudrate
+							//get the baud rates
+							//MIN
 							_iTemp = checkBaudrate(_iBaudrate);
 							if (_iTemp != DEFAULT_VALUE || _iTemp != ERROR_BAUDRATE)
 								_testManager->testStruct.iBaud = _iBaudrate;
@@ -463,6 +407,68 @@ void Interpreter::handleGui()
 								bErr = true;
 								break;
 							}
+							//MAX
+							_iTemp = checkBaudrate(_iBaudrateMax);
+							if (_iTemp != DEFAULT_VALUE || _iTemp != ERROR_BAUDRATE)
+								_testManager->testStruct.iBaudrateMax = _iBaudrateMax;
+							else
+							{
+								bErr = true;
+								break;
+							}
+
+							_testManager->testStruct.svBaudrates = this->comEnumerator.vBaud;
+						}
+						
+						break;
+					//end case 1
+					//----------------------------------------------------------
+
+
+					//Fixed test
+					//get all GUI settings
+					//----------------------------------------------------------
+					case 2:
+						
+						if (_iTransfer >= 0 && _iTransfer <= 3)
+						{
+						
+							//if needed get the slave port
+							if(_iTransfer == 1)
+							{
+								//if no slave port was selected -> error
+								if (_sSlaPort == "")
+								{
+									MessageBoxA(NULL,"Please select a slave port",
+										WINDOW_TITLE, MB_OK | MB_ICONERROR);
+									setDefaultValues();
+									bErr = true;
+									break;
+								}
+								else
+									_testManager->testStruct.sSlavePort = _sSlaPort;
+							}
+							
+							if(_iTransfer != 3) //if not slave mode
+							{
+								//check parity, protocol and stopbits
+								if(ERROR_INPUT == checkInputConfigData())
+								{
+									setDefaultValues();
+									bErr = true;
+									break;
+								}
+							
+								//check baudrate
+								_iTemp = checkBaudrate(_iBaudrate);
+								if (_iTemp != DEFAULT_VALUE || _iTemp != ERROR_BAUDRATE)
+									_testManager->testStruct.iBaud = _iBaudrate;
+								else
+								{
+									bErr = true;
+									break;
+								}
+							}
 						}
 						else
 						{
@@ -473,7 +479,7 @@ void Interpreter::handleGui()
 							break;
 						}
 						break;
-					//case 2
+					//end case 2
 					//----------------------------------------------------------
 			
 
@@ -493,19 +499,21 @@ void Interpreter::handleGui()
 				//start the testManager for testing if no input errors were reported
 				if(bErr == false)
 				{
-					//save the logger state, file path,
-					//repeater, textToSend and transtextmode
-					_testManager->testStruct.bLoggerState = _bLoggerState;
-					_testManager->testStruct.bStopOnError = _bStopOnError;
-					_testManager->testStruct.sFilePath = _sFilePath;
-					_testManager->testStruct.iRepeater = _iRepeater;
-					_testManager->testStruct.sTextToTransfer = _sTextToSend;
-					_testManager->testStruct.iTransTextMode = _iTransTextMode;
-					_testManager->testStruct.svBaudrates = _svBaudrates;
+					//save the repeater, logger state and stop on first error
+					_testManager->testStruct.bLoggerState	 = _bLoggerState;
+					_testManager->testStruct.bStopOnError	 = _bStopOnError;
+					_testManager->testStruct.iRepeater		 = _iRepeater;
+
+					if(_iTransfer != 3) //if not slave mode
+					{	
+						//textToSend, file path, baud rates and transtextmode				
+						_testManager->testStruct.sFilePath		 = _sFilePath;
+						_testManager->testStruct.sTextToTransfer = _sTextToSend;
+						_testManager->testStruct.iTransTextMode	 = _iTransTextMode;
+						_testManager->testStruct.svBaudrates	 = _svBaudrates;
+					}
 
 
-					
-					
 					//**********************************************************
 					//*	START THE TEST MANAGER
 					//**********************************************************
@@ -519,8 +527,8 @@ void Interpreter::handleGui()
 					}
 					else
 					{
-						_sTemp = "Send and/or Recieve failure\nError : ";
-						_sTemp.append(tools.convertToString(_iError));
+						_sTemp = "Send and/or Recieve failure\n";
+						_sTemp.append(tools.errorCodeParser(_iError));
 
 						MessageBoxA(NULL, _sTemp.c_str(),
 							WINDOW_TITLE,
@@ -782,10 +790,10 @@ int Interpreter::loadIniFile(string sPath, string sPort)
 						 << endl;
 				else
 				{
-					string sError = "Error testing port";
+					string sError = "Error testing port ";
 					sError.append(_vIniFilePorts.at(index).sMasterPort);
-					sError.append(". Error : ");
-					sError.append(tools.convertToString(_iError));
+					sError.append(".\n");
+					sError.append(tools.errorCodeParser(_iError));
 					MessageBoxA(NULL, sError.c_str(), WINDOW_TITLE, MB_OK | MB_ICONERROR);
 				}
 			}

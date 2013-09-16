@@ -116,7 +116,8 @@ using namespace std;
 #define ERROR_WAIT_MASTER	-22
 #define	ERROR_SYNC			-23
 #define ERROR_PARSE_SLAVE	-24 //error parsing info sent by the master
-//#define						-25
+#define	ERROR_MSG_HEADER	-25 //error decoding header
+#define ERROR_GET_
 //#define						-26
 
 
