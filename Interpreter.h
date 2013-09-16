@@ -34,9 +34,7 @@ public:
 	Tools tools;
 
 //------------------------------------------------------------------------------
-//Methods	
-
-	void startT1();
+//Methods
 
 	void setTestMode(int);
 	void setParity(int);
@@ -59,8 +57,6 @@ public:
 	//is void 'cos gui does not handle values!
 	void handleGui();
 	
-	
-
 	int checkInputConfigData();
 	int checkBaudrate(int);
 

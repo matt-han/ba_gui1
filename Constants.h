@@ -11,10 +11,6 @@
 
 using namespace std;
 
-//------------------------------------------------------------------------------
-//Constants
-#define WAIT_FOR_READ_OBJ 500
-
 //Version
 #define VERSION "0.70"
 #define WINDOW_TITLE "Serial Port Tester version 0.70"
@@ -153,7 +149,9 @@ const char ERROR_TRANSMITION[] = "ERROR_TRANSMITION";
 #define B_128K			 128000
 #define B_256K			 256000
 
-
+//------------------------------------------------------------------------------
+//Constants
+#define WAIT_FOR_READ_OBJ 500
 
 //------------------------------------------------------------------------------
 //Variables

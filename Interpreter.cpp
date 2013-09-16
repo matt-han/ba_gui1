@@ -246,6 +246,91 @@ void Interpreter::setBaudVector(vector<string> svBaud)
 	this->_svBaudrates = svBaud;
 }
 
+
+//------------------------------------------------------------------------------
+//	Checks the parity, protocol and stopbits in the GUI to save them in the
+//	test manager
+//------------------------------------------------------------------------------
+int Interpreter::checkInputConfigData()
+{
+
+	//parity
+	if(_iParity == DEFAULT_VALUE)
+	{
+		MessageBoxA(NULL,"Please select the parity",
+			WINDOW_TITLE, MB_OK | MB_ICONERROR);
+		return ERROR_INPUT;
+	}
+	else
+		_testManager->testStruct.iParity = _iParity;
+
+	//protocol
+	if(_iProtocol == DEFAULT_VALUE)
+	{
+		MessageBoxA(NULL,"Please select the protocol",
+			WINDOW_TITLE, MB_OK | MB_ICONERROR);
+		return ERROR_INPUT;
+	}
+	else
+		_testManager->testStruct.iProtocol = _iProtocol;
+
+	//stopbits
+	if(_iStopBits == DEFAULT_VALUE)
+	{
+		MessageBoxA(NULL,"Please select the stopbits",
+			WINDOW_TITLE, MB_OK | MB_ICONERROR);
+		return ERROR_INPUT;
+	}
+	else
+		_testManager->testStruct.iStopbits = _iStopBits;
+
+	//stopbits
+	if(_iDataBits == DEFAULT_VALUE)
+	{
+		MessageBoxA(NULL,"Please select the databits",
+			WINDOW_TITLE, MB_OK | MB_ICONERROR);
+		return ERROR_INPUT;
+	}
+	else
+		_testManager->testStruct.iDatabits = _iDataBits;
+
+
+	return ERROR_SUCCESS;
+}
+
+
+//------------------------------------------------------------------------------
+//	Checks the given baud rate
+//	Parameters:
+//	 IN:
+//		- int iBaudrate -> the baud rate
+//Return: the baud rate or error
+//------------------------------------------------------------------------------
+int Interpreter::checkBaudrate(int iBaudrate)
+{
+	if (iBaudrate == DEFAULT_VALUE)
+	{
+		MessageBoxA(NULL,"Please select a baud rate!!!!!!",
+			WINDOW_TITLE, MB_OK | MB_ICONERROR);
+		setDefaultValues();
+		return DEFAULT_VALUE;
+
+	}
+	else if(iBaudrate == ERROR_BAUDRATE)
+	{
+		MessageBoxA(NULL,"Baud rate is not suported by"
+			" this port\n"
+			"Please choose another baud rate",
+			WINDOW_TITLE, MB_OK | MB_ICONERROR);
+		setDefaultValues();
+		return ERROR_BAUDRATE;
+
+	}
+	else
+		return iBaudrate;
+}
+
+
 //------------------------------------------------------------------------------
 //	Set the variables to the default values
 //------------------------------------------------------------------------------
@@ -554,91 +639,6 @@ void Interpreter::handleGui()
 
 	delete _testManager;
 	_testManager = NULL;
-}
-
-
-
-//------------------------------------------------------------------------------
-//	Checks the parity, protocol and stopbits in the GUI to save them in the
-//	test manager
-//------------------------------------------------------------------------------
-int Interpreter::checkInputConfigData()
-{
-
-	//parity
-	if(_iParity == DEFAULT_VALUE)
-	{
-		MessageBoxA(NULL,"Please select the parity",
-			WINDOW_TITLE, MB_OK | MB_ICONERROR);
-		return ERROR_INPUT;
-	}
-	else
-		_testManager->testStruct.iParity = _iParity;
-
-	//protocol
-	if(_iProtocol == DEFAULT_VALUE)
-	{
-		MessageBoxA(NULL,"Please select the protocol",
-			WINDOW_TITLE, MB_OK | MB_ICONERROR);
-		return ERROR_INPUT;
-	}
-	else
-		_testManager->testStruct.iProtocol = _iProtocol;
-
-	//stopbits
-	if(_iStopBits == DEFAULT_VALUE)
-	{
-		MessageBoxA(NULL,"Please select the stopbits",
-			WINDOW_TITLE, MB_OK | MB_ICONERROR);
-		return ERROR_INPUT;
-	}
-	else
-		_testManager->testStruct.iStopbits = _iStopBits;
-
-	//stopbits
-	if(_iDataBits == DEFAULT_VALUE)
-	{
-		MessageBoxA(NULL,"Please select the databits",
-			WINDOW_TITLE, MB_OK | MB_ICONERROR);
-		return ERROR_INPUT;
-	}
-	else
-		_testManager->testStruct.iDatabits = _iDataBits;
-
-
-	return ERROR_SUCCESS;
-}
-
-
-//------------------------------------------------------------------------------
-//	Checks the given baud rate
-//	Parameters:
-//	 IN:
-//		- int iBaudrate -> the baud rate
-//Return: the baud rate or error
-//------------------------------------------------------------------------------
-int Interpreter::checkBaudrate(int iBaudrate)
-{
-	if (iBaudrate == DEFAULT_VALUE)
-	{
-		MessageBoxA(NULL,"Please select a baud rate!!!!!!",
-			WINDOW_TITLE, MB_OK | MB_ICONERROR);
-		setDefaultValues();
-		return DEFAULT_VALUE;
-
-	}
-	else if(iBaudrate == ERROR_BAUDRATE)
-	{
-		MessageBoxA(NULL,"Baud rate is not suported by"
-			" this port\n"
-			"Please choose another baud rate",
-			WINDOW_TITLE, MB_OK | MB_ICONERROR);
-		setDefaultValues();
-		return ERROR_BAUDRATE;
-
-	}
-	else
-		return iBaudrate;
 }
 
 
