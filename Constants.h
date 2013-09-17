@@ -12,9 +12,9 @@
 using namespace std;
 
 //Version
-#define VERSION "0.70"
-#define WINDOW_TITLE "Serial Port Tester version 0.70"
-#define lpcw_WINDOW_TITLE L"Serial Port Tester version 0.70"
+#define VERSION "0.80"
+#define WINDOW_TITLE "Serial Port Tester version 0.80"
+#define lpcw_WINDOW_TITLE L"Serial Port Tester version 0.80"
 
 
 //------------------------------------------------------------------------------
@@ -117,8 +117,8 @@ using namespace std;
 //#define						-26
 
 
-const char ERROR_TRANSMITION[] = "ERROR_TRANSMITION";
-//#define ERROR_TRANSMITION "ERROR_TRANSMITION"
+const char ERROR_TRANSMISSION[] = "ERROR_TRANSMISSION";
+//#define ERROR_TRANSMISSION "ERROR_TRANSMISSION"
 
 #define DEFAULT_VALUE		-100
 #define ERROR_TODO			-666

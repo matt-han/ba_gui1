@@ -8,9 +8,14 @@
 #include "Tools.h"
 
 #include <vector>
+#include <iostream>
+#include <iomanip>
 
-#define TEXT_LENGTH 8
-#define BUFFER_LENGTH 100
+
+#define TEXT_LENGTH		8
+#define HEADER_LENGTH	9	//	-> max header length 9 characters
+#define BUFFER_LENGTH	100
+
 using namespace std;
 
 
@@ -38,7 +43,7 @@ public:
 	HANDLE masterHCom;
 	HANDLE slaveHCom;
 	
-	bool bTransmitionError;
+	bool bTransmissionError;
 	char empfang[BUFFER_LENGTH];
 
 	vector<int> ivTestErrors;
@@ -51,7 +56,7 @@ public:
 	int startMasterTest();
 	int startSlaveTest();
 	
-		string createTestInformation();
+	string createTestInformation();
 	int setTestInformation(string sTestInfo);
 
 private:
@@ -68,13 +73,14 @@ private:
 
 	string _ESC;
 	string _ACK;
-	
+	string _sReceivedFromMaster;
+
 	int communicate(string sSendData, bool bMaster);
 
 
 
 	bool sendData(bool MasterSlave, string sSendData);
-	string getData(bool MasterSlave, string sSendData);
+	string getData(bool MasterSlave, int iDataSize);
 	void printTestSettings();
 	void setProtocol(int iProtocol, Com *com);
 	int setPortDefaultSettings(Com &com); //timeout and 96,o,8,1
@@ -86,12 +92,12 @@ private:
 	int parseHeader(string sHeader);
 
 	int sendAndSync(string sHeader);
-	int getandSync();
+	int getAndSync(int iLength);
 //	int sendTestSettings(string sTestInformation);
 
-//needed???????
+
 	int communicateMaster(string sSendData);
-	int communicateSlave(string sSendData);
+	int communicateSlave(int iLength);
 
 };
 

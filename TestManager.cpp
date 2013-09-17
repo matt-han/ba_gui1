@@ -18,11 +18,6 @@ TestManager::TestManager(void)
 //------------------------------------------------------------------------------
 TestManager::~TestManager(void)
 {
-	//if(testStruct.bLoggerState || _bTestStarted)
-	//{
-	//	//_logger->closelog(true);
-	//	delete _logger;
-	//}
 	if(_logger != NULL)
 		delete _logger;
 }
@@ -195,7 +190,9 @@ int TestManager::startFixedTest()
 
 			//Master 
 			case 2:
-				_tools.wait(20);
+				if(iRepeat == 1)
+					_tools.wait(100);
+
 				_iError = fixedTest.startMasterTest();
 				break;
 

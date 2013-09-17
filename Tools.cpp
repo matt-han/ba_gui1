@@ -196,17 +196,17 @@ vector<string> Tools::parseCmdLine(LPSTR pCmdLine)
 
 
 //------------------------------------------------------------------------------
-//	Waits 'x' * 100 miliseconds
+//	Waits 'x' * 10 miliseconds
 //	Parameters:
 //	 IN:
-//		- int x -> specifies how often 100 ms will be waited
+//		- int x -> specifies how often 10 ms will be waited
 //------------------------------------------------------------------------------
 void Tools::wait(int x)
 {
 	for (int i = 0; i < x; i++)
 	{
 		clog << "." << flush;
-		Sleep(100);
+		Sleep(10);
 	}
 	clog << endl;
 }
@@ -419,7 +419,7 @@ string Tools::errorCodeParser(int iError)
 			break;
 
 		case ERROR_CMP_STR:
-			sError = "Send and recieved strings in test are not equal. See log file, if available, for more details";
+			sError = "Send and received strings in test are not equal. See log file, if available, for more details";
 			break;
 
 		case ERROR_WAIT_SLAVE:

@@ -29,9 +29,9 @@ IniFileHandler::~IniFileHandler(void)
 //		- int iBaud -> Baud rate for test
 //		- int iTestMode -> testing mode
 //		- int iParity -> COM port(s) baud rate
-//		- int iProtocol -> transmition protocol for test
+//		- int iProtocol -> Transmission protocol for test
 //		- int iStopbits -> stopbits to be set
-//		- int iTransfer -> single/double/master/slave transmition
+//		- int iTransfer -> single/double/master/slave Transmission
 //		- int iTextMode	-> text mode to transfer
 //		- string sTextToTransfer -> default text, input text or input file
 //		- bool bLoggerStatur -> true for logfile, false for no logging
@@ -197,7 +197,7 @@ void IniFileHandler::writeINIfile(string sMasterPort, string sSlavePort, int iBa
 //	 IN:
 //		- string sMasterPort -> Master COM port for test
 //		- string sSlavePort  -> Slave COM port for test
-//		- int iTransfer -> single/double/master-slave transmition
+//		- int iTransfer -> single/double/master-slave Transmission
 //		- string sPath -> path where to save the ini test file
 //	Return: _iError code signaling if operation succeded or _iError
 //------------------------------------------------------------------------------
@@ -932,7 +932,7 @@ int IniFileHandler::readRepeater(string sPort, string sFilePath)
 //	 IN:
 //		- string sPort -> COM port in the system to use for transfer
 //		- string sFilePath -> INI file path
-//		- string sTranferTextMode -> text mode for transmition
+//		- string sTranferTextMode -> text mode for Transmission
 //		- int index -> index of the COM port for the vector
 //	Return: parsed GUI parameters
 //------------------------------------------------------------------------------
@@ -982,7 +982,7 @@ int IniFileHandler::parseTextToTransfer(string sPort, string sFilePath, string s
 //	Parse GUI parameters to a string
 //	Parameters:
 //	 IN:
-//		- int iParity -> integer describing the parity for the transmition
+//		- int iParity -> integer describing the parity for the Transmission
 //	Return: parsed GUI parameters
 //------------------------------------------------------------------------------
 string IniFileHandler::parseParityToIni(int iParity)
@@ -1044,7 +1044,7 @@ string IniFileHandler::parseProtocolToIni(int iProtocol)
 //	Parse GUI parameters to a string
 //	Parameters:
 //	 IN:
-//		- int iStopbits -> integer describing the stopbits for the transmition
+//		- int iStopbits -> integer describing the stopbits for the Transmission
 //	Return: parsed GUI parameters
 //------------------------------------------------------------------------------
 string IniFileHandler::parseStopbitsToIni(int iStopbits)
@@ -1069,7 +1069,7 @@ string IniFileHandler::parseStopbitsToIni(int iStopbits)
 //	Parse GUI parameters to a string
 //	Parameters:
 //	 IN:
-//		- int iDatabits -> integer describing the databits for the transmition
+//		- int iDatabits -> integer describing the databits for the Transmission
 //	Return: parsed GUI parameters
 //------------------------------------------------------------------------------
 string IniFileHandler::parseDatabitsToIni(int iDatabits)
@@ -1214,7 +1214,7 @@ int IniFileHandler::parseParity(string sParity, int index)
 //	parse INI file parameter to test setting
 //	Parameters:
 //	 IN:
-//		- string sProtocol -> transmition protocol
+//		- string sProtocol -> Transmission protocol
 //	Return: protocol as an integer, if fails returns parsing _iError
 //------------------------------------------------------------------------------
 int IniFileHandler::parseProtocol(string sProtocol)
@@ -1241,7 +1241,7 @@ int IniFileHandler::parseProtocol(string sProtocol)
 //	parse INI file parameter to test setting
 //	Parameters:
 //	 IN:
-//		- string sStopbits -> transmition stopbits
+//		- string sStopbits -> Transmission stopbits
 //	Return: stopbits as an integer, if fails returns parsing _iError
 //------------------------------------------------------------------------------
 int IniFileHandler::parseStopbits(string sStopbits)
@@ -1266,7 +1266,7 @@ int IniFileHandler::parseStopbits(string sStopbits)
 //	parse INI file parameter to test setting
 //	Parameters:
 //	 IN:
-//		- string sDatabits -> transmition databits
+//		- string sDatabits -> Transmission databits
 //	Return: databits as an integer, if fails returns parsing _iError
 //------------------------------------------------------------------------------
 int IniFileHandler::parseDatabits(string sDatabits)

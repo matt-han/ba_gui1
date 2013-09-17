@@ -246,13 +246,13 @@ bool PortCommunications::readData(char * lpBuf, DWORD dwSize)
 				//reset for next read, this one was successful
 				iCounter = 0;
 				
-				memcpy(ourPtr,ourBuf,dwRead);
-				ourPtr+=dwRead;
-				clog << "read operation completed" << endl;// . dwRead " << dwRead << " dwSize " << dwSize << " ourBuf " << ourBuf << endl;
-				ourCount-=dwRead;
+				memcpy(ourPtr, ourBuf, dwRead);
+				ourPtr += dwRead;
+				ourCount -= dwRead;
 					
 				if(ourCount<=0) 
 				{
+					clog << "read operation completed" << endl;
 					CloseHandle(osReader.hEvent);
 					return TRUE;
 				}

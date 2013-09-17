@@ -157,7 +157,7 @@ void Interpreter::setLoggerState(bool bLoggerState)
 
 
 //------------------------------------------------------------------------------
-//	Saves if the user wishes to stop on the first transmition error
+//	Saves if the user wishes to stop on the first Transmission error
 //	Parameters:
 //	 IN:
 //		- bool _bStopOnError -> user GUI input
@@ -605,14 +605,14 @@ void Interpreter::handleGui()
 					_iError = _testManager->startManager();
 					if(_iError == ERROR_SUCCESS)
 					{
-						MessageBoxA(NULL, "Transmition finished", WINDOW_TITLE,
+						MessageBoxA(NULL, "Transmission finished", WINDOW_TITLE,
 									MB_OK);
 						//tools.printErrorVector(_testManager->testStruct.bLoggerState,
 						//	_testManager->ivTestErrors);
 					}
 					else
 					{
-						_sTemp = "Send and/or Recieve failure\n";
+						_sTemp = "Send and/or receive failure\n";
 						_sTemp.append(tools.errorCodeParser(_iError));
 
 						MessageBoxA(NULL, _sTemp.c_str(),
