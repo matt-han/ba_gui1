@@ -236,10 +236,10 @@ void Interpreter::setRepeater(string sRepeater)
 
 
 //------------------------------------------------------------------------------
-//	Saves the user input for how many times a test wil be repeated in _iRepeater
+//	Saves the vector containing the available baud rates
 //	Parameters:
 //	 IN:
-//		- string sRepeater -> user GUI input
+//		- vector<string> svBaud -> baud rates as string in vector
 //------------------------------------------------------------------------------
 void Interpreter::setBaudVector(vector<string> svBaud)
 {
@@ -462,7 +462,8 @@ void Interpreter::handleGui()
 								else
 									_testManager->testStruct.sSlavePort = _sSlaPort;
 							}
-							else if(_iTransfer != 3) //if not slave mode
+							
+							if(_iTransfer != 3) //if not slave mode
 							{
 								//check parity, protocol and stopbits
 								if(ERROR_INPUT == checkInputConfigData())
@@ -480,30 +481,29 @@ void Interpreter::handleGui()
 							setDefaultValues();
 							break;
 						}
-						if(_iTransfer != 3) //if not slave mode
-						{
-							//get the baud rates
-							//MIN
-							_iTemp = checkBaudrate(_iBaudrate);
-							if (_iTemp != DEFAULT_VALUE || _iTemp != ERROR_BAUDRATE)
-								_testManager->testStruct.iBaud = _iBaudrate;
-							else
-							{
-								bErr = true;
-								break;
-							}
-							//MAX
-							_iTemp = checkBaudrate(_iBaudrateMax);
-							if (_iTemp != DEFAULT_VALUE || _iTemp != ERROR_BAUDRATE)
-								_testManager->testStruct.iBaudrateMax = _iBaudrateMax;
-							else
-							{
-								bErr = true;
-								break;
-							}
 
-							_testManager->testStruct.svBaudrates = this->comEnumerator.vBaud;
+						//get the baud rates
+						//MIN
+						_iTemp = checkBaudrate(_iBaudrate);
+						if (_iTemp != DEFAULT_VALUE && _iTemp != ERROR_BAUDRATE)
+							_testManager->testStruct.iBaud = _iBaudrate;
+						else
+						{
+							bErr = true;
+							break;
 						}
+						//MAX
+						_iTemp = checkBaudrate(_iBaudrateMax);
+						if (_iTemp != DEFAULT_VALUE && _iTemp != ERROR_BAUDRATE)
+							_testManager->testStruct.iBaudrateMax = _iBaudrateMax;
+						else
+						{
+							bErr = true;
+							break;
+						}
+
+						//_testManager->testStruct.svBaudrates = this->comEnumerator.vBaud;
+						_testManager->testStruct.svBaudrates = this->_svBaudrates;
 						
 						break;
 					//end case 1

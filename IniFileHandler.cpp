@@ -46,15 +46,35 @@ void IniFileHandler::writeINIfile(string sMasterPort, string sSlavePort, int iBa
 								string sPath)
 {
 	string sBaud, sBaudMax, sParity, sProtocol, sStopbits, sDatabits, sLogger, sStopOnError;
-	
+	int iCount = 1;
+	bool bFileExists = true;
+	string sTemp = getenv("TEMP");
+
 	//if path is empty then create default path
-	//if (sPath == "")
-	//{
-	//	sPath = getenv("TEMP");
-	//	sPath.append("\\WN_ComPortTestFile_");
-	//	sPath.append(sMasterPort);
-	//	sPath.append(".ini");
-	//}
+	if (sPath == "")
+	{
+		do
+		{
+			sPath = sTemp;
+			sPath.append("\\SerialPortTester_ConfigurationTestFile_");
+			sPath.append(sMasterPort);
+			sPath.append("_");
+			sPath.append(tools.convertToString(iCount));
+			sPath.append(".ini");
+
+		
+			//check if file exists
+			ifstream file(sPath.c_str());
+			
+			if(file.good())
+				iCount++;
+			else
+				bFileExists = false;
+
+			file.close();
+
+		}while(bFileExists);
+	}
 
 	sFilePath = sPath;
 

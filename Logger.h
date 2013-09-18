@@ -16,7 +16,7 @@ using namespace std;
 class Logger
 {
 public:
-	Logger(bool log, string sPort);
+	Logger(bool log, string sPort, int MasterSlave);
 	~Logger(void);
 
 //------------------------------------------------------------------------------
@@ -24,7 +24,7 @@ public:
 	int iError;
 //------------------------------------------------------------------------------
 //Methods
-	int log(bool bLog, string sPort);
+	int log(bool bLog, string sPort, int MasterSlave);
 	void closelog(bool bLog);
 
 

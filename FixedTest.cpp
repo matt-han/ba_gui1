@@ -199,7 +199,7 @@ int FixedTest::startSingleTest()
 		}
 		else
 		{
-			clog << "Error getting the master port DCB" << endl;
+			clog << "Error getting the master port settings" << endl;
 			masterCom.closePort();
 			return _iError;
 		}//getDCB
@@ -259,7 +259,7 @@ int FixedTest::startDoubleTest()
 		}
 		else
 		{
-			clog << "Error getting the master port DCB" << endl;
+			clog << "Error getting the master port settings" << endl;
 			masterCom.closePort();
 			return _iError;
 		}
@@ -296,7 +296,7 @@ int FixedTest::startDoubleTest()
 		}
 		else
 		{
-			clog << "Error getting the slave port DCB" << endl;
+			clog << "Error getting the slave port settings" << endl;
 			masterCom.closePort();
 			slaveCom.closePort();
 			return _iError;
@@ -441,10 +441,10 @@ int FixedTest::setPortSettings(Com &com)
 
 	if(_iError == ERROR_SUCCESS)
 	{
-		masterCom.dcb.BaudRate = testStruct->iBaud; 
-		masterCom.dcb.Parity   = (BYTE)testStruct->iParity;
-		masterCom.dcb.StopBits = (BYTE)testStruct->iStopbits;
-		masterCom.dcb.ByteSize = (BYTE)testStruct->iDatabits;
+		com.dcb.BaudRate = testStruct->iBaud; 
+		com.dcb.Parity   = (BYTE)testStruct->iParity;
+		com.dcb.StopBits = (BYTE)testStruct->iStopbits;
+		com.dcb.ByteSize = (BYTE)testStruct->iDatabits;
 				
 		//set all the protocol settings
 		setProtocol(testStruct->iProtocol, &com);
@@ -548,7 +548,7 @@ int FixedTest::startMasterTest()
 		}	 //getDCB
 		else
 		{
-			clog << "Error getting the master port DCB" << endl;
+			clog << "Error getting the master port settings" << endl;
 		}//getDCB
 
 
@@ -581,25 +581,24 @@ int FixedTest::startMasterTest()
 					clog<<"-----------------------------------------"<<endl;
 						
 					ivTestErrors.clear();
-					//for (unsigned int index = 0; index < vTextToSend.size();
-					//index++)
-					//{
-					//_iLineTimeOut = _iTimeOut * (vTextToSend.at(index).size() + 1);
-						_iLineTimeOut = _iTimeOut * (sTestString.size() + 1); 
+					for (unsigned int index = 0; index < vTextToSend.size();
+					index++)
+					{
+						_iLineTimeOut = _iTimeOut * (vTextToSend.at(index).size() + 1);
+						//_iLineTimeOut = _iTimeOut * (sTestString.size() + 1); 
 						clog << "\n\nText line nr.: " << "1" << endl;
 						clog << "time out: " << _iLineTimeOut << " ms" << endl;
 		
 						//create header for current line
-						sHeader = createHeader(1, (sTestString.size()) );
-						//sHeader = createHeader(1, (vTextToSend.at(index).size());
+						//sHeader = createHeader(1, sTestString.size() );
+						sHeader = createHeader(1, vTextToSend.at(index).size() );
 
 						//SEND HEADER
 						sendAndSync(sHeader);
 
 						//SEND TEXT
-						//_iTestError = communicate(sTestString, true);
-						_iTestError = communicateMaster(sTestString);
-						//_iTestError = communicate(vTextToSend.at(index), true);
+						//_iTestError = communicateMaster(sTestString);
+						_iTestError = communicateMaster(vTextToSend.at(index));
 
 						if(_iTestError != ERROR_SUCCESS)
 						{
@@ -607,12 +606,12 @@ int FixedTest::startMasterTest()
 								 << tools.errorCodeParser(_iTestError) << endl;
 							bTransmissionError = true;
 							if(testStruct->bStopOnError)
-								;//break;
+								break;
 						}
 
 						ivTestErrors.push_back(_iTestError);
 
-					//}//for
+					}//for
 
 					clog<<"\n-----------------------------------------"<<endl;
 					clog << "Transmission finished"<<endl;
@@ -682,7 +681,7 @@ int FixedTest::syncMaster()
 		do // ten times
 		{
 			clog << "		_____________________" << endl;
-			clog << "		Sync attempt : " << iCount << endl;
+			clog << "		Sync attempt : " << iCount + 1 << endl;
 
 			string sTemp = getData(true, 1);
 
@@ -706,15 +705,6 @@ int FixedTest::syncMaster()
 
 			
 		return iError;
-
-		//else
-		//{
-		//	clog <<"read was false"<<endl;
-		//	clog<<"-----------------------------------------"<<endl;
-		//	clog<<"-----------------------------------------"<<endl;
-		//	bTransmissionError = true;
-		//	return ERROR_READ_PORT;
-		//}//getData
 
 	}
 	else
@@ -746,7 +736,7 @@ int FixedTest::syncSlave()
 	do // ten times
 	{
 		clog << "		_____________________" << endl;
-		clog << "		Sync attempt : " << iCount+1 << endl;
+		clog << "		Sync attempt : " << iCount + 1 << endl;
 
 		string sTemp = getData(true, 1);
 
@@ -873,7 +863,7 @@ int FixedTest::startSlaveTest()
 		}//getDCB
 		else
 		{
-			clog << "Error getting the slave port DCB" << endl;
+			clog << "Error getting the slave port settings" << endl;
 			//masterCom.closePort();
 			//return _iError;
 		}//getDCB
@@ -905,9 +895,9 @@ int FixedTest::startSlaveTest()
 				clog<<"-----------------------------------------"<<endl;
 						
 				ivTestErrors.clear();
-				//for (unsigned int index = 0; index < vTextToSend.size();
-				//index++)
-				//{
+				for (unsigned int index = 0; index < vTextToSend.size();
+				index++)
+				{
 				//_iLineTimeOut = _iTimeOut * (vTextToSend.at(index).size() + 1);
 					
 					//get Header
@@ -928,7 +918,7 @@ int FixedTest::startSlaveTest()
 								 << tools.errorCodeParser(_iTestError) << endl;
 								bTransmissionError = true;
 								if(testStruct->bStopOnError)
-								;//break;
+									break;
 							}
 
 							ivTestErrors.push_back(_iTestError);
@@ -936,16 +926,16 @@ int FixedTest::startSlaveTest()
 						else
 						{
 							clog << "Error parsing header" << endl;
-							//break;
+							break;
 						}
 					}
 					else
 					{
 						clog << "Error getting the header" << endl;
-						//break;
+						break;
 					}
 					
-				//}//for
+				}//for
 
 				clog<<"\n-----------------------------------------"<<endl;
 				clog << "Transmission finished"<<endl;
@@ -1001,18 +991,19 @@ int FixedTest::communicate(string sSendData, bool bMaster)
 {
 //	bool bRead;
 	bTransmissionError = false;
+	bool bRead;
 	string sTemp = "";
 
-	//if (bMaster)		//Single and Master mode
-	//{					//if true & false then read and write to master port
-	//	bRead = bMaster;		
-	//}
-	//else				//Double mode
-	//{					//if true & true then write to master and read slave
-	//	//bMaster = true;
-	//	//bRead = !bMaster;
-	//	bRead = bMaster;
-	//}
+	if (bMaster)		//Single and Master mode
+	{					//if true then read and write to master port
+		bRead = bMaster;		
+	}
+	else				//Double mode
+	{					//if false then write to master and read slave
+		bMaster = true;
+		//bRead = !bMaster;
+		bRead = false;
+	}
 
 	//send the data
 	if (true == sendData(bMaster, sSendData))
@@ -1020,7 +1011,7 @@ int FixedTest::communicate(string sSendData, bool bMaster)
 		clog <<"write was true\n"<<endl;
 
 		//read the data
-		sTemp = getData(bMaster, sSendData.size() );
+		sTemp = getData(bRead, sSendData.size() );
 
 		if (sTemp != ERROR_TRANSMISSION)
 		{
@@ -1420,7 +1411,7 @@ int FixedTest::sendAndSync(string sInformation)
 		}while(!bStop);
 
 
-		clog << "	waitet for slaves response, none arrived" << endl;
+		clog << "	waited for slaves response, none arrived" << endl;
 		return ERROR_SYNC;
 	}
 	else

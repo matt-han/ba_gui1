@@ -32,25 +32,8 @@ public:
 					  int iStopbits, int iDatabits, int iTransfer, int iTextMode, 
 					  string sTextToTransfer, string sRepeater, bool bLogger, bool bStopOnError,
 					  string sPath);
-
-	void writeINItransferSettings(string sMasterPort, string sSlavePort,
-								  int iTransfer, string sPath);
 	
-	//read methods
 	int readINIFile(string sFilePath, string sPort);
-	int readPortConfig(string sPort,  string sFilePath, int index);
-	int readTransferMode(string sPort, string sFilePath, int index);
-	int readSlave(string sPort, string sFilePath, int index);
-	int readSettings(string sPort, string sFilePath, int index);
-	int readParity(string sPort, string sFilePath, int index);
-	int readProtocol(string sPort, string sFilePath, int index);
-	int readStopbits(string sPort, string sFilePath, int index);
-	int readDatabits(string sPort, string sFilePath, int index);
-	int readBaudRate(string sPort, string sFilePath, int index);
-	int readTextToTransfer(string sPort, string sFilePath, int index);
-	int readLogger(string sPort, string sFilePath);
-	int readStopOnError(string sPort, string sFilePath);
-	int readRepeater(string sPort, string sFilePath);
 	
 	
 	vector<TestStruct> getTestStructure();
@@ -71,7 +54,26 @@ private:
 	vector<TestStruct> vComPorts;
 	
 //------------------------------------------------------------------------------
-//Methods	
+//Methods
+	//write
+	void writeINItransferSettings(string sMasterPort, string sSlavePort,
+								  int iTransfer, string sPath);
+	
+	//read	
+	int readPortConfig(string sPort,  string sFilePath, int index);
+	int readTransferMode(string sPort, string sFilePath, int index);
+	int readSlave(string sPort, string sFilePath, int index);
+	int readSettings(string sPort, string sFilePath, int index);
+	int readParity(string sPort, string sFilePath, int index);
+	int readProtocol(string sPort, string sFilePath, int index);
+	int readStopbits(string sPort, string sFilePath, int index);
+	int readDatabits(string sPort, string sFilePath, int index);
+	int readBaudRate(string sPort, string sFilePath, int index);
+	int readTextToTransfer(string sPort, string sFilePath, int index);
+	int readLogger(string sPort, string sFilePath);
+	int readStopOnError(string sPort, string sFilePath);
+	int readRepeater(string sPort, string sFilePath);
+
 	//Parse from GUI to INI file
 	string parseParityToIni(int iParity);
 	string parseProtocolToIni(int iProtocol);

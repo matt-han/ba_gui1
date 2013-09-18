@@ -6,6 +6,7 @@
 #include "Tools.h"
 #include "Logger.h"
 #include "Constants.h"
+#include "IniFileHandler.h"
 
 #include <vector>
 //#include <thread>
@@ -32,7 +33,6 @@ public:
 //Methods
 	
 	void evaluateInput();
-
 	int startManager();
 	int startAutomaticTest();
 	int startWobbleTest(int iBaudrate, int iParity);
@@ -40,6 +40,7 @@ public:
 
 	//get the text to be transmitted... either from a file, input string or default
 	int getTextToTransmit();
+	void saveSettingsToFile();
 
 
 private:
@@ -47,6 +48,7 @@ private:
 //Variables
 	Tools _tools;
 	Logger * _logger;
+	IniFileHandler * _IniFile;
 	int _iError;
 	bool _bError;
 	bool _bWobbleParity;

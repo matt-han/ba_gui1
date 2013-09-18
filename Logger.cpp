@@ -7,12 +7,13 @@
 //		- bool bLog    -> true for logging events, false for redictecting clog
 //						  to NULL
 //		- string sPort -> COM port for which events will be logged
+//		- int iMasterSlave -> indicates wheter it is a master or slave port
 //------------------------------------------------------------------------------
-Logger::Logger(bool bLog, string sPort)
+Logger::Logger(bool bLog, string sPort, int iMasterSlave)
 {
 	iError = ERROR_SUCCESS;
 	backup = NULL;
-	iError = log(bLog, sPort);
+	iError = log(bLog, sPort, iMasterSlave);
 }
 
 
@@ -38,20 +39,26 @@ Logger::~Logger(void)
 //		- bool bLog    -> true for logging events, false for redictecting clog
 //						  to NULL
 //		- string sPort -> COM port for which events will be logged
+//		- int iMasterSlave -> indicates wheter it is a master or slave port
 //	Return: _iError code signaling if operation succeded or _iError
 //------------------------------------------------------------------------------
-int Logger::log(bool bLog, string sPort)
+int Logger::log(bool bLog, string sPort, int iMasterSlave)
 {
 	//backup the clog system default
 	backup = clog.rdbuf();
 	bool bFileExists = true;
 
+	string sMasterSlave;
 	string sDestFolder = getenv("TEMP"); 
 	string sCompName   = getenv("COMPUTERNAME");
 
 	if(0 == sPort.compare(0,1,"\\"))
 		sPort.erase(0, sPort.find_last_of("\\")+1);
 
+	if(iMasterSlave == 3)
+		sMasterSlave = "Slave_";
+	else
+		sMasterSlave = "Master_";
 
 	int iCount = 1;
 
@@ -64,6 +71,7 @@ int Logger::log(bool bLog, string sPort)
 			path += "\\Serial_Port_Tester_";
 			path += sCompName;
 			path += "_";
+			path += sMasterSlave;
 			path += sPort;
 			path += "_";
 			path += tools.convertToString(iCount);

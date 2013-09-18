@@ -239,6 +239,7 @@ bool PortCommunications::readData(char * lpBuf, DWORD dwSize)
 				if(dwRead == 0)
 				{
 					clog << "no data available to be read. Buffer empty" << endl;
+					CloseHandle(osReader.hEvent);
 					return FALSE;
 				}
 
@@ -250,7 +251,7 @@ bool PortCommunications::readData(char * lpBuf, DWORD dwSize)
 				ourPtr += dwRead;
 				ourCount -= dwRead;
 					
-				if(ourCount<=0) 
+				if(ourCount <= 0) 
 				{
 					clog << "read operation completed" << endl;
 					CloseHandle(osReader.hEvent);

@@ -570,6 +570,10 @@ int Com::setDCB()
 				 << _iError << endl;
 			clog << "Probably baud rate is not truly supported. Check with \"mode com\'x\'\" in the command line" << endl;
 
+			clog << "BaudRate :" << dcb.BaudRate << endl;
+			clog << "Parity   :" << (int)dcb.Parity   << endl;
+			clog << "Stopbits :" << (int)dcb.StopBits << endl;
+			clog << "Databits :" << (int)dcb.ByteSize << endl;
 			return ERROR_SET_DCB;
 		}
 		else

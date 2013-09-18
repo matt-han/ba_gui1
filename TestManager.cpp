@@ -9,6 +9,7 @@ TestManager::TestManager(void)
 	_bContinueTest = true;
 	bStopButton = false;
 	_logger = NULL;
+	_IniFile = NULL;
 }
 
 
@@ -31,7 +32,7 @@ int TestManager::startManager()
 {
 
 	//always create a logger, if not required then it redirects clog to null
-	_logger = new Logger(testStruct.bLoggerState, testStruct.sMasterPort);
+	_logger = new Logger(testStruct.bLoggerState, testStruct.sMasterPort, testStruct.iTransfer);
 	if(_logger->iError != ERROR_SUCCESS)
 	{
 		_iError = _logger->iError;
@@ -49,6 +50,11 @@ int TestManager::startManager()
 	{
 		//automatic test
 		case 0:
+
+			//save test to a ini file if logging is enabled
+			if(testStruct.bLoggerState)
+				saveSettingsToFile();
+
 			_iError = startAutomaticTest();
 			break;
 
@@ -99,6 +105,23 @@ int TestManager::startManager()
 			else
 				iPar = testStruct.iParity;
 
+			//save test to a ini file if logging is enabled
+			if(testStruct.bLoggerState)
+				saveSettingsToFile();
+
+
+
+
+
+
+			//if master wait 1 sec
+			if(testStruct.iTransfer == 2)
+				_tools.wait(100);
+
+
+
+
+
 
 
 			//start the tests
@@ -114,6 +137,7 @@ int TestManager::startManager()
 				{
 					for(iPar = 0; iPar < 3; iPar++)
 					{
+
 						_iError = startWobbleTest(iTemp, iPar);
 						if (_iError != ERROR_SUCCESS)
 						{
@@ -148,6 +172,10 @@ int TestManager::startManager()
 	//fixed
 	//----------------------------------------------------------------------
 		case 2:
+			//save test to a ini file if logging is enabled
+			if(testStruct.bLoggerState)
+				saveSettingsToFile();
+
 			_iError = startFixedTest();
 			break;
 	}
@@ -205,7 +233,13 @@ int TestManager::startFixedTest()
 		if(	iRepeat == testStruct.iRepeater)
 			_bContinueTest = false;
 
+		//if test should stop on first error and the return code was no success,
+		//stop the current test
+		if(testStruct.bStopOnError && _iError != ERROR_SUCCESS)
+			_bContinueTest = false;
+
 		iRepeat++;
+
 	}while(_bContinueTest && !bStopButton);
 
 	return ERROR_SUCCESS;
@@ -259,7 +293,13 @@ int TestManager::startWobbleTest(int iBaudrate, int iParity)
 		if(	iRepeat == testStruct.iRepeater)
 			_bContinueTest = false;
 
+		//if test should stop on first error and the return code was no success,
+		//stop the current test
+		if(testStruct.bStopOnError && _iError != ERROR_SUCCESS)
+			_bContinueTest = false;
+
 		iRepeat++;
+
 	}while(_bContinueTest && !bStopButton);
 	
 	return ERROR_SUCCESS;
@@ -322,7 +362,41 @@ int TestManager::startAutomaticTest()
 		if(testStruct.bStopOnError && _iError != ERROR_SUCCESS)
 			_bContinueTest = false;
 
+		//if test should stop on first error and the return code was no success,
+		//stop the current test
+		if(testStruct.bStopOnError && _iError != ERROR_SUCCESS)
+			_bContinueTest = false;
+
 	}while(_bContinueTest && !bStopButton);
 
 	return ERROR_SUCCESS;
+}
+
+
+void TestManager::saveSettingsToFile()
+{
+	_IniFile = new IniFileHandler();
+
+	string sRepeater = _tools.convertToString(testStruct.iRepeater);
+
+	_IniFile->writeINIfile(testStruct.sMasterPort,
+							testStruct.sSlavePort,
+							testStruct.iBaud,
+							testStruct.iBaudrateMax,
+							testStruct.iTestMode,
+							testStruct.iParity,
+							testStruct.iProtocol,
+							testStruct.iStopbits,
+							testStruct.iDatabits,
+							testStruct.iTransfer,
+							testStruct.iTestMode,
+							testStruct.sTextToTransfer,
+							sRepeater,
+							testStruct.bLoggerState,
+							testStruct.bStopOnError,
+							"");
+
+	if(_IniFile != NULL)
+		delete _IniFile;
+
 }
