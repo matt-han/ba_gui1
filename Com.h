@@ -34,8 +34,7 @@ public:
 
 	DCB dcb;
 
-	//Port timeout struct
-	COMMTIMEOUTS timeouts;
+	
 	vector<string> vPortList;
 	vector<string> vBaud;
 	vector<DWORD> dwvBaudRates;
@@ -69,8 +68,10 @@ protected:
 //------------------------------------------------------------------------------
 //Variables
 	
-				//Device-Control Block
+	//Device-Control Block
 	COMMPROP commProp;
+	//Port timeout struct
+	COMMTIMEOUTS timeouts;
 	bool protocol;
 	bool transfer;
 

@@ -450,7 +450,7 @@ int Com::setTimeOuts(int iTimeOut)
 
 	//EVENT BASED READ
 
-	//// Specify time-out between charactor for receiving.
+	//// Specify time-out between character for receiving.
 	//timeouts.ReadIntervalTimeout = MAXDWORD;
 	//// Specify value that is multiplied 
 	//// by the requested number of bytes to be read. 
