@@ -113,6 +113,8 @@ void FixedTest::setTextVector(int iTextMode)
 //------------------------------------------------------------------------------
 int FixedTest::startSingleTest()
 {
+	bTransmissionError = false;
+
 	masterHCom = masterCom.openPort(masterCom.sPort);
 	if (INVALID_HANDLE_VALUE == masterHCom)
 	{
@@ -160,10 +162,11 @@ int FixedTest::startSingleTest()
 					{
 						clog << "Error communicating. Error : "<< _iTestError << "\n"
 							<< tools.errorCodeParser(_iTestError) << endl;
+						
 						if(testStruct->bStopOnError == true)
 						{
-							masterCom.closePort();
-							return _iError;
+							ivTestErrors.push_back(_iTestError);
+							break;
 						}
 					}
 					
@@ -212,7 +215,7 @@ int FixedTest::startSingleTest()
 		{
 			clog << "Error closing " << masterCom.sPort << endl;
 			if (bTransmissionError == true)
-				clog << "Error in tranismition" << endl;	
+				clog << "Error in tranismition. Error :\n" << tools.errorCodeParser(_iTestError) << endl;	
 			return _iError;
 		}
 
@@ -230,6 +233,7 @@ int FixedTest::startSingleTest()
 //------------------------------------------------------------------------------
 int FixedTest::startDoubleTest()
 {
+	bTransmissionError = false;
 	//Prepare the master for communications
 	masterHCom = masterCom.openPort(masterCom.sPort);
 	if (INVALID_HANDLE_VALUE == masterHCom)
@@ -333,11 +337,12 @@ int FixedTest::startDoubleTest()
 		{
 			clog << "Error communicating. Error : "<< _iTestError << "\n"
 				 << tools.errorCodeParser(_iTestError) << endl;
+			bTransmissionError = true;
+
 			if(testStruct->bStopOnError == true)
 			{
-				masterCom.closePort();
-				slaveCom.closePort();
-				return _iError;
+				ivTestErrors.push_back(_iTestError);
+				break;
 			}
 		}
 
@@ -368,7 +373,7 @@ int FixedTest::startDoubleTest()
 	{
 		clog << "Error closing " << masterCom.sPort << endl;
 		if (bTransmissionError == true)
-			clog << "Error in tranismition" << endl;	
+			clog << "Error in tranismition. Error :\n" << tools.errorCodeParser(_iTestError) << endl;	
 		return _iError;
 	}
 
@@ -377,7 +382,7 @@ int FixedTest::startDoubleTest()
 	{
 		clog << "Error closing " << masterCom.sPort << endl;
 		if (bTransmissionError == true)
-			clog << "Error in tranismition" << endl;	
+			clog << "Error in tranismition. Error :\n" << tools.errorCodeParser(_iTestError) << endl;	
 		return _iError;
 	}
 
@@ -465,6 +470,8 @@ int FixedTest::setPortSettings(Com &com)
 //------------------------------------------------------------------------------
 int FixedTest::startMasterTest()
 {
+	bTransmissionError = false;
+
 	clog << "I'M THE MASTER" << endl;
 	string sTestString = "teststring";
 	string sTestSettings, sHeader;
@@ -585,26 +592,28 @@ int FixedTest::startMasterTest()
 					index++)
 					{
 						_iLineTimeOut = _iTimeOut * (vTextToSend.at(index).size() + 1);
-						//_iLineTimeOut = _iTimeOut * (sTestString.size() + 1); 
+
 						clog << "\n\nText line nr.: " << "1" << endl;
 						clog << "time out: " << _iLineTimeOut << " ms" << endl;
 		
 						//create header for current line
-						//sHeader = createHeader(1, sTestString.size() );
-						sHeader = createHeader(1, vTextToSend.at(index).size() );
+						sHeader = createHeader(index + 1, vTextToSend.at(index).size() );
 
 						//SEND HEADER
 						sendAndSync(sHeader);
 
 						//SEND TEXT
-						//_iTestError = communicateMaster(sTestString);
 						_iTestError = communicateMaster(vTextToSend.at(index));
 
 						if(_iTestError != ERROR_SUCCESS)
 						{
 							clog << "Error communicating. Error : "<< _iTestError << "\n"
 								 << tools.errorCodeParser(_iTestError) << endl;
+							
 							bTransmissionError = true;
+							
+							ivTestErrors.push_back(_iTestError);
+							
 							if(testStruct->bStopOnError)
 								break;
 						}
@@ -651,8 +660,6 @@ int FixedTest::startMasterTest()
 
 		return _iError;
 	}
-
-	//no more code needed from here on
 
 }
 
@@ -916,7 +923,11 @@ int FixedTest::startSlaveTest()
 							{
 								clog << "Error communicating. Error : "<< _iTestError << "\n"
 								 << tools.errorCodeParser(_iTestError) << endl;
+								
 								bTransmissionError = true;
+								
+								ivTestErrors.push_back(_iTestError);
+								
 								if(testStruct->bStopOnError)
 									break;
 							}
@@ -965,8 +976,10 @@ int FixedTest::startSlaveTest()
 	if(_iError != ERROR_SUCCESS)
 	{
 		clog << "Error closing " << masterCom.sPort << endl;
+		
 		if (bTransmissionError == true)
-			clog << "Error in tranismition" << endl;	
+				clog << "Error in tranismition, see logs for more information" << endl;	
+		
 		return _iError;
 	}
 

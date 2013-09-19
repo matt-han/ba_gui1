@@ -607,8 +607,6 @@ void Interpreter::handleGui()
 					{
 						MessageBoxA(NULL, "Transmission finished", WINDOW_TITLE,
 									MB_OK);
-						//tools.printErrorVector(_testManager->testStruct.bLoggerState,
-						//	_testManager->ivTestErrors);
 					}
 					else
 					{

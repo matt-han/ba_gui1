@@ -1355,9 +1355,6 @@ void Window::viewAllElements(BOOLEAN bView)
 	EnableWindow(GetDlgItem(m_hwnd, ID_LOGGER),  bView);
 	//stop on 1. error
 	EnableWindow(GetDlgItem(m_hwnd, ID_STOP_ON_ERR),  bView);
-
-	
-
 }
 
 

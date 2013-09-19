@@ -242,7 +242,12 @@ int TestManager::startFixedTest()
 
 	}while(_bContinueTest && !bStopButton);
 
-	return ERROR_SUCCESS;
+
+	if(testStruct.bStopOnError)
+		return _iError;
+	else
+		return ERROR_SUCCESS;
+
 }
 
 
@@ -302,7 +307,10 @@ int TestManager::startWobbleTest(int iBaudrate, int iParity)
 
 	}while(_bContinueTest && !bStopButton);
 	
-	return ERROR_SUCCESS;
+	if(testStruct.bStopOnError)
+		return _iError;
+	else
+		return ERROR_SUCCESS;
 }
 
 
@@ -348,6 +356,8 @@ int TestManager::startAutomaticTest()
 
 			//Master 
 			case 2:
+				if(iRepeat == 1)
+					_tools.wait(100);
 				_iError = automatic.startMasterTest();
 				break;
 
@@ -359,9 +369,6 @@ int TestManager::startAutomaticTest()
 
 		iRepeat++;
 
-		if(testStruct.bStopOnError && _iError != ERROR_SUCCESS)
-			_bContinueTest = false;
-
 		//if test should stop on first error and the return code was no success,
 		//stop the current test
 		if(testStruct.bStopOnError && _iError != ERROR_SUCCESS)
@@ -369,7 +376,10 @@ int TestManager::startAutomaticTest()
 
 	}while(_bContinueTest && !bStopButton);
 
-	return ERROR_SUCCESS;
+	if(testStruct.bStopOnError)
+		return _iError;
+	else
+		return ERROR_SUCCESS;
 }
 
 
