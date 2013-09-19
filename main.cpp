@@ -83,6 +83,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR pCmdLine, int nCmdShow)
 		}
 		else
 		{//error parsing parameters
+			tools.showCmdHelp();
 			return _iError;
 		}
 	}

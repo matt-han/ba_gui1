@@ -448,3 +448,20 @@ string Tools::errorCodeParser(int iError)
 	return sError;
 
 }
+
+
+void Tools::showCmdHelp()
+{
+	cout << WINDOW_TITLE << endl;
+	cout << "Please use the Serial Port Tester with the following options:" << endl;
+	cout << "SerialPortTester.exe <Test Configuration File> /[COM Port]" << endl;
+	cout << "If no parameters are specified, the programm starts the GUI" << endl;
+	cout << "<Test Configuration File>:" << endl;
+	cout << " A file which has the test settings for one or more COM ports" << endl;
+	cout <<	" It can be written manually, but it is advisable to create one with the GUI" << endl << endl;
+	cout << "/[COM Port]" << endl;
+	cout << " This is an optional parameter, it specifies which prot will be tested" << endl;
+	cout << " If a port is given, the test configuration file header has to be [COM]" << endl;
+	//cout << "" << endl;
+	//cout << "" << endl;
+}

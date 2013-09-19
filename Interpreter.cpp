@@ -223,7 +223,7 @@ void Interpreter::setRepeater(string sRepeater)
 		else
 		{
 			MessageBoxA(NULL, "Error in repeater value,\n"
-							  "please type an number > 0",
+							  "please type a number > 0",
 							  WINDOW_TITLE, MB_OK | MB_ICONWARNING);
 			this->_iRepeater = DEFAULT_VALUE;
 		}

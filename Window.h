@@ -97,6 +97,7 @@ private:
 	char _szTextToSend[31];
 	string _sTemp;
 	string _sPath;
+	string _sHelpInfo;
 	int _i;
 
 	vector<string> _svBaud;

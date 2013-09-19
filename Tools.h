@@ -43,6 +43,7 @@ public:
 	void printErrorVector(bool bPrint, vector<int> ivTestErrors);
 	string replaceASCII(string sToSend);
 	string errorCodeParser(int iError);
+	void showCmdHelp();
 
 //------------------------------------------------------------------------------
 //Template for vector operation "remove_if"

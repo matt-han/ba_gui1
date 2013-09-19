@@ -50,6 +50,23 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	LRESULT portIndex = 0;
 	LRESULT baudIndex = -1;
+
+	_sHelpInfo = "This is the GUI for the Serial Port Tester.\n";
+	_sHelpInfo.append("To start a test, please pick the test settings and press start.\n");
+	_sHelpInfo.append("If you want to load a test configuration file, please press\n");
+	_sHelpInfo.append("\"load test file\"and select the file\n");
+	_sHelpInfo.append("To save a test configuration in a file, press \"save\".");
+	_sHelpInfo.append("If no text is given, a default text is transfered in the test, else");
+	_sHelpInfo.append("load transfer a file, please press \"load file to send\" and select the file.");
+	_sHelpInfo.append("If you wish to transfer a specified text, write the text in the text box");
+	_sHelpInfo.append("and press \"load text to send\". After selecting a text mode press the start button.");
+	_sHelpInfo.append("If you wish to log the test, check the check box \"Logger\".");
+	_sHelpInfo.append("To repeat the test, tipe how often the test should be repeated(1 - 99999). Zero stands for");
+	_sHelpInfo.append("and infinite test, that has to be stopped by the user(stop button)");
+	_sHelpInfo.append("The stop on 1. error option stops the test on the first identified error.");
+	//_sHelpInfo.append("");
+
+
 	switch(uMsg)  
 	{
 		case WM_CREATE:
@@ -861,6 +878,7 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 
 					case ID_BT_HELP:
+						MessageBoxA(m_hwnd, _sHelpInfo.c_str(), WINDOW_TITLE, MB_OK);
 						break;
 
 						
