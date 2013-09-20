@@ -489,6 +489,7 @@ int IniFileHandler::readPortConfig(string sPort, string sFilePath, int index)
 	
 }
 
+
 //------------------------------------------------------------------------------
 //	Reads the transfer mode setting from the INI file
 //	Parameters:
@@ -721,6 +722,7 @@ int IniFileHandler::readStopbits(string sPort, string sFilePath, int index)
 	}
 	return ERROR_SUCCESS;
 }
+
 
 //------------------------------------------------------------------------------
 //	Reads the databits setting from the INI file
@@ -1123,19 +1125,14 @@ int IniFileHandler::parseBaud(string sBaud, int index)
 
 	sRate = tools.delSpacesAndComents(sBaud);
 
-	if (sRate == "MIN-MAX")
-	{
-		vComPorts.at(index).iBaud = 0;
-		vComPorts.at(index).iBaudrateMax = 1;
-	}
-	else if( 0 != sRate.find_first_of("-")) //2 Baud rate values were given
+	if( 0 != sRate.find_first_of("-")) //2 Baud rate values were given
 	{
 		iTemp = sRate.find_first_of("-");
 		sTemp = sRate.substr(0, iTemp);
 		sTemp2 = sRate.substr(sRate.find_first_of("-") + 1, sRate.length() - iTemp);
 
 		if(sTemp == "MIN")
-			vComPorts.at(index).iBaud = 0;
+			vComPorts.at(index).iBaud = MIN_BAUD;
 		else
 		{
 			iTemp = strtol(sTemp.c_str(),NULL, 10);
@@ -1146,7 +1143,7 @@ int IniFileHandler::parseBaud(string sBaud, int index)
 		}
 
 		if (sTemp2 == "MAX")
-			vComPorts.at(index).iBaudrateMax = 1;
+			vComPorts.at(index).iBaudrateMax = MAX_BAUD;
 		else
 		{
 			iTemp = strtol(sTemp2.c_str(),NULL, 10);

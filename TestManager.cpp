@@ -50,11 +50,6 @@ int TestManager::startManager()
 	{
 		//automatic test
 		case 0:
-
-			//save test to a ini file if logging is enabled
-			if(testStruct.bLoggerState)
-				saveSettingsToFile();
-
 			_iError = startAutomaticTest();
 			break;
 
@@ -63,38 +58,38 @@ int TestManager::startManager()
 		case 1:
 			_bWobbleParity = false;
 			int iPar;
-			//user wrote MIN - MAX Baudrate in INI file
-			if(testStruct.iBaud == 0 && testStruct.iBaudrateMax == 1)
+
+			//find baud rates
+			sBegin = _tools.convertToString(testStruct.iBaud);
+			sEnd   = _tools.convertToString(testStruct.iBaudrateMax);
+
+			for( int i = 0;  i < testStruct.svBaudrates.size(); i++)
 			{
-				iBegin = 0;
-				iEnd = testStruct.svBaudrates.size() - 1;
-			}
-			else
-			{
+				if(sBegin == testStruct.svBaudrates.at(i))
+					iBegin = i;
 
-				sBegin = _tools.convertToString(testStruct.iBaud);
-				sEnd   = _tools.convertToString(testStruct.iBaudrateMax);
-
-				for( int i = 0;  i < testStruct.svBaudrates.size(); i++)
+				if(sEnd == testStruct.svBaudrates.at(i))
 				{
-					if(sBegin == testStruct.svBaudrates.at(i))
-						iBegin = i;
-
-					if(sEnd == testStruct.svBaudrates.at(i))
-					{
-						iEnd = i;
-						break;
-					}
-				}
-
-				if(iBegin >= iEnd)
-				{
-					MessageBoxA(NULL, "MAX baud rate has to be higher than MIN baud rate", WINDOW_TITLE,
-								MB_OK | MB_ICONERROR);
-					_iError = ERROR_BAUD_MINMAX;
+					iEnd = i;
 					break;
 				}
-			}//MIN MAX Baudrate
+			}
+
+			//user wrote MIN in INI file
+			if(testStruct.iBaud == MIN_BAUD)
+				iBegin = 0;
+
+			//user wrote MAX in INI file
+			if(testStruct.iBaudrateMax == MAX_BAUD)
+				iEnd = testStruct.svBaudrates.size() - 1;
+
+			if(iBegin >= iEnd)
+			{
+				MessageBoxA(NULL, "MAX baud rate has to be higher than MIN baud rate", WINDOW_TITLE,
+							MB_OK | MB_ICONERROR);
+				_iError = ERROR_BAUD_MINMAX;
+				break;
+			}
 
 
 			//min max parity
@@ -105,24 +100,13 @@ int TestManager::startManager()
 			else
 				iPar = testStruct.iParity;
 
+			//if master wait 5 sec
+			if(testStruct.iTransfer == 2)
+				_tools.wait(500);
+
 			//save test to a ini file if logging is enabled
 			if(testStruct.bLoggerState)
 				saveSettingsToFile();
-
-
-
-
-
-
-			//if master wait 1 sec
-			if(testStruct.iTransfer == 2)
-				_tools.wait(100);
-
-
-
-
-
-
 
 			//start the tests
 			for(int index = iBegin; index <= iEnd; index++)
@@ -163,7 +147,6 @@ int TestManager::startManager()
 					}
 				}
 
-				
 			}//for baudrates
 
 			break;
@@ -172,14 +155,10 @@ int TestManager::startManager()
 	//fixed
 	//----------------------------------------------------------------------
 		case 2:
-			//save test to a ini file if logging is enabled
-			if(testStruct.bLoggerState)
-				saveSettingsToFile();
-
 			_iError = startFixedTest();
 			break;
 	}
-	
+
 	return _iError;
 }
 
@@ -198,6 +177,10 @@ int TestManager::startFixedTest()
 
 	//set the text to be transfered
 	fixedTest.setTextVector(testStruct.iTransTextMode);
+
+	//save test to a ini file if logging is enabled
+	if(testStruct.bLoggerState)
+		saveSettingsToFile();
 
 	do
 	{
@@ -219,7 +202,7 @@ int TestManager::startFixedTest()
 			//Master 
 			case 2:
 				if(iRepeat == 1)
-					_tools.wait(100);
+					_tools.wait(500);
 
 				_iError = fixedTest.startMasterTest();
 				break;
@@ -247,7 +230,6 @@ int TestManager::startFixedTest()
 		return _iError;
 	else
 		return ERROR_SUCCESS;
-
 }
 
 
@@ -331,11 +313,16 @@ int TestManager::startAutomaticTest()
 	testStruct.iDatabits		= 8;
 	testStruct.sTextToTransfer	= "";
 	testStruct.iTransTextMode	= DEFAULT_VALUE;
+	testStruct.bStopOnError		= true;
 
 
 	FixedTest automatic(&testStruct);
 
 	automatic.setTextVector(testStruct.iTransTextMode);
+
+	//save test to a ini file if logging is enabled
+	if(testStruct.bLoggerState)
+		saveSettingsToFile();
 
 	//ask stop button..........
 	do
@@ -357,7 +344,7 @@ int TestManager::startAutomaticTest()
 			//Master 
 			case 2:
 				if(iRepeat == 1)
-					_tools.wait(100);
+					_tools.wait(500);
 				_iError = automatic.startMasterTest();
 				break;
 

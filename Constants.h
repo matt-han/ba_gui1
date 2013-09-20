@@ -152,6 +152,8 @@ const char ERROR_TRANSMISSION[] = "ERROR_TRANSMISSION";
 //------------------------------------------------------------------------------
 //Constants
 #define WAIT_FOR_READ_OBJ 500
+#define MIN_BAUD 0
+#define MAX_BAUD 1
 
 //------------------------------------------------------------------------------
 //Variables

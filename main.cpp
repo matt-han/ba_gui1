@@ -18,6 +18,7 @@ void start();
 int createGUI(HINSTANCE hInstance, int nCmdShow);
 int parseCmdParameters();
 int parsePort();
+
 string sFilePath, sPort;
 vector<string> svParameters;
 bool bContinue = true;
@@ -74,8 +75,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR pCmdLine, int nCmdShow)
 			}
 
 			cout << "Testing finished" << endl;
-			
-			//getchar();
 
 			FreeConsole();
 

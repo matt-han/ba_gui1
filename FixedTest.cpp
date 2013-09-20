@@ -723,6 +723,7 @@ int FixedTest::syncMaster()
 	}//sendData
 }
 
+
 //------------------------------------------------------------------------------
 //	slave wait for ESC and sends ACK to master
 //Returns if slave is sync

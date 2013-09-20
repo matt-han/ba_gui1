@@ -295,7 +295,6 @@ string Tools::replaceASCII(string sToSend)
 	{
 		//if char at i == "\\"
 		if(0 == sToSend.compare(i,1,"\\"))
-			//strcmp("\\", sToSend.at(i) )
 		{
 			sTemp = sToSend.at(i+1);
 			//sTemp.append(sToSend.at(i+2));
@@ -309,14 +308,13 @@ string Tools::replaceASCII(string sToSend)
 			{
 				clog << "Couldn't convert " << sTemp << " to a char" << endl;
 				clog << "continue without converting " << endl;
-				return "";
+				i++;
 			}
-
-			//append the read&parsed char
-			sParsed.insert(sParsed.end(), char(iCharVal) );
-				//append(char(iCharVal));
-
-			i = i + 3;
+			else
+			{	//append the read&parsed char
+				sParsed.insert(sParsed.end(), char(iCharVal) );
+				i = i + 3;
+			}
 		}
 		else //append the char to the return string
 		{

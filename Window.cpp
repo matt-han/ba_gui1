@@ -51,20 +51,33 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	LRESULT portIndex = 0;
 	LRESULT baudIndex = -1;
 
-	_sHelpInfo = "This is the GUI for the Serial Port Tester.\n";
+	_sHelpInfo = "This is the GUI for the Serial Port Tester.\n\n";
 	_sHelpInfo.append("To start a test, please pick the test settings and press start.\n");
 	_sHelpInfo.append("If you want to load a test configuration file, please press\n");
-	_sHelpInfo.append("\"load test file\"and select the file\n");
-	_sHelpInfo.append("To save a test configuration in a file, press \"save\".");
-	_sHelpInfo.append("If no text is given, a default text is transfered in the test, else");
-	_sHelpInfo.append("load transfer a file, please press \"load file to send\" and select the file.");
-	_sHelpInfo.append("If you wish to transfer a specified text, write the text in the text box");
-	_sHelpInfo.append("and press \"load text to send\". After selecting a text mode press the start button.");
-	_sHelpInfo.append("If you wish to log the test, check the check box \"Logger\".");
-	_sHelpInfo.append("To repeat the test, tipe how often the test should be repeated(1 - 99999). Zero stands for");
-	_sHelpInfo.append("and infinite test, that has to be stopped by the user(stop button)");
-	_sHelpInfo.append("The stop on 1. error option stops the test on the first identified error.");
-	//_sHelpInfo.append("");
+	_sHelpInfo.append("\"load test file\"and select the file.\n");
+	_sHelpInfo.append("To save a test configuration in a file, press \"save\".\n");
+	_sHelpInfo.append("If no text is given, a default text is transfered in the test, else to ");
+	_sHelpInfo.append("transfer a file, please press \"load file to send\" and select the file.\n");
+	_sHelpInfo.append("If you wish to transfer a specified text, write the text in the text box ");
+	_sHelpInfo.append("and press \"load text to send\". After selecting a text mode press the start button.\n");
+	_sHelpInfo.append("If you wish to send ASCII control character please tipe \\ and hexadecimal value of the control character (CR -> \\od).\n");
+	_sHelpInfo.append("If you wish to log the test, check the check box \"Logger\".\n");
+	_sHelpInfo.append("To repeat the test, tipe how often the test should be repeated(1 - 99999). Zero stands for ");
+	_sHelpInfo.append("an infinite test, that has to be stopped by the user(stop button).\n");
+	_sHelpInfo.append("The stop on 1. error option stops the test on the first identified error.\n\n");
+	_sHelpInfo.append("Test modes:\n");
+	_sHelpInfo.append("- Automatic :Tests the selected port with 96,o,1,8 in an infintie test.\n");
+	_sHelpInfo.append("- Wobble      :Tests the selected port with the user selected settings from the min\n                        baud rate to the max baud rate.\n");
+	_sHelpInfo.append("- Fixed           :Tests the selected port with the user selected settings.\n\n");
+	_sHelpInfo.append("Transfer modes:\n");
+	_sHelpInfo.append("- Shorted :Tests one port that sends and recieves the information with a loopback\n                   connector.\n");
+	_sHelpInfo.append("- Double  :Test between 2 ports with a null modem cable\n");
+	_sHelpInfo.append("- Master   :Sends port settings to a slave\n");
+	_sHelpInfo.append("- Slave      :Recieves information from the master and replies\n\n");
+	_sHelpInfo.append("In a Master - Slave test both ports need to have the same test configuration. Please start the master and 5 seconds later the slave.\n");
+	_sHelpInfo.append("In this test, both ports are independent and do not know of the existence of the other port. The master port sends information and \n");
+	_sHelpInfo.append("waits for a reply. The slave port waits for input information and resends the information.\n");
+	//_sHelpInfo.append("\n");
 
 
 	switch(uMsg)  
@@ -1107,12 +1120,17 @@ void Window::sendTestSettings()
 
 }
 
+
 //------------------------------------------------------------------------------
 //	Sends the GUI input repeater settings to the interpreter
 //------------------------------------------------------------------------------
 void Window::sendRepeater()
 {
-	GetWindowTextA(_hwnd_Repeater, _szRepeater, 5);
+	if(_iTestMode == 0)
+		_szRepeater[0] = '1';
+	else
+		GetWindowTextA(_hwnd_Repeater, _szRepeater, 5);
+
 	interpreter->setRepeater(_szRepeater);
 }
 
@@ -1401,46 +1419,6 @@ void Window::viewPortElements(BOOLEAN bView)
 	EnableWindow(GetDlgItem(m_hwnd, ID_LB_TEXT), bView);
 
 }
-//------------------------------------------------------------------------------
-//	Set the path for the test file to be used
-//	Return: string with the file path
-//------------------------------------------------------------------------------
-//string Window::getTransferFile()
-//{
-//	int iLen = GetWindowTextLengthW(_hwnd_lbLoad);
-//	char* pstrText;
-//	pstrText = (char*) malloc (sizeof(char)*iLen+1);
-//
-//	if(pstrText == NULL)
-//	{
-//		_iError = GetLastError();
-//		clog << "Error allocating memory. Error : " << _iError << endl;
-//		return "-1";
-//	}
-//
-//	if (0 == GetWindowTextA(_hwnd_lbLoad, pstrText, iLen) )
-//	{
-//		_iError = GetLastError();
-//		clog << "Error getting path for transfer file. Error: " <<
-//				_iError << endl;
-//		return "-1";
-//	}
-//
-//	_sTransferFilePath = interpreter.tools.convertToString(pstrText);
-//
-//	free(pstrText);
-//	pstrText = NULL;
-//	
-//	return _sTransferFilePath;
-//}
-
-
-//------------------------------------------------------------------------------
-//	Open file winapi dialog box
-//  http://msdn.microsoft.com/en-us/library/ms646829%28v=vs.85%29.aspx#open_file
-//	Return: file path as string
-//------------------------------------------------------------------------------
-
 
 
 

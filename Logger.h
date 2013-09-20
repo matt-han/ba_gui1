@@ -25,7 +25,7 @@ public:
 //------------------------------------------------------------------------------
 //Methods
 	int log(bool bLog, string sPort, int MasterSlave);
-	void closelog(bool bLog);
+	//void closelog(bool bLog);
 
 
 private:
