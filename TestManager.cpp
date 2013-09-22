@@ -5,10 +5,11 @@
 //------------------------------------------------------------------------------
 TestManager::TestManager(void)
 {
-	_bTestStarted = false;
+	_bTestStarted  = false;
 	_bContinueTest = true;
-	bStopButton = false;
-	_logger = NULL;
+	bStopButton    = false;
+
+	_logger  = NULL;
 	_IniFile = NULL;
 }
 
@@ -370,6 +371,9 @@ int TestManager::startAutomaticTest()
 }
 
 
+//------------------------------------------------------------------------------
+//	Saves the current test settings to a test configuration file
+//------------------------------------------------------------------------------
 void TestManager::saveSettingsToFile()
 {
 	_IniFile = new IniFileHandler();

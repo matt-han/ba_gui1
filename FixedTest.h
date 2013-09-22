@@ -22,7 +22,6 @@ using namespace std;
 class FixedTest
 {
 public:
-	FixedTest(void);
 	FixedTest(TestStruct *testStruct);
 	~FixedTest(void);
 
@@ -75,16 +74,19 @@ private:
 	string _ACK;
 	string _sReceivedFromMaster;
 
+	//Communication methods
 	int communicate(string sSendData, bool bMaster);
-
-
-
 	bool sendData(bool MasterSlave, string sSendData);
 	string getData(bool MasterSlave, int iDataSize);
-	void printTestSettings();
+
+	//set settings methods
 	void setProtocol(int iProtocol, Com *com);
 	int setPortDefaultSettings(Com &com); //timeout and 96,o,8,1
 	int setPortSettings(Com &com);
+
+	void printTestSettings();
+
+	//only master / slave methods
 	int syncMaster();
 	int syncSlave();
 
@@ -93,8 +95,6 @@ private:
 
 	int sendAndSync(string sHeader);
 	int getAndSync(int iLength);
-//	int sendTestSettings(string sTestInformation);
-
 
 	int communicateMaster(string sSendData);
 	int communicateSlave(int iLength);

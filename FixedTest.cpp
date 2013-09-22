@@ -1,20 +1,5 @@
 #include "FixedTest.h"
 
-//------------------------------------------------------------------------------
-//Default constructor
-//------------------------------------------------------------------------------
-//FixedTest::FixedTest(void)
-//{
-//	defaultText[0] = "Freude, schoener Goetterfunken,";
-//	defaultText[1] = "Tochter aus Elysium!";
-//	defaultText[2] = "Wir betreten feuertrunken,";
-//	defaultText[3] = "Himmlische, Dein Heiligthum.";
-//	defaultText[4] = "Deine Zauber binden wieder,";
-//	defaultText[5] = "Was die Mode streng getheilt,";
-//	defaultText[6] = "Alle Menschen werden Brueder,";
-//	defaultText[7] = "Wo Dein sanfter Fluegel weilt";
-//	bTransmissionError = false;
-//}
 
 //------------------------------------------------------------------------------
 //	Constructor for new fixed test
@@ -310,10 +295,7 @@ int FixedTest::startDoubleTest()
 
 	//slave is ready, start testing
 
-
 	printTestSettings();
-
-
 
 	//start the communication
 	clog<<"-----------------------------------------"<<endl;
@@ -570,11 +552,9 @@ int FixedTest::startMasterTest()
 			_iError = setPortSettings(masterCom);
 			if(_iError == ERROR_SUCCESS)
 			{
-
 				//print the test information
 				printTestSettings();					
 				
-
 				//sync with the new settings
 				clog << "trying to sync with the new settings! " << endl;
 				_iError = syncMaster();

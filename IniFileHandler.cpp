@@ -1123,7 +1123,7 @@ int IniFileHandler::parseBaud(string sBaud, int index)
 
 	string sRate, sTemp, sTemp2;
 
-	sRate = tools.delSpacesAndComents(sBaud);
+	sRate = tools.delSpaces(sBaud);
 
 	if( 0 != sRate.find_first_of("-")) //2 Baud rate values were given
 	{
@@ -1204,7 +1204,7 @@ int IniFileHandler::parseParity(string sParity, int index)
 	string sPar;//, sTemp, sTemp2;
 	int iErr = ERROR_SUCCESS;
 
-	sPar = tools.delSpacesAndComents(sParity);
+	sPar = tools.delSpaces(sParity);
 
 	if (sPar == "MIN-MAX")
 	{

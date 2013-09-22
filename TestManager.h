@@ -9,8 +9,6 @@
 #include "IniFileHandler.h"
 
 #include <vector>
-//#include <thread>
-
 
 
 using namespace std;
@@ -29,23 +27,16 @@ public:
 	vector<int> ivTestErrors;
 	string s;
 	bool bStopButton;
+
 //------------------------------------------------------------------------------
 //Methods
 	
-	void evaluateInput();
 	int startManager();
-	int startAutomaticTest();
-	int startWobbleTest(int iBaudrate, int iParity);
-	int startFixedTest();
-
-	//get the text to be transmitted... either from a file, input string or default
-	int getTextToTransmit();
-	void saveSettingsToFile();
-
 
 private:
 //------------------------------------------------------------------------------
 //Variables
+
 	Tools _tools;
 	Logger * _logger;
 	IniFileHandler * _IniFile;
@@ -55,7 +46,13 @@ private:
 	bool _bTestStarted;
 	bool _bContinueTest;
 
-	HANDLE _hSubThread;
+//------------------------------------------------------------------------------
+//Methods
+
+	int startAutomaticTest();
+	int startWobbleTest(int iBaudrate, int iParity);
+	int startFixedTest();
+	void saveSettingsToFile();
 };
 
 #endif

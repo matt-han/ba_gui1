@@ -93,37 +93,37 @@ string Tools::printTime()
 //		- string s -> string containing the system time
 //	Return: parsed string of the system time
 //------------------------------------------------------------------------------
-string Tools::parseTime(string s)
-{
-	unsigned int position1;
-	unsigned int position2;
-	bool bpos1 = true;
-	bool bpos2 = true;
-	while(bpos1)
-	{
-		position1 = s.find_first_of(":");
-		if (position1 != s.npos)
-			s.replace(position1, 1,"xx");
-		else
-			bpos1 = false;
-	}
-
-	while(bpos2)
-	{
-		position2 = s.find_first_of(" ");
-		if (position2 != s.npos)
-			s.replace(position2, 1,"_");
-		else
-			bpos2 = false;
-	}
-	
-	//if (position != s.npos)
-	//	s.erase(position ,s.npos);
-	//
-	//s.erase(remove_if(s.begin(), s.end(), isspace),s.end());
-	//
-	return s;
-}
+//string Tools::parseTime(string s)
+//{
+//	unsigned int position1;
+//	unsigned int position2;
+//	bool bpos1 = true;
+//	bool bpos2 = true;
+//	while(bpos1)
+//	{
+//		position1 = s.find_first_of(":");
+//		if (position1 != s.npos)
+//			s.replace(position1, 1,"xx");
+//		else
+//			bpos1 = false;
+//	}
+//
+//	while(bpos2)
+//	{
+//		position2 = s.find_first_of(" ");
+//		if (position2 != s.npos)
+//			s.replace(position2, 1,"_");
+//		else
+//			bpos2 = false;
+//	}
+//	
+//	//if (position != s.npos)
+//	//	s.erase(position ,s.npos);
+//	//
+//	//s.erase(remove_if(s.begin(), s.end(), isspace),s.end());
+//	//
+//	return s;
+//}
 
 
 //------------------------------------------------------------------------------
@@ -133,12 +133,12 @@ string Tools::parseTime(string s)
 //		- string s -> string to be parsed
 //	Return: parsed string, without white spaces or '#'
 //------------------------------------------------------------------------------
-string Tools::delSpacesAndComents(string s)
+string Tools::delSpaces(string s)
 {
-	unsigned int position = s.find_first_of("#");
-	
-	if (position != s.npos)
-		s.erase(position ,s.npos);
+	//unsigned int position = s.find_first_of("#");
+	//
+	//if (position != s.npos)
+	//	s.erase(position ,s.npos);
 	
 	s.erase(remove_if(s.begin(), s.end(), isspace),s.end());
 	
@@ -448,6 +448,9 @@ string Tools::errorCodeParser(int iError)
 }
 
 
+//------------------------------------------------------------------------------
+// shows a help text in case the user gives the wrong input parameters
+//------------------------------------------------------------------------------
 void Tools::showCmdHelp()
 {
 	cout << WINDOW_TITLE << endl;

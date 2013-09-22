@@ -36,8 +36,8 @@ public:
 	string convertToString(char * Array);
 	string convertToString(int number);
 	string printTime();
-	string parseTime(string s);
-	string delSpacesAndComents(string s);
+	//string parseTime(string s);
+	string delSpaces(string s);
 	vector<string> parseCmdLine(LPSTR pCmdLine);
 	void wait(int x);
 	void printErrorVector(bool bPrint, vector<int> ivTestErrors);

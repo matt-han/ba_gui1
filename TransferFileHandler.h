@@ -1,5 +1,5 @@
 /*
- *	Opens, reads/writes and closes text files to transfer trough the designated
+ *	Opens, reads and closes text files to transfer trough the designated
  */
 
 #ifndef _TRANSFERFILEHANDLER_H
@@ -22,16 +22,21 @@ public:
 	TransferFileHandler(void);
 	~TransferFileHandler(void);
 
+//------------------------------------------------------------------------------
+//Variablen
 	Tools tools;
-	
-	int openFile(string sFilePath);
-	void closeFile();
-	int readTransferFile();
 
 	ifstream inputFile;
 	vector<string> vTranferFileLines;
 	const char * path;
 	string templine;
+
+//------------------------------------------------------------------------------
+//Methods
+	
+	int openFile(string sFilePath);
+	void closeFile();
+	int readTransferFile();
 };
 
 #endif
