@@ -398,7 +398,7 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 			//BAUDRATE
 			_hwndCB_Baud = CreateWindowA("combobox", NULL, 
-                WS_CHILD | WS_VISIBLE | CBS_DROPDOWN | WS_VSCROLL,
+				WS_CHILD | WS_VISIBLE | CBS_DROPDOWN | WS_VSCROLL,
                 POS_X, POS_Y + 70, 90, 120, m_hwnd, (HMENU)ID_CB_COM_BAUD,
 				NULL, NULL);
 
@@ -410,7 +410,7 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 			
 			//BAUDRATE
 			_hwndCB_Baud_MAX = CreateWindowA("combobox", NULL, 
-                WS_CHILD | WS_VISIBLE | CBS_DROPDOWN | WS_VSCROLL,
+				WS_CHILD | WS_VISIBLE | CBS_DROPDOWN | WS_VSCROLL,
                 POS_X + 120, POS_Y + 140, 90, 120, m_hwnd, (HMENU)ID_CB_BAUD_MAX,
 				NULL, NULL);
 
@@ -506,8 +506,8 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 					case ID_CB_COM_PORT:
 
 						//Delete the baud rates when new port is chosen
-						SendMessage(_hwndCB_Baud, CB_RESETCONTENT,0,0);
-						SendMessage(_hwndCB_Baud_MAX, CB_RESETCONTENT,0,0);
+						SendMessage(_hwndCB_Baud, CB_RESETCONTENT, 0, 0);
+						SendMessage(_hwndCB_Baud_MAX, CB_RESETCONTENT, 0, 0);
 
 
 						portIndex = SendMessage(_hwndCB_MasPorts,

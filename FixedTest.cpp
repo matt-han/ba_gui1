@@ -667,7 +667,7 @@ int FixedTest::syncMaster()
 
 		do // ten times
 		{
-			clog << "		_____________________" << endl;
+			//clog << "		_____________________" << endl;
 			clog << "		Sync attempt : " << iCount + 1 << endl;
 
 			string sTemp = getData(true, 1);
@@ -679,18 +679,19 @@ int FixedTest::syncMaster()
 					clog << "		ACK received\n" << endl;
 					iError = ERROR_SUCCESS;
 				}
-				else
-				{
-					clog << "		No ACK received" << endl;
+				//else
+				//{
+				//	clog << "		No ACK received" << endl;
 
-				}
+				//}
 			}
-
 			iCount++;
 
-		}while(iError != ERROR_SUCCESS && iCount < 10);
+		}while(iError != ERROR_SUCCESS && iCount < SYNC_REPEATER);
 
-			
+		if(iError != ERROR_SUCCESS)
+			clog << "		No ACK received" << endl;
+
 		return iError;
 
 	}
@@ -723,7 +724,7 @@ int FixedTest::syncSlave()
 
 	do // ten times
 	{
-		clog << "		_____________________" << endl;
+		//clog << "		_____________________" << endl;
 		clog << "		Sync attempt : " << iCount + 1 << endl;
 
 		string sTemp = getData(true, 1);
@@ -735,19 +736,21 @@ int FixedTest::syncSlave()
 				clog << "		ESC received, reply with ACK\n" << endl;
 				iError = ERROR_SUCCESS;
 			}
-			else
-				clog << "		No ESC received" << endl;
+			//else
+			//	clog << "		No ESC received" << endl;
 		}
-		else
-			clog << "		Nothing received" << endl;
-
+		//else
+		//	clog << "		Nothing received" << endl;
 		iCount++;
 
-	}while(iError != ERROR_SUCCESS && iCount < 10);
+	}while(iError != ERROR_SUCCESS && iCount < SYNC_REPEATER);
 
 	//if not success, then did not read the ESC... error in sync
 	if(iError != ERROR_SUCCESS)
+	{
+		clog << "		Nothing received" << endl;
 		return ERROR_SYNC;
+	}
 
 	if (true == sendData(true, _ACK) )
 	{

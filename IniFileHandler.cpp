@@ -31,7 +31,7 @@ IniFileHandler::~IniFileHandler(void)
 //		- int iParity -> COM port(s) baud rate
 //		- int iProtocol -> Transmission protocol for test
 //		- int iStopbits -> stopbits to be set
-//		- int iTransfer -> single/double/master/slave Transmission
+//		- int iTransfer -> shorted/double/master/slave Transmission
 //		- int iTextMode	-> text mode to transfer
 //		- string sTextToTransfer -> default text, input text or input file
 //		- bool bLoggerStatur -> true for logfile, false for no logging
@@ -81,20 +81,19 @@ void IniFileHandler::writeINIfile(string sMasterPort, string sSlavePort, int iBa
 	//copy ints into strings
 	if (iTestMode != 0)
 	{
-	//if (iTestMode != 0)
-	//{	
+	
 		sBaud = tools.convertToString(iBaud);
 			
 		if(iTestMode == 1)
 			sBaudMax = tools.convertToString(iBaudMax);
-	//}
 		
 		sParity	  = parseParityToIni(iParity);
 		sProtocol = parseProtocolToIni(iProtocol);
 		sStopbits = parseStopbitsToIni(iStopbits);
 		sDatabits = parseDatabitsToIni(iDatabits);
-		
-		if(bLogger)
+	}
+
+	if(bLogger)
 			sLogger = "true";
 		else
 			sLogger = "false";
@@ -103,8 +102,6 @@ void IniFileHandler::writeINIfile(string sMasterPort, string sSlavePort, int iBa
 			sStopOnError = "true";
 		else
 			sStopOnError = "false";
-	}
-
 
 	switch(iTestMode)
 	{
@@ -112,6 +109,7 @@ void IniFileHandler::writeINIfile(string sMasterPort, string sSlavePort, int iBa
 		case 0:
 			WritePrivateProfileStringA(sMasterPort.c_str(),"TestMode",
 										"automatic", sPath.c_str());
+
 			//Transfer mode + slave port if needed
 			writeINItransferSettings(sMasterPort, sSlavePort, iTransfer, sPath);
 			//Ignore baudrate, parity, protocol and stopbits
@@ -122,6 +120,7 @@ void IniFileHandler::writeINIfile(string sMasterPort, string sSlavePort, int iBa
 		case 1:
 			WritePrivateProfileStringA(sMasterPort.c_str(),"TestMode",
 										"wobble", sPath.c_str());
+
 			//Transfer mode + slave port if needed
 			writeINItransferSettings(sMasterPort, sSlavePort, iTransfer, sPath);
 
@@ -131,18 +130,24 @@ void IniFileHandler::writeINIfile(string sMasterPort, string sSlavePort, int iBa
 			WritePrivateProfileStringA(sMasterPort.c_str(),"BaudRate",
 										sBaud.c_str(), sPath.c_str());
 
-			//Parity
-			WritePrivateProfileStringA(sMasterPort.c_str(),"Parity",
-										sParity.c_str(), sPath.c_str());
-			//Protocol
-			WritePrivateProfileStringA(sMasterPort.c_str(),"Protocol",
-										sProtocol.c_str(), sPath.c_str());
-			//Stopbits
-			WritePrivateProfileStringA(sMasterPort.c_str(),"Stopbits",
-										sStopbits.c_str(), sPath.c_str());
-			//Databits
-			WritePrivateProfileStringA(sMasterPort.c_str(),"Databits",
-										sDatabits.c_str(), sPath.c_str());
+			if(iTransfer >= 0 && iTransfer < 3)
+			{
+				//Parity
+				WritePrivateProfileStringA(sMasterPort.c_str(),"Parity",
+											sParity.c_str(), sPath.c_str());
+				//Protocol
+				WritePrivateProfileStringA(sMasterPort.c_str(),"Protocol",
+											sProtocol.c_str(), sPath.c_str());
+				//Stopbits
+				WritePrivateProfileStringA(sMasterPort.c_str(),"Stopbits",
+											sStopbits.c_str(), sPath.c_str());
+				//Databits
+				WritePrivateProfileStringA(sMasterPort.c_str(),"Databits",
+											sDatabits.c_str(), sPath.c_str());
+			}
+
+			writeTextTransferSettings(sMasterPort, iTestMode, sTextToTransfer, sPath);
+
 			break;
 
 
@@ -154,49 +159,31 @@ void IniFileHandler::writeINIfile(string sMasterPort, string sSlavePort, int iBa
 			//Transfer mode + slave port if needed
 			writeINItransferSettings(sMasterPort, sSlavePort, iTransfer, sPath);
 			
-			//Baud rate
-			WritePrivateProfileStringA(sMasterPort.c_str(),"BaudRate",
-										sBaud.c_str(), sPath.c_str());
-			//Parity
-			WritePrivateProfileStringA(sMasterPort.c_str(),"Parity",
-										sParity.c_str(), sPath.c_str());
-			//Protocol
-			WritePrivateProfileStringA(sMasterPort.c_str(),"Protocol",
-										sProtocol.c_str(), sPath.c_str());
-			//Stopbits
-			WritePrivateProfileStringA(sMasterPort.c_str(),"Stopbits",
-										sStopbits.c_str(), sPath.c_str());
-			//Databits
-			WritePrivateProfileStringA(sMasterPort.c_str(),"Databits",
+			if(iTransfer >= 0 && iTransfer < 3)
+			{
+				//Baud rate
+				WritePrivateProfileStringA(sMasterPort.c_str(),"BaudRate",
+											sBaud.c_str(), sPath.c_str());
+				//Parity
+				WritePrivateProfileStringA(sMasterPort.c_str(),"Parity",
+											sParity.c_str(), sPath.c_str());
+				//Protocol
+				WritePrivateProfileStringA(sMasterPort.c_str(),"Protocol",
+											sProtocol.c_str(), sPath.c_str());
+				//Stopbits
+				WritePrivateProfileStringA(sMasterPort.c_str(),"Stopbits",
+											sStopbits.c_str(), sPath.c_str());
+				//Databits
+				WritePrivateProfileStringA(sMasterPort.c_str(),"Databits",
 										sDatabits.c_str(), sPath.c_str());
+			}
+
+			writeTextTransferSettings(sMasterPort, iTestMode, sTextToTransfer, sPath);
+
 			break;
 	}//switch
 
-
-	switch(iTextMode)
-	{
-		//1 for file
-		case ID_BT_LOAD:
-			WritePrivateProfileStringA(sMasterPort.c_str(),"TransferTextMode",
-								"file", sPath.c_str());
-			break;
-			
-		//2 for string
-		case ID_BT_TEXT:
-			WritePrivateProfileStringA(sMasterPort.c_str(),"TransferTextMode",
-								"text", sPath.c_str());
-			break;
-
-		default:
-			WritePrivateProfileStringA(sMasterPort.c_str(),"TransferTextMode",
-								"default", sPath.c_str());
-			break;
-	}
-
-	//Transfer text
-	WritePrivateProfileStringA(sMasterPort.c_str(),"TransferText",
-								sTextToTransfer.c_str(), sPath.c_str());
-
+	
 	//Logger
 	WritePrivateProfileStringA(sMasterPort.c_str(),"Logger",
 										sLogger.c_str(), sPath.c_str());
@@ -205,8 +192,9 @@ void IniFileHandler::writeINIfile(string sMasterPort, string sSlavePort, int iBa
 	WritePrivateProfileStringA(sMasterPort.c_str(),"StopOnFirstError",
 										sStopOnError.c_str(), sPath.c_str());
 
-	//Repeater
-	WritePrivateProfileStringA(sMasterPort.c_str(),"Repeater",
+	//Repeater, write only if not automatic
+	if(iTestMode != 0)
+		WritePrivateProfileStringA(sMasterPort.c_str(),"Repeater",
 										sRepeater.c_str(), sPath.c_str());
 }
 
@@ -217,7 +205,7 @@ void IniFileHandler::writeINIfile(string sMasterPort, string sSlavePort, int iBa
 //	 IN:
 //		- string sMasterPort -> Master COM port for test
 //		- string sSlavePort  -> Slave COM port for test
-//		- int iTransfer -> single/double/master-slave Transmission
+//		- int iTransfer -> shorted/double/master-slave Transmission
 //		- string sPath -> path where to save the ini test file
 //	Return: _iError code signaling if operation succeded or _iError
 //------------------------------------------------------------------------------
@@ -228,10 +216,10 @@ void IniFileHandler::writeINItransferSettings(string sMasterPort,
 {
 	switch(iTransfer)
 	{
-		//single
+		//shorted
 		case 0:
 			WritePrivateProfileStringA(sMasterPort.c_str(),"TransferMode",
-										"single", sPath.c_str());
+										"shorted", sPath.c_str());
 			break;
 	
 		//double
@@ -257,6 +245,53 @@ void IniFileHandler::writeINItransferSettings(string sMasterPort,
 
 	}
 }
+
+
+
+//------------------------------------------------------------------------------
+//	Writes the text transfer settings in the ini test file
+//	Parameters:
+//	 IN:
+//		- string sMasterPort -> Master COM port for test
+//		- int iTextMode -> default/file/shorted line to transfer
+//		- string sTextToTransfer -> text to be transfered
+//		- string sPath -> path where to save the ini test file
+//	Return: _iError code signaling if operation succeded or _iError
+//------------------------------------------------------------------------------
+void IniFileHandler::writeTextTransferSettings(string sMasterPort,
+											   int iTextMode,
+											   string sTextToTransfer,
+											   string sPath)
+{
+	switch(iTextMode)
+	{
+		//1 for file
+		case ID_BT_LOAD:
+			WritePrivateProfileStringA(sMasterPort.c_str(),"TransferTextMode",
+								"file", sPath.c_str());
+			break;
+			
+		//2 for string
+		case ID_BT_TEXT:
+			WritePrivateProfileStringA(sMasterPort.c_str(),"TransferTextMode",
+								"text", sPath.c_str());
+			break;
+
+		default:
+			WritePrivateProfileStringA(sMasterPort.c_str(),"TransferTextMode",
+								"default", sPath.c_str());
+			break;
+	}
+	
+	//Transfer text
+	WritePrivateProfileStringA(sMasterPort.c_str(),"TransferText",
+								sTextToTransfer.c_str(), sPath.c_str());
+
+
+}
+
+
+
 
 //##############################################################################
 //	READ METHODS
@@ -334,14 +369,14 @@ int IniFileHandler::readINIFile(string sFilePath, string sMainPort)
 			{
 				clog << "Error reading port " << sPort << " from INI file."
 					 << "Error " << _iError << endl;
+				clog << tools.errorCodeParser(_iError) << endl;
+				return _iError;
 			}
 			iPort++;
 		}
-		_iError = 0;
 	}
-	//if any read the 
+
 	return ERROR_SUCCESS;
-	//else Errooooor
 }
 
 
@@ -397,18 +432,20 @@ int IniFileHandler::readPortConfig(string sPort, string sFilePath, int index)
 					
 				}
 
-				_iError = readSettings(sPort, sFilePath.c_str(), index);
+				//read the baud rate
+				_iError = readBaudRate(sPort, sFilePath.c_str(), index);
+						
 				if (_iError != ERROR_SUCCESS)
 					return _iError;
 				else
 				{
-					//read the baud rate
-					_iError = readBaudRate(sPort, sFilePath.c_str(), index);
-						
-					if (_iError != ERROR_SUCCESS)
-						return _iError;
+					if(vComPorts.at(index).iTransfer != 3)
+					{
+						_iError = readSettings(sPort, sFilePath.c_str(), index);
+						if (_iError != ERROR_SUCCESS)
+							return _iError;
+					}
 				}
-	
 				break;
 			//------------------------------------------------------------------
 
@@ -425,20 +462,21 @@ int IniFileHandler::readPortConfig(string sPort, string sFilePath, int index)
 					if (_iError != ERROR_SUCCESS)
 						return _iError;
 				}
-
-				//read the baud rate
-				_iError = readBaudRate(sPort, sFilePath.c_str(), index);
+				//if not slave mode
+				if(vComPorts.at(index).iTransfer != 3)
+				{//read the baud rate
+					_iError = readBaudRate(sPort, sFilePath.c_str(), index);
 					
-				if (_iError != ERROR_SUCCESS)
-					return _iError;
-				else	//read the other settings
-				{
-					_iError = readSettings(sPort, sFilePath.c_str(), index);
-						
 					if (_iError != ERROR_SUCCESS)
 						return _iError;
+					else	
+					{	//read the other settings
+						_iError = readSettings(sPort, sFilePath.c_str(), index);
+						
+						if (_iError != ERROR_SUCCESS)
+							return _iError;
+					}
 				}
-
 				break;
 			//------------------------------------------------------------------
 
@@ -473,15 +511,18 @@ int IniFileHandler::readPortConfig(string sPort, string sFilePath, int index)
 			return _iError;
 
 		//repeater
-		_iError = readRepeater(sPort, sFilePath.c_str());
-		if(_iError != ERROR_INI)
+		if(vComPorts.at(index).iTestMode != 0 )
 		{
-			vComPorts.at(index).iRepeater = _iError;
+			_iError = readRepeater(sPort, sFilePath.c_str());
+			if(_iError != ERROR_INI)
+			{
+				vComPorts.at(index).iRepeater = _iError;
+			}
+			else
+				return _iError;
 		}
-		else
-			return _iError;
 
-	}//if
+	}//if readTransferMode
 	else
 		return _iError;
 
@@ -1314,7 +1355,7 @@ int IniFileHandler::parseTransfer(string sTransfer)
 {
 	int i = ERROR_PARSE;
 
-	if (sTransfer == "single")
+	if (sTransfer == "shorted")
 		i = 0;
 	else if(sTransfer == "double")
 		i = 1;
@@ -1325,7 +1366,7 @@ int IniFileHandler::parseTransfer(string sTransfer)
 	else
 	{
 		clog << "Error parsing the stopbits. Wrong parameter." << sTransfer
-			<< "\nUse single, double, master or slave" << endl;
+			<< "\nUse shorted, double, master or slave" << endl;
 	}
 	
 	return i;

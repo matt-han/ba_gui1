@@ -58,7 +58,8 @@ private:
 	//write
 	void writeINItransferSettings(string sMasterPort, string sSlavePort,
 								  int iTransfer, string sPath);
-	
+	void writeTextTransferSettings(string sMasterPort, int iTextMode, 
+								   string sTextToTransfer, string sPath);
 	//read	
 	int readPortConfig(string sPort,  string sFilePath, int index);
 	int readTransferMode(string sPort, string sFilePath, int index);

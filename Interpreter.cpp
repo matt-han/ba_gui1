@@ -798,13 +798,6 @@ int Interpreter::loadIniFile(string sPath, string sPort)
 
 		}//for
 
-		//if(_bErr)
-		//{
-		//	_vIniFilePorts.clear();
-		//	delete _testManager;
-		//	_testManager = NULL;
-		//	return ERROR_TEST;
-		//}
 	}
 	else
 	{

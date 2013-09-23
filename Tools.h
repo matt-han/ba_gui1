@@ -32,7 +32,7 @@ public:
 
 //------------------------------------------------------------------------------
 //Methods
-	string convertToString(TCHAR Array[]);
+	//string convertToString(TCHAR Array[]);
 	string convertToString(char * Array);
 	string convertToString(int number);
 	string printTime();

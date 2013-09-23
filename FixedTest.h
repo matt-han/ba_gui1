@@ -15,6 +15,7 @@
 #define TEXT_LENGTH		8
 #define HEADER_LENGTH	9	//	-> max header length 9 characters
 #define BUFFER_LENGTH	100
+#define SYNC_REPEATER	100
 
 using namespace std;
 

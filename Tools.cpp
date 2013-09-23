@@ -24,17 +24,17 @@ Tools::~Tools(void)
 //		- TCHAR Array[] -> array to be converted to string
 //	Return: converted string
 //------------------------------------------------------------------------------
-string Tools::convertToString(TCHAR szArray[])
-{
-	stringstream ss;
-	int i = 0;
-	while ( szArray[i] != '\0')
-	{
-		ss << char(szArray[i]);
-		i++;
-	}
-	return ss.str();
-}
+//string Tools::convertToString(TCHAR szArray[])
+//{
+//	stringstream ss;
+//	int i = 0;
+//	while ( szArray[i] != '\0')
+//	{
+//		ss << char(szArray[i]);
+//		i++;
+//	}
+//	return ss.str();
+//}
 
 
 //------------------------------------------------------------------------------
@@ -203,9 +203,11 @@ vector<string> Tools::parseCmdLine(LPSTR pCmdLine)
 //------------------------------------------------------------------------------
 void Tools::wait(int x)
 {
+	clog << "waitinng..." << endl;
+
 	for (int i = 0; i < x; i++)
 	{
-		clog << "." << flush;
+		
 		Sleep(10);
 	}
 	clog << endl;

@@ -28,6 +28,8 @@ public:
 	Interpreter * interpreter;
 	Interpreter infoInterpreter;
 	Tools tools;
+
+	long error;
 //------------------------------------------------------------------------------
 //Methods
 	//user definied message handler. NOT static
@@ -64,7 +66,7 @@ public:
 	//get
 	//string getTransferFile()
 	
-	PCWSTR  ClassName() const { return L"Serial Port Tester"; }
+	LPCSTR  ClassName() const { return "Serial Port Tester"; }
 
 private:
 //------------------------------------------------------------------------------

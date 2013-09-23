@@ -61,7 +61,7 @@ public:
 	BaseWindow() : m_hwnd(NULL) { }
 
     BOOL Create(
-        LPCWSTR lpWindowName,
+        LPCSTR lpWindowName,
         DWORD dwStyle,
         DWORD dwExStyle = 0,
         int x = WINDOW_X,
@@ -99,7 +99,7 @@ public:
 
 protected:
 
-    virtual PCWSTR  ClassName() const = 0;
+    virtual LPCSTR  ClassName() const = 0;
     virtual LRESULT HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam) = 0;
 
     HWND m_hwnd;

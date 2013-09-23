@@ -83,7 +83,7 @@ bool PortCommunications::readData(char * lpBuf, DWORD dwSize)
 				}
 				else
 				{
-					clog << "\noperation not completed yet. buffer ->" << ourBuf << endl;
+					//clog << "\noperation not completed yet. buffer ->" << ourBuf << endl;
 					fWaitingOnRead = TRUE;
 				}
 			}
@@ -118,11 +118,11 @@ bool PortCommunications::readData(char * lpBuf, DWORD dwSize)
 					return FALSE;
 				}
 
-				clog << "GetOverlappedResult was ok" << endl;
+				//clog << "GetOverlappedResult was ok" << endl;
 				
 				if(dwRead == 0)
 				{
-					clog << "No data available to be read. Buffer empty" << endl;
+					//clog << "No data available to be read. Buffer empty" << endl;
 					CloseHandle(osReader.hEvent);
 					return FALSE;
 				}
@@ -136,7 +136,7 @@ bool PortCommunications::readData(char * lpBuf, DWORD dwSize)
 					
 				if(ourCount <= 0) 
 				{
-					clog << "read operation completed" << endl;
+					//clog << "read operation completed" << endl;
 					CloseHandle(osReader.hEvent);
 					return TRUE;
 				}
@@ -157,7 +157,7 @@ bool PortCommunications::readData(char * lpBuf, DWORD dwSize)
 					clog << "to many object timeouts. ABORT" << endl;
 					return FALSE;
 				}
-				clog << "operation isnt complete yet, carry on..."<<endl;
+				//clog << "operation isnt complete yet, carry on..."<<endl;
 
 				break;                       
 

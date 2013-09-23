@@ -103,7 +103,7 @@ int TestManager::startManager()
 
 			//if master wait 5 sec
 			if(testStruct.iTransfer == 2)
-				_tools.wait(500);
+				_tools.wait(300);
 
 			//save test to a ini file if logging is enabled
 			if(testStruct.bLoggerState)
@@ -180,7 +180,7 @@ int TestManager::startFixedTest()
 	fixedTest.setTextVector(testStruct.iTransTextMode);
 
 	//save test to a ini file if logging is enabled
-	if(testStruct.bLoggerState)
+if(testStruct.bLoggerState)
 		saveSettingsToFile();
 
 	do
@@ -203,7 +203,7 @@ int TestManager::startFixedTest()
 			//Master 
 			case 2:
 				if(iRepeat == 1)
-					_tools.wait(500);
+					_tools.wait(300);
 
 				_iError = fixedTest.startMasterTest();
 				break;
@@ -314,7 +314,6 @@ int TestManager::startAutomaticTest()
 	testStruct.iDatabits		= 8;
 	testStruct.sTextToTransfer	= "";
 	testStruct.iTransTextMode	= DEFAULT_VALUE;
-	testStruct.bStopOnError		= true;
 
 
 	FixedTest automatic(&testStruct);
@@ -345,7 +344,7 @@ int TestManager::startAutomaticTest()
 			//Master 
 			case 2:
 				if(iRepeat == 1)
-					_tools.wait(500);
+					_tools.wait(300);
 				_iError = automatic.startMasterTest();
 				break;
 

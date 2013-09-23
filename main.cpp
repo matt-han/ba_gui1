@@ -184,7 +184,7 @@ int createGUI(HINSTANCE hInstance, int nCmdShow)
 
 	win.sethInstance(hInstance);
 
-	if (!win.Create(lpcw_WINDOW_TITLE , WS_OVERLAPPEDWINDOW))
+	if (!win.Create(WINDOW_TITLE , WS_OVERLAPPEDWINDOW))
     {
         return ERROR_CREATE_GUI;
     }
