@@ -24,17 +24,17 @@ Tools::~Tools(void)
 //		- TCHAR Array[] -> array to be converted to string
 //	Return: converted string
 //------------------------------------------------------------------------------
-//string Tools::convertToString(TCHAR szArray[])
-//{
-//	stringstream ss;
-//	int i = 0;
-//	while ( szArray[i] != '\0')
-//	{
-//		ss << char(szArray[i]);
-//		i++;
-//	}
-//	return ss.str();
-//}
+string Tools::convertToString(char * szArray[])
+{
+	stringstream ss;
+	int i = 0;
+	while ( szArray[i] != '\0')
+	{
+		ss << char(szArray[i]);
+		i++;
+	}
+	return ss.str();
+}
 
 
 //------------------------------------------------------------------------------
@@ -153,42 +153,45 @@ string Tools::delSpaces(string s)
 //		- LPSTR pCmdLine -> command line arguments
 //	Return: string vector with the command line arguments
 //------------------------------------------------------------------------------
-vector<string> Tools::parseCmdLine(LPSTR pCmdLine)
+vector<string> Tools::parseCmdLine(char * argv[], int argc)
 {
 	vector<string> svParameters;
 	string sTemp = "";
-	string sCmdLine = pCmdLine;
+	string sCmdLine = convertToString(argv);
 	int i = 0;
-
-
 	int iLength = sCmdLine.length();
 
-	for (int j = 0; i < iLength ; j++)
-	{
-		//clog << "j " << j << endl;
-		while(i < iLength)
-		{
-			//if not a space, save it to sTemp
-			if (0 == isspace(sCmdLine.at(i)) )
-			{
-				sTemp.append( 1, sCmdLine.at(i) );
-				//clog << "i " << sCmdLine.at(i) << "-" << endl;
-				i++;
-			}
-			else
-			{
-				i++;
-				break;
-			}
-		}
+	//for (int j = 0; i < iLength ; j++)
+	//{
+	//	
+	//	while(i < iLength)
+	//	{
+	//		//if not a space, save it to sTemp
+	//		if (0 == isspace(sCmdLine.at(i)) )
+	//		{
+	//			sTemp.append( 1, sCmdLine.at(i) );
+	//			i++;
+	//		}
+	//		else
+	//		{
+	//			i++;
+	//			break;
+	//		}
+	//	}//while
 
-		if (sTemp != "")
-		{
-			//clog << "stemp " << sTemp << "-" << endl << endl;
-			svParameters.push_back(sTemp);
-			sTemp = "";
-		}
-		
+	//	if (sTemp != "")
+	//	{
+	//		//clog << "stemp " << sTemp << "-" << endl << endl;
+	//		svParameters.push_back(sTemp);
+	//		sTemp = "";
+	//	}
+	//	
+	//}
+
+	for(int j = 1; j < argc; j++)
+	{
+		sTemp = argv[j];
+		svParameters.push_back(sTemp);
 	}
 
 	return svParameters;
@@ -218,12 +221,12 @@ void Tools::wait(int x)
 //	Prints the error vector to the log file or cmd line
 //	Parameters:
 //	 IN:
-//		- bool bPrint -> true for log file, false for message box
+//		- bool bPrintLog -> true for log file, false for message box
 //		- vector int ivTestError -> error codes from tests
 //------------------------------------------------------------------------------
-void Tools::printErrorVector(bool bPrint, vector<int> ivTestErrors)
+void Tools::printErrorVector(bool bPrintLog, vector<int> ivTestErrors)
 {
-	if(bPrint)
+	if(bPrintLog)
 	{
 		clog << "   Test Results   " << endl;
 		clog << "__________________" << endl;
@@ -375,7 +378,7 @@ string Tools::errorCodeParser(int iError)
 			break;
 
 		case ERROR_INI:
-			sError =  "Error in test configuration file. Please see log file, if available, for more information on the error";
+			sError =  "Error in test configuration file. At least one parameter is incorrect";
 			break;
 
 		case ERROR_SET_DCB:
@@ -455,6 +458,7 @@ string Tools::errorCodeParser(int iError)
 //------------------------------------------------------------------------------
 void Tools::showCmdHelp()
 {
+	cout << endl << endl;
 	cout << WINDOW_TITLE << endl;
 	cout << "Please use the Serial Port Tester with the following options:" << endl;
 	cout << "SerialPortTester.exe <Test Configuration File> /[COM Port]" << endl;

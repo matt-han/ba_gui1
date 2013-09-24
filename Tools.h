@@ -32,15 +32,15 @@ public:
 
 //------------------------------------------------------------------------------
 //Methods
-	//string convertToString(TCHAR Array[]);
+	string convertToString(char * szArray[]);
 	string convertToString(char * Array);
 	string convertToString(int number);
 	string printTime();
 	//string parseTime(string s);
 	string delSpaces(string s);
-	vector<string> parseCmdLine(LPSTR pCmdLine);
+	vector<string> parseCmdLine(char * argv[], int argc);
 	void wait(int x);
-	void printErrorVector(bool bPrint, vector<int> ivTestErrors);
+	void printErrorVector(bool bPrintLog, vector<int> ivTestErrors);
 	string replaceASCII(string sToSend);
 	string errorCodeParser(int iError);
 	void showCmdHelp();

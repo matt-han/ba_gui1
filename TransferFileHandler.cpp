@@ -60,6 +60,9 @@ int TransferFileHandler::readTransferFile()
 	{
 		getline(inputFile, templine);
 
+		if(templine.size() >= 100)
+			templine = templine.substr(0, 99);
+		
 		vTranferFileLines.push_back(tools.replaceASCII(templine));
 	}
 

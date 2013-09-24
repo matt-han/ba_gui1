@@ -222,9 +222,13 @@ void Interpreter::setRepeater(string sRepeater)
 			this->_iRepeater = iTemp;
 		else
 		{
-			MessageBoxA(NULL, "Error in repeater value,\n"
+			if(bPrint)
+				MessageBoxA(NULL, "Error in repeater value,\n"
 							  "please type a number > 0",
 							  WINDOW_TITLE, MB_OK | MB_ICONWARNING);
+			else
+				cout <<"Error in repeater value, please type a number > 0" << endl;
+
 			this->_iRepeater = DEFAULT_VALUE;
 		}
 	}
@@ -257,8 +261,12 @@ int Interpreter::checkInputConfigData()
 	//parity
 	if(_iParity == DEFAULT_VALUE)
 	{
-		MessageBoxA(NULL,"Please select the parity",
-			WINDOW_TITLE, MB_OK | MB_ICONERROR);
+		if(bPrint)
+			MessageBoxA(NULL,"Please select the parity",
+						WINDOW_TITLE, MB_OK | MB_ICONERROR);
+		else
+			cout << "Please select the parity" << endl;
+
 		return ERROR_INPUT;
 	}
 	else
@@ -267,8 +275,12 @@ int Interpreter::checkInputConfigData()
 	//protocol
 	if(_iProtocol == DEFAULT_VALUE)
 	{
-		MessageBoxA(NULL,"Please select the protocol",
-			WINDOW_TITLE, MB_OK | MB_ICONERROR);
+		if(bPrint)
+			MessageBoxA(NULL,"Please select the protocol",
+						WINDOW_TITLE, MB_OK | MB_ICONERROR);
+		else
+			cout << "Please select the protocol" << endl;
+
 		return ERROR_INPUT;
 	}
 	else
@@ -277,8 +289,12 @@ int Interpreter::checkInputConfigData()
 	//stopbits
 	if(_iStopBits == DEFAULT_VALUE)
 	{
-		MessageBoxA(NULL,"Please select the stopbits",
-			WINDOW_TITLE, MB_OK | MB_ICONERROR);
+		if(bPrint)
+			MessageBoxA(NULL,"Please select the stopbits",
+						WINDOW_TITLE, MB_OK | MB_ICONERROR);
+		else
+			cout << "Please select the stopbits" << endl;
+
 		return ERROR_INPUT;
 	}
 	else
@@ -287,8 +303,12 @@ int Interpreter::checkInputConfigData()
 	//stopbits
 	if(_iDataBits == DEFAULT_VALUE)
 	{
-		MessageBoxA(NULL,"Please select the databits",
-			WINDOW_TITLE, MB_OK | MB_ICONERROR);
+		if(bPrint)
+			MessageBoxA(NULL,"Please select the databits",
+						WINDOW_TITLE, MB_OK | MB_ICONERROR);
+		else
+			cout << "Please select the databits" << endl;
+
 		return ERROR_INPUT;
 	}
 	else
@@ -310,18 +330,24 @@ int Interpreter::checkBaudrate(int iBaudrate)
 {
 	if (iBaudrate == DEFAULT_VALUE)
 	{
-		MessageBoxA(NULL,"Please select a baud rate!!!!!!",
-			WINDOW_TITLE, MB_OK | MB_ICONERROR);
+		if(bPrint)
+			MessageBoxA(NULL,"Please select a baud rate",
+						WINDOW_TITLE, MB_OK | MB_ICONERROR);
+		else
+			cout << "Please select a baud rate" << endl;
+
 		setDefaultValues();
 		return DEFAULT_VALUE;
 
 	}
 	else if(iBaudrate == ERROR_BAUDRATE)
 	{
-		MessageBoxA(NULL,"Baud rate is not suported by"
-			" this port\n"
-			"Please choose another baud rate",
-			WINDOW_TITLE, MB_OK | MB_ICONERROR);
+		if(bPrint)
+			MessageBoxA(NULL,"Baud rate is not suported by this port.\n"
+						"Please choose another baud rate",
+						WINDOW_TITLE, MB_OK | MB_ICONERROR);
+		else
+			cout << "Baud rate is not suported by this port. Please choose another baud rate" << endl;
 		setDefaultValues();
 		return ERROR_BAUDRATE;
 
@@ -385,8 +411,12 @@ void Interpreter::handleGui()
 		//if no test mode was selected -> error
 		if (_iTestMode == DEFAULT_VALUE)
 		{
-			MessageBoxA(NULL,"Please select a test mode",
-				WINDOW_TITLE, MB_OK | MB_ICONERROR);
+			if(bPrint)
+				MessageBoxA(NULL,"Please select a test mode",
+							WINDOW_TITLE, MB_OK | MB_ICONERROR);
+			else
+				cout << "Please select a test mode" << endl;
+
 			setDefaultValues();
 		}
 		else
@@ -396,8 +426,12 @@ void Interpreter::handleGui()
 			//if no transfer mode was selected -> error
 			if (_iTransfer == DEFAULT_VALUE)
 			{
-				MessageBoxA(NULL,"Please select a transfer mode",
-					WINDOW_TITLE, MB_OK | MB_ICONERROR);
+				if(bPrint)
+					MessageBoxA(NULL,"Please select a transfer mode",
+								WINDOW_TITLE, MB_OK | MB_ICONERROR);
+				else
+					cout << "Please select a transfer mode" << endl;
+
 				setDefaultValues();
 			}
 			else
@@ -411,30 +445,25 @@ void Interpreter::handleGui()
 					//needs transfer mode, master/slave port and logger settings
 					//----------------------------------------------------------
 					case 0:
-						if (_iTransfer >= 0 && _iTransfer <= 3)
+						//if needed get the slave port
+						if(_iTransfer == 1)
 						{
-							//if needed get the slave port
-							if(_iTransfer == 1)
+							//if no slave port was selected -> error
+							if (_sSlaPort == "")
 							{
-								//if no slave port was selected -> error
-								if (_sSlaPort == "")
-								{
+								if(bPrint)
 									MessageBoxA(NULL,"Please select a slave port",
-										WINDOW_TITLE, MB_OK | MB_ICONERROR);
-									setDefaultValues();
-									break;
-								}
+												WINDOW_TITLE, MB_OK | MB_ICONERROR);
 								else
-									_testManager->testStruct.sSlavePort = _sSlaPort;
+									cout << "Please select a slave port" << endl;
+
+								setDefaultValues();
+								break;
 							}
+							else
+								_testManager->testStruct.sSlavePort = _sSlaPort;
 						}
-						else
-						{
-							MessageBoxA(NULL, "Please select a transfer mode",
-										WINDOW_TITLE, MB_OK | MB_ICONERROR);
-							setDefaultValues();
-							break;
-						}
+						
 						break;
 					// end case 0
 					//----------------------------------------------------------
@@ -444,42 +473,35 @@ void Interpreter::handleGui()
 					//needs, master/slave port, max baud and logger settings
 					//----------------------------------------------------------
 					case 1:
-						//if needed get the slave port
-						if (_iTransfer >= 0 && _iTransfer <= 3)
+						//if transfer mode = double then get the slave
+						if(_iTransfer == 1)
 						{
-							//if transfer mode = double then get the slave
-							if(_iTransfer == 1)
+							//if no slave port was selected -> error
+							if (_sSlaPort == "")
 							{
-								//if no slave port was selected -> error
-								if (_sSlaPort == "")
-								{
+								if(bPrint)
 									MessageBoxA(NULL,"Please select a slave port",
-										WINDOW_TITLE, MB_OK | MB_ICONERROR);
-									setDefaultValues();
-									bErr = true;
-									break;
-								}
+												WINDOW_TITLE, MB_OK | MB_ICONERROR);
 								else
-									_testManager->testStruct.sSlavePort = _sSlaPort;
+									cout << "Please select a slave port" << endl;
+
+								setDefaultValues();
+								bErr = true;
+								break;
 							}
-							
-							if(_iTransfer != 3) //if not slave mode
-							{
-								//check parity, protocol and stopbits
-								if(ERROR_INPUT == checkInputConfigData())
-								{
-									setDefaultValues();
-									bErr = true;
-									break;
-								}
-							}
+							else
+								_testManager->testStruct.sSlavePort = _sSlaPort;
 						}
-						else
+							
+						if(_iTransfer != 3) //if not slave mode
 						{
-							MessageBoxA(NULL,"Please select a transfer mode",
-										WINDOW_TITLE, MB_OK | MB_ICONERROR);
-							setDefaultValues();
-							break;
+							//check parity, protocol and stopbits
+							if(ERROR_INPUT == checkInputConfigData())
+							{
+								setDefaultValues();
+								bErr = true;
+								break;
+							}
 						}
 
 						//get the baud rates
@@ -515,53 +537,45 @@ void Interpreter::handleGui()
 					//----------------------------------------------------------
 					case 2:
 						
-						if (_iTransfer >= 0 && _iTransfer <= 3)
+						//if needed get the slave port
+						if(_iTransfer == 1)
 						{
-						
-							//if needed get the slave port
-							if(_iTransfer == 1)
+							//if no slave port was selected -> error
+							if (_sSlaPort == "")
 							{
-								//if no slave port was selected -> error
-								if (_sSlaPort == "")
-								{
+								if(bPrint)
 									MessageBoxA(NULL,"Please select a slave port",
-										WINDOW_TITLE, MB_OK | MB_ICONERROR);
-									setDefaultValues();
-									bErr = true;
-									break;
-								}
+												WINDOW_TITLE, MB_OK | MB_ICONERROR);
 								else
-									_testManager->testStruct.sSlavePort = _sSlaPort;
+									cout << "Please select a slave port" << endl;
+
+								setDefaultValues();
+								bErr = true;
+								break;
 							}
-							
-							if(_iTransfer != 3) //if not slave mode
-							{
-								//check parity, protocol and stopbits
-								if(ERROR_INPUT == checkInputConfigData())
-								{
-									setDefaultValues();
-									bErr = true;
-									break;
-								}
-							
-								//check baudrate
-								_iTemp = checkBaudrate(_iBaudrate);
-								if (_iTemp != DEFAULT_VALUE || _iTemp != ERROR_BAUDRATE)
-									_testManager->testStruct.iBaud = _iBaudrate;
-								else
-								{
-									bErr = true;
-									break;
-								}
-							}
+							else
+								_testManager->testStruct.sSlavePort = _sSlaPort;
 						}
-						else
+							
+						if(_iTransfer != 3) //if not slave mode
 						{
-							MessageBoxA(NULL,"Please select a transfer mode",
-										WINDOW_TITLE, MB_OK | MB_ICONERROR);
-							setDefaultValues();
-							bErr = true;
-							break;
+							//check parity, protocol and stopbits
+							if(ERROR_INPUT == checkInputConfigData())
+							{
+								setDefaultValues();
+								bErr = true;
+								break;
+							}
+							
+							//check baudrate
+							_iTemp = checkBaudrate(_iBaudrate);
+							if (_iTemp != DEFAULT_VALUE || _iTemp != ERROR_BAUDRATE)
+								_testManager->testStruct.iBaud = _iBaudrate;
+							else
+							{
+								bErr = true;
+								break;
+							}
 						}
 						break;
 					//end case 2
@@ -571,8 +585,12 @@ void Interpreter::handleGui()
 					//Port was selected but no test mode
 					//----------------------------------------------------------
 					default:
-						MessageBoxA(NULL,"Please select a Test Mode",
-							WINDOW_TITLE, MB_OK | MB_ICONERROR);
+						if(bPrint)
+							MessageBoxA(NULL,"Please select a Test Mode",
+										WINDOW_TITLE, MB_OK | MB_ICONERROR);
+						else
+							cout << "Please select a Test Mode" << endl;
+
 						setDefaultValues();
 						bErr = true;
 						break;
@@ -605,17 +623,22 @@ void Interpreter::handleGui()
 					_iError = _testManager->startManager();
 					if(_iError == ERROR_SUCCESS)
 					{
-						MessageBoxA(NULL, "Transmission finished", WINDOW_TITLE,
-									MB_OK);
+						if(bPrint)
+							MessageBoxA(NULL, "Transmission finished", WINDOW_TITLE,
+										MB_OK);
+						else
+							cout << "\nTransmission finished" << endl;
 					}
 					else
 					{
 						_sTemp = "Send and/or receive failure\n";
 						_sTemp.append(tools.errorCodeParser(_iError));
 
-						MessageBoxA(NULL, _sTemp.c_str(),
-							WINDOW_TITLE,
-							MB_OK | MB_ICONWARNING);
+						if(bPrint)
+							MessageBoxA(NULL, _sTemp.c_str(), WINDOW_TITLE,
+										MB_OK | MB_ICONWARNING);
+						else
+							cout << _sTemp << endl;
 					}
 				}
 				else //bErr
@@ -629,8 +652,12 @@ void Interpreter::handleGui()
 	}
 	else
 	{
-		MessageBoxA(NULL,"Please select the port to be tested",
-					WINDOW_TITLE, MB_OK | MB_ICONERROR);
+		if(bPrint)
+			MessageBoxA(NULL,"Please select the port to be tested",
+						WINDOW_TITLE, MB_OK | MB_ICONERROR);
+		else
+			cout << "Please select the port to be tested" << endl;
+
 		//Delete other values to avoid errors in new copy process
 		setDefaultValues();
 	}
@@ -792,7 +819,11 @@ int Interpreter::loadIniFile(string sPath, string sPort)
 					sError.append(_vIniFilePorts.at(index).sMasterPort);
 					sError.append(".\n");
 					sError.append(tools.errorCodeParser(_iError));
-					MessageBoxA(NULL, sError.c_str(), WINDOW_TITLE, MB_OK | MB_ICONERROR);
+					
+					if(bPrint)
+						MessageBoxA(NULL, sError.c_str(), WINDOW_TITLE, MB_OK | MB_ICONERROR);
+					else
+						cout << sError << endl;
 				}
 			}
 
@@ -803,8 +834,13 @@ int Interpreter::loadIniFile(string sPath, string sPort)
 	{
 		string sError = "Error reading test file:\n";
 		sError.append(sPath);
-		MessageBoxA(NULL, sError.c_str(),
-					WINDOW_TITLE, MB_OK | MB_ICONERROR);
+		
+		if(bPrint)
+			MessageBoxA(NULL, sError.c_str(),
+						WINDOW_TITLE, MB_OK | MB_ICONERROR);
+		else
+			cout << sError << endl;
+
 		delete _testManager;
 		_testManager = NULL;
 		return _iError;

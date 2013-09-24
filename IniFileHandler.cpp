@@ -333,8 +333,13 @@ int IniFileHandler::readINIFile(string sFilePath, string sMainPort)
 			_iError = readPortConfig("COM", sFilePath, 0);
 			if (_iError != ERROR_SUCCESS)
 			{
-				clog << "Error reading port from INI file."
-					 << "Error " << _iError << endl;
+				_sError = "Error reading port from INI file. Error:\n";
+				_sError.append(tools.errorCodeParser(_iError));
+				
+				if(bPrint)
+					MessageBoxA(NULL, _sError.c_str(), WINDOW_TITLE, MB_OK | MB_ICONERROR);
+				else
+					cout << _sError << endl;
 			}
 
 			return _iError;
@@ -367,9 +372,16 @@ int IniFileHandler::readINIFile(string sFilePath, string sMainPort)
 			_iError = readPortConfig(sPort, sFilePath, iPort);
 			if (_iError != ERROR_SUCCESS)
 			{
-				clog << "Error reading port " << sPort << " from INI file."
-					 << "Error " << _iError << endl;
-				clog << tools.errorCodeParser(_iError) << endl;
+				_sError = "Error reading port ";
+				_sError.append(sPort);
+				_sError.append(" from INI file.\n");
+				_sError.append(tools.errorCodeParser(_iError));
+				
+				if(bPrint)
+					MessageBoxA(NULL, _sError.c_str(), WINDOW_TITLE, MB_OK | MB_ICONERROR);
+				else
+					cout << _sError << endl;
+
 				return _iError;
 			}
 			iPort++;
@@ -555,15 +567,27 @@ int IniFileHandler::readTransferMode(string sPort, string sFilePath, int index)
 		}//_iError_parse
 		else
 		{
-			clog << "Error in INI file. Incorrect transfer mode for "
-				 << "port " << sPort << endl;
+			_sError = "Error in INI file. Incorrect transfer mode for port ";
+			_sError.append(sPort);
+
+			if(bPrint)
+				MessageBoxA(NULL, _sError.c_str(), WINDOW_TITLE, MB_OK | MB_ICONERROR);
+			else
+				cout << _sError << endl;
+
 			return ERROR_INI;
 		}
 	}
 	else	//_iError in ini file
 	{
-		clog << "Error in INI file. No transfer mode definied for "
-				<< sPort << " port" << endl;
+		_sError = "Error in INI file. No transfer mode definied for ";
+		_sError.append(sPort);
+
+		if(bPrint)
+			MessageBoxA(NULL, _sError.c_str(), WINDOW_TITLE, MB_OK | MB_ICONERROR);
+		else
+			cout << _sError << endl;
+
 		return ERROR_INI;
 	}
 	return ERROR_SUCCESS;
@@ -592,8 +616,14 @@ int IniFileHandler::readSlave(string sPort, string sFilePath, int index)
 
 		if(sTemp == "")
 		{
-			clog << "Error in INI file. Incorrect slave "
-					<< "port for " << sPort << endl;
+			_sError = "Error in INI file. Incorrect slave for port ";
+			_sError.append(sPort);
+
+			if(bPrint)
+				MessageBoxA(NULL, _sError.c_str(), WINDOW_TITLE, MB_OK | MB_ICONERROR);
+			else
+				cout << _sError << endl;
+
 			return ERROR_INI;
 		}
 		else
@@ -601,8 +631,14 @@ int IniFileHandler::readSlave(string sPort, string sFilePath, int index)
 	}
 	else
 	{
-		clog << "Error in INI file. No slave port given for"
-				<< " port " << sPort << endl;
+		_sError = "Error in INI file. No slave port given for port ";
+		_sError.append(sPort);
+
+		if(bPrint)
+			MessageBoxA(NULL, _sError.c_str(), WINDOW_TITLE, MB_OK | MB_ICONERROR);
+		else
+			cout << _sError << endl;
+
 		return ERROR_INI;
 	}
 	return ERROR_SUCCESS;
@@ -669,15 +705,27 @@ int IniFileHandler::readParity(string sPort, string sFilePath, int index)
 		iTemp = parseParity(szValue, index);
 		if (iTemp == ERROR_PARSE)
 		{
-			clog << "Error in INI file. Incorrect parity for "
-				 << "port " << sPort << endl;
+			_sError = "Error in INI file. Incorrect parity definied for port ";
+			_sError.append(sPort);
+
+			if(bPrint)
+				MessageBoxA(NULL, _sError.c_str(), WINDOW_TITLE, MB_OK | MB_ICONERROR);
+			else
+				cout << _sError << endl;
+
 			return ERROR_INI;
 		}
 	}
 	else	//_iError in ini file
 	{
-		clog << "Error in INI file. No parity definied for "
-				<< sPort << " port" << endl;
+		_sError = "Error in INI file. No parity definied for port ";
+		_sError.append(sPort);
+
+		if(bPrint)
+			MessageBoxA(NULL, _sError.c_str(), WINDOW_TITLE, MB_OK | MB_ICONERROR);
+		else
+			cout << _sError << endl;
+
 		return ERROR_INI;
 	}
 	return ERROR_SUCCESS;
@@ -709,15 +757,27 @@ int IniFileHandler::readProtocol(string sPort, string sFilePath, int index)
 		}//_iError_parse
 		else
 		{
-			clog << "Error in INI file. Incorrect protocol for "
-				 << "port " << sPort << endl;
+			_sError = "Error in INI file. Incorrect protocol for port ";
+			_sError.append(sPort);
+
+			if(bPrint)
+				MessageBoxA(NULL, _sError.c_str(), WINDOW_TITLE, MB_OK | MB_ICONERROR);
+			else
+				cout << _sError << endl;
+
 			return ERROR_INI;
 		}
 	}
 	else	//_iError in ini file
 	{
-		clog << "Error in INI file. No protocol definied for "
-				<< sPort << " port" << endl;
+		_sError = "Error in INI file. No protocol definiedfor port ";
+		_sError.append(sPort);
+
+		if(bPrint)
+			MessageBoxA(NULL, _sError.c_str(), WINDOW_TITLE, MB_OK | MB_ICONERROR);
+		else
+			cout << _sError << endl;
+
 		return ERROR_INI;
 	}
 	return ERROR_SUCCESS;
@@ -750,15 +810,27 @@ int IniFileHandler::readStopbits(string sPort, string sFilePath, int index)
 		}
 		else
 		{
-			clog << "Error in INI file. Incorrect stopbits for "
-				 << "port " << sPort << endl;
+			_sError = "Error in INI file. Incorrect stopbits for port ";
+			_sError.append(sPort);
+
+			if(bPrint)
+				MessageBoxA(NULL, _sError.c_str(), WINDOW_TITLE, MB_OK | MB_ICONERROR);
+			else
+				cout << _sError << endl;
+
 			return ERROR_INI;
 		}
 	}
 	else	//_iError in ini file
 	{
-		clog << "Error in INI file. No Stopbits definied for "
-				<< sPort << endl;
+		_sError = "Error in INI file. No stopbits definied for port ";
+		_sError.append(sPort);
+
+		if(bPrint)
+			MessageBoxA(NULL, _sError.c_str(), WINDOW_TITLE, MB_OK | MB_ICONERROR);
+		else
+			cout << _sError << endl;
+
 		return ERROR_INI;
 	}
 	return ERROR_SUCCESS;
@@ -791,15 +863,27 @@ int IniFileHandler::readDatabits(string sPort, string sFilePath, int index)
 		}
 		else
 		{
-			clog << "Error in INI file. Incorrect databits for "
-				 << "port " << sPort << endl;
+			_sError = "Error in INI file. Incorrect databits for port ";
+			_sError.append(sPort);
+
+			if(bPrint)
+				MessageBoxA(NULL, _sError.c_str(), WINDOW_TITLE, MB_OK | MB_ICONERROR);
+			else
+				cout << _sError << endl;
+
 			return ERROR_INI;
 		}
 	}
 	else	//_iError in ini file
 	{
-		clog << "Error in INI file. No datapbits definied for "
-				<< sPort << endl;
+		_sError = "Error in INI file. No datapbits definied for port ";
+		_sError.append(sPort);
+
+		if(bPrint)
+			MessageBoxA(NULL, _sError.c_str(), WINDOW_TITLE, MB_OK | MB_ICONERROR);
+		else
+			cout << _sError << endl;
+
 		return ERROR_INI;
 	}
 	return ERROR_SUCCESS;
@@ -832,8 +916,14 @@ int IniFileHandler::readBaudRate(string sPort, string sFilePath, int index)
 	}
 	else	//_iError in ini file
 	{
-		clog << "Error in INI file. No baud rate definied for "
-				<< sPort << endl;
+		_sError = "Error in INI file. No baud rate definied for port ";
+		_sError.append(sPort);
+
+		if(bPrint)
+			MessageBoxA(NULL, _sError.c_str(), WINDOW_TITLE, MB_OK | MB_ICONERROR);
+		else
+			cout << _sError << endl;
+
 		return ERROR_INI;
 	}
 
@@ -862,9 +952,15 @@ int IniFileHandler::readTextToTransfer(string sPort, string sFilePath, int index
 	}
 	else
 	{
-		clog << "Error in INI file. No text transfer mode definied for "
-			 << sPort << endl;
-			return ERROR_INI;
+		_sError = "Error in INI file. No text transfer mode definied for port ";
+		_sError.append(sPort);
+
+		if(bPrint)
+			MessageBoxA(NULL, _sError.c_str(), WINDOW_TITLE, MB_OK | MB_ICONERROR);
+		else
+			cout << _sError << endl;
+
+		return ERROR_INI;
 	}
 
 	return ERROR_SUCCESS;
@@ -894,16 +990,28 @@ int IniFileHandler::readLogger(string sPort, string sFilePath)
 			return 1;				// for false
 		else
 		{
-			clog << "Error in INI file. Logging mode has to be either true or false in "
-			 << sPort << endl;
+			_sError = "Error in INI file. Logging mode has to be either true or false in port ";
+			_sError.append(sPort);
+
+			if(bPrint)
+				MessageBoxA(NULL, _sError.c_str(), WINDOW_TITLE, MB_OK | MB_ICONERROR);
+			else
+				cout << _sError << endl;
+
 			return ERROR_INI;
 		}
 	}
 	else
 	{
-		clog << "Error in INI file. No logging mode definied for "
-			 << sPort << endl;
-			return ERROR_INI;
+		_sError = "Error in INI file. No logging mode definied for port ";
+		_sError.append(sPort);
+
+		if(bPrint)
+			MessageBoxA(NULL, _sError.c_str(), WINDOW_TITLE, MB_OK | MB_ICONERROR);
+		else
+			cout << _sError << endl;
+		
+		return ERROR_INI;
 	}
 }
 
@@ -931,15 +1039,27 @@ int IniFileHandler::readStopOnError(string sPort, string sFilePath)
 			return 1;				// for false
 		else
 		{
-			clog << "Error in INI file. StopOnFirstError mode has to be either true or false in "
-			 << sPort << endl;
+			_sError = "Error in INI file. StopOnFirstError mode has to be either true or false in port ";
+			_sError.append(sPort);
+
+			if(bPrint)
+				MessageBoxA(NULL, _sError.c_str(), WINDOW_TITLE, MB_OK | MB_ICONERROR);
+			else
+				cout << _sError << endl;
+
 			return ERROR_INI;
 		}
 	}
 	else
 	{
-		clog << "Error in INI file. No logging mode definied for "
-			 << sPort << endl;
+		_sError = "Error in INI file. No StopOnFirstError mode definied for port ";
+		_sError.append(sPort);
+
+		if(bPrint)
+			MessageBoxA(NULL, _sError.c_str(), WINDOW_TITLE, MB_OK | MB_ICONERROR);
+		else
+			cout << _sError << endl;
+
 			return ERROR_INI;
 	}
 }
@@ -970,15 +1090,27 @@ int IniFileHandler::readRepeater(string sPort, string sFilePath)
 			return iRepeater;
 		else
 		{
-			clog << "Error in INI file. Repeater has to be a integer number greater than 0, in "
-			 << sPort << endl;
+			_sError = "Error in INI file. Repeater has to be a integer number equal or greater than 0 in port ";
+			_sError.append(sPort);
+
+			if(bPrint)
+				MessageBoxA(NULL, _sError.c_str(), WINDOW_TITLE, MB_OK | MB_ICONERROR);
+			else
+				cout << _sError << endl;
+
 			return ERROR_INI;
 		}
 	}
 	else
 	{
-		clog << "Error in INI file. No repeater definied for "
-			 << sPort << endl;
+		_sError = "Error in INI file. No repeater definied for port ";
+		_sError.append(sPort);
+
+		if(bPrint)
+			MessageBoxA(NULL, _sError.c_str(), WINDOW_TITLE, MB_OK | MB_ICONERROR);
+		else
+			cout << _sError << endl;
+
 			return ERROR_INI;
 	}
 }
@@ -1024,15 +1156,27 @@ int IniFileHandler::parseTextToTransfer(string sPort, string sFilePath, string s
 		}
 		else
 		{
-			clog << "Error in INI file. No correct text for transfer parameter for "
-					<< sPort << endl;
+			_sError = "Error in INI file. No correct text for transfer parameter for port ";
+			_sError.append(sPort);
+
+			if(bPrint)
+				MessageBoxA(NULL, _sError.c_str(), WINDOW_TITLE, MB_OK | MB_ICONERROR);
+			else
+				cout << _sError << endl;
+
 			return ERROR_INI;
 		}
 	}	
 	else
 	{
-		clog << "Error in INI file. No text for transfer definied for "
-				<< sPort << endl;
+		_sError = "Error in INI file. No text for transfer definied for port ";
+		_sError.append(sPort);
+
+		if(bPrint)
+			MessageBoxA(NULL, _sError.c_str(), WINDOW_TITLE, MB_OK | MB_ICONERROR);
+		else
+			cout << _sError << endl;
+
 		return ERROR_INI;
 	}
 	
@@ -1225,8 +1369,14 @@ int IniFileHandler::parseTestMode(string sTestMode)
 		i = 2;
 	else
 	{
-		clog << "Error parsing the test mode. Wrong parameter." << sTestMode
-			 << "\nUse automatic, wobble or fixed" << endl;
+		_sError = "Error parsing the test mode. Wrong parameter: ";
+		_sError.append(sTestMode);
+		_sError.append("\nUse automatic, wobble or fixed");
+
+		if(bPrint)
+			MessageBoxA(NULL, _sError.c_str(), WINDOW_TITLE, MB_OK | MB_ICONERROR);
+		else
+			cout << _sError << endl;
 	}
 	
 	return i;
@@ -1259,8 +1409,15 @@ int IniFileHandler::parseParity(string sParity, int index)
 		vComPorts.at(index).iParity = 2;
 	else
 	{
-		clog << "Error parsing the parity. Wrong parameter." << sParity
-			 << "\nUse none, odd, even, or MIN-MAX" << endl;
+		_sError = "Error parsing the parity. Wrong parameter: ";
+		_sError.append(sParity);
+		_sError.append("\nnone, odd, even, or MIN-MAX");
+
+		if(bPrint)
+			MessageBoxA(NULL, _sError.c_str(), WINDOW_TITLE, MB_OK | MB_ICONERROR);
+		else
+			cout << _sError << endl;
+
 		iErr = ERROR_PARSE;
 	}
 
@@ -1287,8 +1444,14 @@ int IniFileHandler::parseProtocol(string sProtocol)
 		i = 2;
 	else
 	{
-		clog << "Error parsing the protocol. Wrong parameter." << sProtocol
-			<< "\nUse XON/XOFF, hardware or none" << endl;
+		_sError = "Error parsing the protocol. Wrong parameter: ";
+		_sError.append(sProtocol);
+		_sError.append("\nUse XON/XOFF, hardware or none");
+
+		if(bPrint)
+			MessageBoxA(NULL, _sError.c_str(), WINDOW_TITLE, MB_OK | MB_ICONERROR);
+		else
+			cout << _sError << endl;
 	}
 	
 	return i;
@@ -1312,8 +1475,14 @@ int IniFileHandler::parseStopbits(string sStopbits)
 		i = 2;
 	else
 	{
-		clog << "Error parsing the stopbits. Wrong parameter." << sStopbits
-			<< "\nUse 1 or 2" << endl;
+		_sError = "Error parsing the stopbits. Wrong parameter: ";
+		_sError.append(sStopbits);
+		_sError.append("\nUse 1 or 2");
+
+		if(bPrint)
+			MessageBoxA(NULL, _sError.c_str(), WINDOW_TITLE, MB_OK | MB_ICONERROR);
+		else
+			cout << _sError << endl;
 	}
 	
 	return i;
@@ -1337,8 +1506,14 @@ int IniFileHandler::parseDatabits(string sDatabits)
 		i = 8;
 	else
 	{
-		clog << "Error parsing the databits. Wrong parameter." << sDatabits
-			<< "\nUse 7 or 8" << endl;
+		_sError = "Error parsing the databits. Wrong parameter: ";
+		_sError.append(sDatabits);
+		_sError.append("\nUse 7 or 8");
+
+		if(bPrint)
+			MessageBoxA(NULL, _sError.c_str(), WINDOW_TITLE, MB_OK | MB_ICONERROR);
+		else
+			cout << _sError << endl;
 	}
 	
 	return i;
@@ -1365,8 +1540,14 @@ int IniFileHandler::parseTransfer(string sTransfer)
 		i = 3;
 	else
 	{
-		clog << "Error parsing the stopbits. Wrong parameter." << sTransfer
-			<< "\nUse shorted, double, master or slave" << endl;
+		_sError = "Error parsing the transfer mode. Wrong parameter: ";
+		_sError.append(sTransfer);
+		_sError.append("\nUse shorted, double, master or slave");
+
+		if(bPrint)
+			MessageBoxA(NULL, _sError.c_str(), WINDOW_TITLE, MB_OK | MB_ICONERROR);
+		else
+			cout << _sError << endl;
 	}
 	
 	return i;
@@ -1397,15 +1578,25 @@ string IniFileHandler::parsePort(string sSlavePort)
 		}
 		else
 		{
-			clog << "Error in SlavePort. Please use a port between 1 and 255"
-				 << endl;
+			_sError = "Error in SlavePort. Please use a port between 1 and 256";
+
+			if(bPrint)
+				MessageBoxA(NULL, _sError.c_str(), WINDOW_TITLE, MB_OK | MB_ICONERROR);
+			else
+				cout << _sError << endl;
+
 			return "";
 		}
 	}
 	else
 	{
-		clog << "Error in SlavePort. Please name the port \"COM\" and a number."
-			 << "For example \"COM99\"" << endl;
+		_sError = "Error in SlavePort. Please name the port \"COM\" and a number.\nFor example \"COM99\"";
+
+		if(bPrint)
+			MessageBoxA(NULL, _sError.c_str(), WINDOW_TITLE, MB_OK | MB_ICONERROR);
+		else
+			cout << _sError << endl;
+
 		return "";
 	}
 }

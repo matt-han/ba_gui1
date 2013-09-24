@@ -58,8 +58,8 @@ Com::Com(string sPort)
 	saDefaultBaudrates[17] = "115200";
 	saDefaultBaudrates[18] = "128000";
 	saDefaultBaudrates[19] = "256000";
-	//saDefaultBaudrates[0] = ;
-	//saDefaultBaudrates[0] = ;
+	saDefaultBaudrates[20] = "460800";
+	saDefaultBaudrates[21] = "921600";
 
    
 }
@@ -92,6 +92,8 @@ Com::Com(void)
 	saDefaultBaudrates[17] = "115200";
 	saDefaultBaudrates[18] = "128000";
 	saDefaultBaudrates[19] = "256000";
+	saDefaultBaudrates[20] = "460800";
+	saDefaultBaudrates[21] = "921600";
 }
 
 

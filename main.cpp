@@ -12,6 +12,7 @@
 #include <windows.h>
 #include <vector>
 #include <conio.h>
+#include <stdio.h>
 #include <thread>
 
 void start();
@@ -22,71 +23,70 @@ int parsePort();
 string sFilePath, sPort;
 vector<string> svParameters;
 bool bContinue = true;
+bool bPrint = true;
+char c;
 int iError;
 Tools tools;
 Interpreter interpreter;
 
-int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR pCmdLine, int nCmdShow)
+
+//int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR pCmdLine, int nCmdShow)
+int main(int argc, char * argv[])
 {
-	char c;
+	
 	bool bStopTest = false;
 	iError = ERROR_SUCCESS;
 	int _iError = ERROR_SUCCESS;
-	int iCount = 0;
 
-
-	if (0 == strcmp(pCmdLine, "") )
-		_iError = createGUI(hInstance, nCmdShow);
+	if (1 == argc)
+	{
+		HINSTANCE hInstance = GetModuleHandle(NULL);
+		_iError = createGUI(hInstance, SW_SHOW);
+	}
 	else
 	{
-		svParameters = tools.parseCmdLine(pCmdLine);
+		bPrint = false;
+		svParameters = tools.parseCmdLine(argv, argc);
 		
 		_iError = parseCmdParameters();
 		if (_iError == ERROR_SUCCESS)
 		{
 
-			if (!AllocConsole())
-				MessageBoxA(NULL, "console allocation error", WINDOW_TITLE, MB_OK | MB_ICONERROR);
-		
-			cout << "starting the thread" << endl;
+			cout << "\n\nStarting the test, parsing the configuration file" << endl;
+			cout << "Press ESC to stop the test" << endl;
 
 			thread t1 (&start);
-
 			t1.detach();
-
-			cout << "Test in progress" << endl;
-			cout << "Press ESC to stop the test" << endl;
-			
 
 			while(bContinue && !bStopTest)
 			{
-				c = getch();
-
-				//27 for esc key
-				if (c == 27)
+				if(kbhit())
 				{
-					interpreter.stopTest();
-					cout << "Quiting test" << endl;
-					bStopTest = true;
-					cout << "Testing stopped. Press enter to finish" << endl;
-					//getchar();
+					c = getch();
+
+					//27 for esc key
+					if (c == 27)
+					{
+						interpreter.stopTest();
+						cout << "Quiting test" << endl;
+						bStopTest = true;
+						cout << "Testing stopped. Press enter to finish" << endl;
+						break;
+					}
 				}
-				iCount++;
 			}
 
-			cout << "Testing finished" << endl;
-
-			FreeConsole();
-
+			//getchar();
 			return iError;
 		}
 		else
 		{//error parsing parameters
 			tools.showCmdHelp();
+			//getchar();
 			return _iError;
 		}
 	}
-
+	//getchar();
 	return _iError;
 }
 
@@ -97,8 +97,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR pCmdLine, int nCmdShow)
 void start()
 {
 	iError = interpreter.loadIniFile(sFilePath, sPort);
+	if(iError != ERROR_SUCCESS)
+		cout << "Error while testing" << endl;
+	else
+		cout << "Testing finished" << endl;
+
 	bContinue = false;
-	cout << "Testing finished. Press enter to finish" << endl;
 }
 
 

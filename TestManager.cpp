@@ -86,8 +86,12 @@ int TestManager::startManager()
 
 			if(iBegin >= iEnd)
 			{
-				MessageBoxA(NULL, "MAX baud rate has to be higher than MIN baud rate", WINDOW_TITLE,
-							MB_OK | MB_ICONERROR);
+				if(_CONSTANTS_H::bPrint)
+					MessageBoxA(NULL, "MAX baud rate has to be higher than MIN baud rate", WINDOW_TITLE,
+								MB_OK | MB_ICONERROR);
+				else
+					clog << "MAX baud rate has to be higher than MIN baud rate" << endl;
+
 				_iError = ERROR_BAUD_MINMAX;
 				break;
 			}

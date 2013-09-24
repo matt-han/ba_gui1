@@ -50,7 +50,7 @@ private:
 	char szValue[MAX_PATH];
 	string sFilePath;
 	string substr;
-	
+	string _sError;
 	vector<TestStruct> vComPorts;
 	
 //------------------------------------------------------------------------------

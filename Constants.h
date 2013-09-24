@@ -14,7 +14,7 @@ using namespace std;
 //Version
 #define VERSION "0.80"
 #define WINDOW_TITLE "Serial Port Tester version 0.80"
-#define lpcw_WINDOW_TITLE L"Serial Port Tester version 0.80"
+//#define lpcw_WINDOW_TITLE L"Serial Port Tester version 0.80"
 
 
 //------------------------------------------------------------------------------
@@ -148,6 +148,8 @@ const char ERROR_TRANSMISSION[] = "ERROR_TRANSMISSION";
 #define B_115200		 115200
 #define B_128K			 128000
 #define B_256K			 256000
+#define B_460800		 460800
+#define B_921600		 921600
 
 //------------------------------------------------------------------------------
 //Constants
@@ -200,7 +202,8 @@ const char ERROR_TRANSMISSION[] = "ERROR_TRANSMISSION";
 		}
 	};//struct
 
-
+	extern bool bPrint;
+	//static bool bPrint = true;
 
 
 

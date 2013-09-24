@@ -153,7 +153,7 @@ int Logger::log(bool bLog, string sPort, int iMasterSlave)
 	else
 	{
 		//clog redirected to NULL for no logfile
-		clog.rdbuf(NULL);
+		clog.rdbuf(NULL); //NULL
 	}
 
 	return ERROR_SUCCESS;
