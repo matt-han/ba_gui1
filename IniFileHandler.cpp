@@ -1133,6 +1133,7 @@ int IniFileHandler::readRepeater(string sPort, string sFilePath)
 //------------------------------------------------------------------------------
 int IniFileHandler::parseTextToTransfer(string sPort, string sFilePath, string sTransferTextMode, int index)
 {
+	string sTemp;
 	_dwExists = GetPrivateProfileStringA(sPort.c_str(),"TransferText",
 													NULL, szValue,
 													sizeof(szValue),
@@ -1148,7 +1149,12 @@ int IniFileHandler::parseTextToTransfer(string sPort, string sFilePath, string s
 		else if(sTransferTextMode == "text")
 		{
 			vComPorts.at(index).iTransTextMode = ID_BT_TEXT;
-			vComPorts.at(index).sTextToTransfer = szValue;
+			for(int i = 0; i < 100; i++)
+			{
+				if(szValue[i] != '\0')
+					sTemp.append(1, szValue[i]);
+			}
+			vComPorts.at(index).sTextToTransfer = sTemp;
 		}
 		else if(sTransferTextMode == "default")
 		{
