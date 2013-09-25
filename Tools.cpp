@@ -366,7 +366,7 @@ string Tools::errorCodeParser(int iError)
 			break;
 
 		case ERROR_BAUDRATE:
-			sError = "Error getting or decoding Baud rates for opened port. See log file, if available, for more information";
+			sError = "Error getting or decoding Baud rates for given port. See log file, if available, for more information";
 			break;
 
 		case ERROR_SET_TIMEOUTS:
@@ -410,7 +410,7 @@ string Tools::errorCodeParser(int iError)
 			break;
 
 		case ERROR_PARSE:
-			sError = "Error parsing a parameter read from the test configuration file. For more information on which parameter caused the error, see log file, if available.";
+			sError = "Error parsing a parameter read from the test configuration file.";
 			break;
 
 		case ERROR_READ_PORT:

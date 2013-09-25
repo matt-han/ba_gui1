@@ -116,8 +116,11 @@ Com::~Com(void)
 //------------------------------------------------------------------------------
 HANDLE Com::openPort(string portNumber)
 {
-	clog << "\n**********************" << endl;
-	clog << "Trying to open " << this->sPort << endl << endl;
+	if(bPrint)
+	{
+		clog << "\n**********************" << endl;
+		clog << "Trying to open " << this->sPort << endl << endl;
+	}
 
 	hCom = CreateFileA(portNumber.c_str(),  
             GENERIC_READ|GENERIC_WRITE, // desired access should be read&write  
@@ -146,7 +149,8 @@ int Com::closePort()
 	}
 	else
 	{
-		clog << "Closing " << this->sPort << endl << endl;
+		if(bPrint)
+			clog << "Closing " << this->sPort << endl << endl;
 		return ERROR_SUCCESS;
 	}
 }
@@ -204,8 +208,6 @@ int Com::getBaudrates(string sChosenPort)
 	{
 		if ( 0 != GetCommProperties(hCom, &commProp))
 		{
-			//clog << "Get baud rate for port " << sChosenPort << endl;
-
 			_iError = decodeBaudrates(commProp.dwSettableBaud);
 			if (ERROR_SUCCESS == _iError)
 			{
@@ -265,7 +267,8 @@ vector<string> Com::returnBaudrates(string sChosenPort)
 	{
 		if ( 0 != GetCommProperties(hCom, &commProp))
 		{
-			clog << "Get baud rate for port " << sChosenPort << endl;
+			if(bPrint)
+				clog << "Get baud rate for port " << sChosenPort << endl;
 
 			_iError = decodeBaudrates(commProp.dwSettableBaud);
 			if (ERROR_SUCCESS == _iError)

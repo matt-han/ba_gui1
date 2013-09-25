@@ -307,6 +307,7 @@ int IniFileHandler::readINIFile(string sFilePath, string sMainPort)
 	string sPort;
 	string sTemp;
 	int iPort = 0;
+	bool bPortsExist = false;
 
 	ifstream file(sFilePath.c_str());
 	if(!file.good())
@@ -319,8 +320,10 @@ int IniFileHandler::readINIFile(string sFilePath, string sMainPort)
 
 
 	//if a port is given, then this is the port to test
+	//----------------------------------------------------------------------------------------
 	if( sMainPort != "")
 	{
+
 		vComPorts.push_back(TestStruct());
 		vComPorts.at(iPort).sMasterPort = sMainPort;
 		
@@ -330,6 +333,8 @@ int IniFileHandler::readINIFile(string sFilePath, string sMainPort)
 
 		if (0 != _dwExists)
 		{
+			bPortsExist = true;
+
 			_iError = readPortConfig("COM", sFilePath, 0);
 			if (_iError != ERROR_SUCCESS)
 			{
@@ -353,9 +358,14 @@ int IniFileHandler::readINIFile(string sFilePath, string sMainPort)
 		}
 	}
 
+
+
 	//try to find test settings for all possible system ports
+	//----------------------------------------------------------------------------------------
 	for(int iCom = 1; iCom < 257; iCom++)//256 ports
 	{
+
+		
 		sPort = "COM";
 		sTemp = tools.convertToString(iCom);
 		sPort.append(sTemp);
@@ -366,6 +376,8 @@ int IniFileHandler::readINIFile(string sFilePath, string sMainPort)
 
 		if (0 != _dwExists)
 		{
+			bPortsExist = true;
+
 			vComPorts.push_back(TestStruct());
 			vComPorts.at(iPort).sMasterPort = sPort;
 
@@ -388,7 +400,21 @@ int IniFileHandler::readINIFile(string sFilePath, string sMainPort)
 		}
 	}
 
-	return ERROR_SUCCESS;
+	if(bPortsExist)
+		return ERROR_SUCCESS;
+	else
+	{
+		_sError = "Error reading file:\n";
+		_sError.append(sFilePath);
+		_sError.append("\nCould not find any COM port. Is the path correct? Is the COM port value between 1 and 256\n");
+				
+		if(bPrint)
+			MessageBoxA(NULL, _sError.c_str(), WINDOW_TITLE, MB_OK | MB_ICONERROR);
+		else
+			cout << _sError << endl;
+
+		return ERROR_NO_FILE;
+	}
 }
 
 
@@ -522,7 +548,7 @@ int IniFileHandler::readPortConfig(string sPort, string sFilePath, int index)
 		else
 			return _iError;
 
-		//repeater
+		//read repeater as long as not an automatic test
 		if(vComPorts.at(index).iTestMode != 0 )
 		{
 			_iError = readRepeater(sPort, sFilePath.c_str());
@@ -912,7 +938,18 @@ int IniFileHandler::readBaudRate(string sPort, string sFilePath, int index)
 	{
 		iTemp = parseBaud(szValue, index);
 		if(iTemp != ERROR_SUCCESS)
+		{
+			_sError = "Error in INI file. Wrong baud rate(s) definied for port ";
+			_sError.append(sPort);
+			_sError.append("\nPlease use MIN-MAX, MIN-XXXX, XXXX-MAX, XXXX-YYYY or XXXX\nwere XXXX and YYYY are standard baud rates\n");
+
+			if(bPrint)
+				MessageBoxA(NULL, _sError.c_str(), WINDOW_TITLE, MB_OK | MB_ICONERROR);
+			else
+				cout << _sError << endl;
+
 			return iTemp;
+		}
 	}
 	else	//_iError in ini file
 	{
@@ -1134,6 +1171,11 @@ int IniFileHandler::readRepeater(string sPort, string sFilePath)
 int IniFileHandler::parseTextToTransfer(string sPort, string sFilePath, string sTransferTextMode, int index)
 {
 	string sTemp;
+	if(sTransferTextMode == "default")
+	{
+			return ERROR_SUCCESS;
+	}
+
 	_dwExists = GetPrivateProfileStringA(sPort.c_str(),"TransferText",
 													NULL, szValue,
 													sizeof(szValue),
@@ -1155,10 +1197,6 @@ int IniFileHandler::parseTextToTransfer(string sPort, string sFilePath, string s
 					sTemp.append(1, szValue[i]);
 			}
 			vComPorts.at(index).sTextToTransfer = sTemp;
-		}
-		else if(sTransferTextMode == "default")
-		{
-			return ERROR_SUCCESS;
 		}
 		else
 		{
@@ -1417,7 +1455,7 @@ int IniFileHandler::parseParity(string sParity, int index)
 	{
 		_sError = "Error parsing the parity. Wrong parameter: ";
 		_sError.append(sParity);
-		_sError.append("\nnone, odd, even, or MIN-MAX");
+		_sError.append("\nPlease use: none, odd, even, or MIN-MAX\n");
 
 		if(bPrint)
 			MessageBoxA(NULL, _sError.c_str(), WINDOW_TITLE, MB_OK | MB_ICONERROR);

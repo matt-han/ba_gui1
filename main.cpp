@@ -1,10 +1,3 @@
-//test headers
-#include "IniFileHandler.h"
-#include "Logger.h"
-#include "FixedTest.h"
-#include "Com.h"
-
-
 #include "Window.h"
 #include "Interpreter.h"
 #include "Tools.h"
@@ -15,17 +8,21 @@
 #include <stdio.h>
 #include <thread>
 
+//Methoden
 void start();
 int createGUI(HINSTANCE hInstance, int nCmdShow);
 int parseCmdParameters();
 int parsePort();
+void setTestError(int iError);
 
+
+//Variablen
 string sFilePath, sPort;
 vector<string> svParameters;
 bool bContinue = true;
 bool bPrint = true;
 char c;
-int iError;
+int iTestError;
 Tools tools;
 Interpreter interpreter;
 
@@ -35,8 +32,8 @@ int main(int argc, char * argv[])
 {
 	
 	bool bStopTest = false;
-	iError = ERROR_SUCCESS;
-	int _iError = ERROR_SUCCESS;
+	iTestError = 1;
+	int _iError = 2;
 
 	if (1 == argc)
 	{
@@ -53,7 +50,7 @@ int main(int argc, char * argv[])
 		{
 
 			cout << "\n\nStarting the test, parsing the configuration file" << endl;
-			cout << "Press ESC to stop the test" << endl;
+			cout << "Press ESC to stop the test" << endl << endl;
 
 			thread t1 (&start);
 			t1.detach();
@@ -70,42 +67,44 @@ int main(int argc, char * argv[])
 						interpreter.stopTest();
 						cout << "Quiting test" << endl;
 						bStopTest = true;
-						cout << "Testing stopped. Press enter to finish" << endl;
+						cout << "Test stopped" << endl;
 						break;
 					}
 				}
 			}
 
-			//getchar();
-			return iError;
+			return iTestError;
 		}
 		else
 		{//error parsing parameters
 			tools.showCmdHelp();
-			//getchar();
 			return _iError;
+			
 		}
 	}
-	//getchar();
 	return _iError;
 }
 
 
 
 
-
+//------------------------------------------------------------------------------
+//	Starts in a new thread and the interpreter object loads the given file
+//	Return:error code signaling if operation succeded or sytax error
+//------------------------------------------------------------------------------
 void start()
 {
-	iError = interpreter.loadIniFile(sFilePath, sPort);
-	if(iError != ERROR_SUCCESS)
+
+	iTestError = interpreter.loadIniFile(sFilePath, sPort);
+
+	if(iTestError != ERROR_SUCCESS)
 		cout << "Error while testing" << endl;
 	else
 		cout << "Testing finished" << endl;
 
+	
 	bContinue = false;
 }
-
-
 
 
 //------------------------------------------------------------------------------
