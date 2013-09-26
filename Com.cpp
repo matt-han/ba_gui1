@@ -116,11 +116,11 @@ Com::~Com(void)
 //------------------------------------------------------------------------------
 HANDLE Com::openPort(string portNumber)
 {
-	if(bPrint)
-	{
-		clog << "\n**********************" << endl;
-		clog << "Trying to open " << this->sPort << endl << endl;
-	}
+	//if(bPrint)
+	//{
+	//	clog << "\n**********************" << endl;
+	//	clog << "Trying to open " << this->sPort << endl << endl;
+	//}
 
 	hCom = CreateFileA(portNumber.c_str(),  
             GENERIC_READ|GENERIC_WRITE, // desired access should be read&write  
@@ -149,8 +149,8 @@ int Com::closePort()
 	}
 	else
 	{
-		if(bPrint)
-			clog << "Closing " << this->sPort << endl << endl;
+		//if(bPrint)
+			//clog << "Closing " << this->sPort << endl << endl;
 		return ERROR_SUCCESS;
 	}
 }

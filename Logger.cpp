@@ -127,7 +127,7 @@ int Logger::log(bool bLog, string sPort, int iMasterSlave)
 			clog << "++  " << flush;
 			clog.width(37);
 			clog.setf(ios::left, ios::adjustfield);
-			clog << "WN Serial COM Port Tester"<< flush;
+			clog << "Serial Port Tester"<< flush;
 			clog << " ++" << endl;
 			
 			clog << "++  Version " << flush;

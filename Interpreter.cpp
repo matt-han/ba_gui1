@@ -780,8 +780,9 @@ int Interpreter::saveToFile(string sSavePath)
 int Interpreter::loadIniFile(string sPath, string sPort)
 {
 	_testManager = new TestManager();
-	
+	string sError;
 	_bErr = false;
+
 	_iError = iniFile.readINIFile(sPath, sPort);
 
 	if(_iError == ERROR_SUCCESS)
@@ -808,14 +809,16 @@ int Interpreter::loadIniFile(string sPath, string sPort)
 			if(_iError != ERROR_SUCCESS)
 			{
 				_bErr = true;//handle errors
-				if(_bLoggerState)
+
+				if(bPrint)//_bLoggerState
+
 					clog << "Error testing port "
 						 << _vIniFilePorts.at(index).sMasterPort
 						 << ". Error " << _iError
 						 << endl;
 				else
 				{
-					string sError = "Error testing port ";
+					sError = "Error testing port ";
 					sError.append(_vIniFilePorts.at(index).sMasterPort);
 					sError.append(".\n");
 					sError.append(tools.errorCodeParser(_iError));
@@ -825,6 +828,20 @@ int Interpreter::loadIniFile(string sPath, string sPort)
 					else
 						cout << sError << endl;
 				}
+				
+				//in case it was not a transmition error return the code,
+				//else just log it and continue
+				if( _iError != ERROR_READ_PORT ||
+					_iError != ERROR_WRITE_PORT ||
+					_iError != ERROR_CMP_STR ||
+					_iError != ERROR_WAIT_SLAVE ||
+					_iError != ERROR_WAIT_MASTER ||
+					_iError != ERROR_SYNC)
+				{
+					delete _testManager;
+					_testManager = NULL;
+					return _iError;
+				}
 			}
 
 		}//for
@@ -832,7 +849,7 @@ int Interpreter::loadIniFile(string sPath, string sPort)
 	}
 	else
 	{
-		string sError = "Error reading test file:\n";
+		sError = "Error reading test file:\n";
 		sError.append(sPath);
 		
 		if(bPrint)

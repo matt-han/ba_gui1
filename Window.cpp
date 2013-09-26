@@ -74,7 +74,7 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	_sHelpInfo.append("- Double  :Test between 2 ports with a null modem cable\n");
 	_sHelpInfo.append("- Master   :Sends port settings to a slave\n");
 	_sHelpInfo.append("- Slave      :Recieves information from the master and replies\n\n");
-	_sHelpInfo.append("In a Master - Slave test both ports need to have the same test configuration. Please start the master and 5 seconds later the slave.\n");
+	_sHelpInfo.append("In a Master - Slave test both ports need to have the same test configuration. Please start the master and about 3 seconds later the slave.\n");
 	_sHelpInfo.append("In this test, both ports are independent and do not know of the existence of the other port. The master port sends information and \n");
 	_sHelpInfo.append("waits for a reply. The slave port waits for input information and resends the information.\n");
 	//_sHelpInfo.append("\n");

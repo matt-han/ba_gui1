@@ -406,7 +406,7 @@ int IniFileHandler::readINIFile(string sFilePath, string sMainPort)
 	{
 		_sError = "Error reading file:\n";
 		_sError.append(sFilePath);
-		_sError.append("\nCould not find any COM port. Is the path correct? Is the COM port value between 1 and 256\n");
+		_sError.append("\nCould not find any COM port. Is the path correct? Is the COM port value between 1 and 256?\n");
 				
 		if(bPrint)
 			MessageBoxA(NULL, _sError.c_str(), WINDOW_TITLE, MB_OK | MB_ICONERROR);
@@ -979,13 +979,27 @@ int IniFileHandler::readBaudRate(string sPort, string sFilePath, int index)
 //------------------------------------------------------------------------------
 int IniFileHandler::readTextToTransfer(string sPort, string sFilePath, int index)
 {
+	int iError = ERROR_SUCCESS;
+
 	_dwExists = GetPrivateProfileStringA(sPort.c_str(),"TransferTextMode",
 												NULL, szValue,
 												sizeof(szValue),
 												sFilePath.c_str());
 	if (_dwExists != 0)
 	{
-		parseTextToTransfer(sPort, sFilePath, szValue, index);
+		iError = parseTextToTransfer(sPort, sFilePath, szValue, index);
+		if(iError != ERROR_SUCCESS)
+		{
+			_sError = "Error in INI file. Wrong text transfer mode definied for port ";
+			_sError.append(sPort);
+			_sError.append("\nUse default, text or file");
+
+			if(bPrint)
+				MessageBoxA(NULL, _sError.c_str(), WINDOW_TITLE, MB_OK | MB_ICONERROR);
+			else
+				cout << _sError << endl;
+		}
+
 	}
 	else
 	{
@@ -1000,7 +1014,7 @@ int IniFileHandler::readTextToTransfer(string sPort, string sFilePath, int index
 		return ERROR_INI;
 	}
 
-	return ERROR_SUCCESS;
+	return iError;
 }
 
 
@@ -1173,7 +1187,14 @@ int IniFileHandler::parseTextToTransfer(string sPort, string sFilePath, string s
 	string sTemp;
 	if(sTransferTextMode == "default")
 	{
-			return ERROR_SUCCESS;
+		if(bPrint)
+		{
+			_sError = "Warning, if a TransferText was definied, it will be ignored, the default transfer text will be sent\n";
+			_sError.append("If you wish to send a costum text, please use parameters file or text.");
+				
+			cout << _sError << endl << endl;
+		}
+		return ERROR_SUCCESS;
 	}
 
 	_dwExists = GetPrivateProfileStringA(sPort.c_str(),"TransferText",
@@ -1200,14 +1221,6 @@ int IniFileHandler::parseTextToTransfer(string sPort, string sFilePath, string s
 		}
 		else
 		{
-			_sError = "Error in INI file. No correct text for transfer parameter for port ";
-			_sError.append(sPort);
-
-			if(bPrint)
-				MessageBoxA(NULL, _sError.c_str(), WINDOW_TITLE, MB_OK | MB_ICONERROR);
-			else
-				cout << _sError << endl;
-
 			return ERROR_INI;
 		}
 	}	
@@ -1215,6 +1228,10 @@ int IniFileHandler::parseTextToTransfer(string sPort, string sFilePath, string s
 	{
 		_sError = "Error in INI file. No text for transfer definied for port ";
 		_sError.append(sPort);
+		_sError.append("\nIf TransferTextMode is \"file\" then type the file path for the file to be transfered.\n");
+		_sError.append("\nIf TransferTextMode is \"text\" then type the text to be transfered.\n");
+		_sError.append("\nIf TransferTextMode is \"default\" then no parameter needs to be defiened, the default text will be transfered.\n");
+
 
 		if(bPrint)
 			MessageBoxA(NULL, _sError.c_str(), WINDOW_TITLE, MB_OK | MB_ICONERROR);

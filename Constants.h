@@ -111,11 +111,9 @@ using namespace std;
 #define ERROR_WAIT_SLAVE	-21
 #define ERROR_WAIT_MASTER	-22
 #define	ERROR_SYNC			-23
-#define ERROR_PARSE_SLAVE	-24 //error parsing info sent by the master
-#define	ERROR_MSG_HEADER	-25 //error decoding header
-#define ERROR_GET_
-//#define						-26
-
+#define ERROR_PARSE_SLAVE	-24
+#define	ERROR_MSG_HEADER	-25
+#define ERROR_ESC			-26
 
 const char ERROR_TRANSMISSION[] = "ERROR_TRANSMISSION";
 //#define ERROR_TRANSMISSION "ERROR_TRANSMISSION"

@@ -181,10 +181,12 @@ int TestManager::startFixedTest()
 	int iRepeat = 1;
 
 	//set the text to be transfered
-	fixedTest.setTextVector(testStruct.iTransTextMode);
+	_iError = fixedTest.setTextVector(testStruct.iTransTextMode);
+	if(_iError != ERROR_SUCCESS)
+		return _iError;
 
 	//save test to a ini file if logging is enabled
-if(testStruct.bLoggerState)
+	if(testStruct.bLoggerState)
 		saveSettingsToFile();
 
 	do
@@ -251,7 +253,10 @@ int TestManager::startWobbleTest(int iBaudrate, int iParity)
 	//create for each test a new object to avoid errors
 	FixedTest wobble(&testStruct);
 
-	wobble.setTextVector(testStruct.iTransTextMode);
+	_iError = wobble.setTextVector(testStruct.iTransTextMode);
+	if(_iError != ERROR_SUCCESS)
+		return _iError;
+
 	wobble.testStruct->iBaud   = iBaudrate;
 	wobble.testStruct->iParity = iParity;
 
@@ -322,7 +327,10 @@ int TestManager::startAutomaticTest()
 
 	FixedTest automatic(&testStruct);
 
-	automatic.setTextVector(testStruct.iTransTextMode);
+	_iError = automatic.setTextVector(testStruct.iTransTextMode);
+	if(_iError != ERROR_SUCCESS)
+		return _iError;
+
 
 	//save test to a ini file if logging is enabled
 	if(testStruct.bLoggerState)

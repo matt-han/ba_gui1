@@ -27,7 +27,6 @@ Tools tools;
 Interpreter interpreter;
 
 
-//int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR pCmdLine, int nCmdShow)
 int main(int argc, char * argv[])
 {
 	
@@ -68,6 +67,7 @@ int main(int argc, char * argv[])
 						cout << "Quiting test" << endl;
 						bStopTest = true;
 						cout << "Test stopped" << endl;
+						iTestError = ERROR_ESC;
 						break;
 					}
 				}
@@ -76,10 +76,10 @@ int main(int argc, char * argv[])
 			return iTestError;
 		}
 		else
-		{//error parsing parameters
+		{
+			//error parsing parameters
 			tools.showCmdHelp();
 			return _iError;
-			
 		}
 	}
 	return _iError;
@@ -96,6 +96,8 @@ void start()
 {
 
 	iTestError = interpreter.loadIniFile(sFilePath, sPort);
+
+	cout << "\n\n++++++++++++++++++++" << endl;
 
 	if(iTestError != ERROR_SUCCESS)
 		cout << "Error while testing" << endl;

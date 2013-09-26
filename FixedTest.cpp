@@ -17,14 +17,14 @@ FixedTest::FixedTest(TestStruct *testStruct)
 
 	bTransmissionError = false;
 
-	defaultText[0] = "Freude, schoener Goetterfunken,";
+	defaultText[0] = "Freude, schöner Götterfunken,";
 	defaultText[1] = "Tochter aus Elysium!";
 	defaultText[2] = "Wir betreten feuertrunken,";
 	defaultText[3] = "Himmlische, Dein Heiligthum.";
 	defaultText[4] = "Deine Zauber binden wieder,";
 	defaultText[5] = "Was die Mode streng getheilt,";
-	defaultText[6] = "Alle Menschen werden Brueder,";
-	defaultText[7] = "Wo Dein sanfter Fluegel weilt";
+	defaultText[6] = "Alle Menschen werden Brüder,";
+	defaultText[7] = "Wo Dein sanfter Flügel weilt";
 	//later slave port
 
 	_ESC = char(27);
@@ -47,8 +47,10 @@ FixedTest::~FixedTest(void)
 //	 IN:
 //		- int iTextMode -> text mode
 //------------------------------------------------------------------------------
-void FixedTest::setTextVector(int iTextMode)
+int FixedTest::setTextVector(int iTextMode)
 {
+	int iError = ERROR_SUCCESS;
+
 	//delete all elements just in case
 	vTextToSend.erase(vTextToSend.begin(), vTextToSend.end());
 
@@ -69,11 +71,11 @@ void FixedTest::setTextVector(int iTextMode)
 			break;
 
 		case ID_BT_LOAD:
-			_iError = transFile.openFile(this->testStruct->sFilePath);
-			if(_iError == ERROR_SUCCESS)
+			iError = transFile.openFile(this->testStruct->sFilePath);
+			if(iError == ERROR_SUCCESS)
 			{
-				_iError = transFile.readTransferFile();
-				if(_iError == ERROR_SUCCESS)
+				iError = transFile.readTransferFile();
+				if(iError == ERROR_SUCCESS)
 				{
 					vTextToSend = transFile.vTranferFileLines;
 				}
@@ -87,7 +89,7 @@ void FixedTest::setTextVector(int iTextMode)
 			break;
 	}
 
-
+	return iError;
 }
 
 

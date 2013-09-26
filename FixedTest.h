@@ -50,7 +50,7 @@ public:
 
 //------------------------------------------------------------------------------
 //Methods
-	void setTextVector(int iTextMode);	
+	int setTextVector(int iTextMode);	
 	int startSingleTest();
 	int startDoubleTest();
 	int startMasterTest();

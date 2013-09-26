@@ -426,19 +426,27 @@ string Tools::errorCodeParser(int iError)
 			break;
 
 		case ERROR_WAIT_SLAVE:
-			sError = "TO DO";
+			sError = "Master has waited on response from Slave, but none has arrived";
 			break;
 
 		case ERROR_WAIT_MASTER:
-			sError = "TO DO";
+			sError = "Slave has waited for Master to send information, but none has arrived";
 			break;
 
 		case ERROR_SYNC:
-			sError = "TO DO";
+			sError = "Sync error between master and slave";
 			break;
 
 		case ERROR_PARSE_SLAVE:
-			sError = "TO DO";
+			sError = "Test information received from master is corrupt. Information values are not plausible";
+			break;
+
+		case ERROR_MSG_HEADER:
+			sError = "Header received from master is corrupt. Information values are not plausible";
+			break;
+
+		case ERROR_ESC:
+			sError = "User pressed ESC key in the command line";
 			break;
 
 		default:
@@ -461,14 +469,14 @@ void Tools::showCmdHelp()
 	cout << endl << endl;
 	cout << WINDOW_TITLE << endl;
 	cout << "Please use the Serial Port Tester with the following options:" << endl;
-	cout << "SerialPortTester.exe <Test Configuration File> /[COM Port]" << endl;
-	cout << "If no parameters are specified, the programm starts the GUI" << endl;
+	cout << "SerialPortTester.exe <Test Configuration File> /[COM Port]" << endl << endl;
+	cout << "If no parameters are specified, the programm starts the GUI" << endl << endl;
 	cout << "<Test Configuration File>:" << endl;
 	cout << " A file which has the test settings for one or more COM ports" << endl;
 	cout <<	" It can be written manually, but it is advisable to create one with the GUI" << endl << endl;
 	cout << "/[COM Port]" << endl;
-	cout << " This is an optional parameter, it specifies which prot will be tested" << endl;
-	cout << " If a port is given, the test configuration file header has to be [COM]" << endl;
+	cout << " This is an optional parameter, it specifies which port will be tested" << endl;
+	cout << " If a port is given, the test configuration file header has to be [COM]" << endl << endl;
 	//cout << "" << endl;
 	//cout << "" << endl;
 }
