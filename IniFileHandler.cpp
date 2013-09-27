@@ -309,8 +309,9 @@ int IniFileHandler::readINIFile(string sFilePath, string sMainPort)
 	int iPort = 0;
 	bool bPortsExist = false;
 
-	ifstream file(sFilePath.c_str());
-	if(!file.good())
+	ifstream file;
+	file.open(sFilePath.c_str(), ios::in);
+	if(!file.is_open())
 	{
 		file.close();
 		return ERROR_NO_FILE;

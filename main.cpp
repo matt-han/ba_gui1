@@ -121,6 +121,9 @@ int parseCmdParameters()
 	}
 	else
 	{
+		if(string::npos == svParameters.at(0).find("\\"))
+			return ERROR_CMD_SYNTAX;
+
 		sFilePath = svParameters.at(0);
 		
 		//is 2 parameters, then second is a port

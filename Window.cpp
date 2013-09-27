@@ -861,8 +861,13 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 					case ID_BT_TEXT:
 						ZeroMemory(_szTextToSend, sizeof(_szTextToSend));
 						GetWindowTextA(_hwnd_lbText, _szTextToSend, 30);
-						_iTextToTransfer = ID_BT_TEXT;
-						MessageBoxA(NULL, "Text loaded", WINDOW_TITLE, MB_OK);
+						if(_szTextToSend[0] == '\0')
+							MessageBoxA(NULL, "Text is empty. No text was loaded", WINDOW_TITLE, MB_OK);
+						else
+						{
+							_iTextToTransfer = ID_BT_TEXT;
+							MessageBoxA(NULL, "Text loaded", WINDOW_TITLE, MB_OK);
+						}
 						break;
 
 					case ID_BT_SAVE:
