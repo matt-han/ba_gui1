@@ -1,7 +1,6 @@
 /*
  *	Header file with template for GUI. Example taken from:
- *  http://msdn.microsoft.com/en-us/library/windows/desktop/
- *  ff381400%28v=vs.85%29.aspx
+ *  http://msdn.microsoft.com/en-us/library/windows/desktop/ff381400%28v=vs.85%29.aspx
  */
 
 

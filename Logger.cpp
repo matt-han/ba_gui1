@@ -158,22 +158,3 @@ int Logger::log(bool bLog, string sPort, int iMasterSlave)
 
 	return ERROR_SUCCESS;
 }
-
-
-//------------------------------------------------------------------------------
-//	If a log file was opened, the function closes it, and always redirects 
-//	clog to the system default
-//	Parameters:
-//	 IN:
-//		- bool bLog    -> true for logging events, false for redictecting clog
-//------------------------------------------------------------------------------
-//void Logger::closelog(bool bLog)
-//{
-//	////set clog back to default
-//	//clog.rdbuf(backup);
-//	//
-//	//if(bLog == true)
-//	//{
-//	//	filestr.close();
-//	//}
-//}

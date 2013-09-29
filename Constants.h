@@ -12,10 +12,8 @@
 using namespace std;
 
 //Version
-#define VERSION "0.80"
-#define WINDOW_TITLE "Serial Port Tester version 0.80"
-//#define lpcw_WINDOW_TITLE L"Serial Port Tester version 0.80"
-
+#define VERSION "1.0"
+#define WINDOW_TITLE "Serial Port Tester version 1.0"
 
 //------------------------------------------------------------------------------
 //GUI Elements
@@ -79,11 +77,6 @@ using namespace std;
 #define ID_GB_PROTOCOL	45
 #define ID_STOP_ON_ERR	56
 
-#define ID_THREAD_MAIN	98
-#define ID_THREAD_SUB	99
-
-#define ID_BUT			100
-
 
 
 //------------------------------------------------------------------------------
@@ -114,13 +107,9 @@ using namespace std;
 #define ERROR_PARSE_SLAVE	-24
 #define	ERROR_MSG_HEADER	-25
 #define ERROR_ESC			-26
+#define DEFAULT_VALUE		-100
 
 const char ERROR_TRANSMISSION[] = "ERROR_TRANSMISSION";
-//#define ERROR_TRANSMISSION "ERROR_TRANSMISSION"
-
-#define DEFAULT_VALUE		-100
-#define ERROR_TODO			-666
-
 
 //------------------------------------------------------------------------------
 //Baud rates
@@ -201,8 +190,5 @@ const char ERROR_TRANSMISSION[] = "ERROR_TRANSMISSION";
 	};//struct
 
 	extern bool bPrint;
-	//static bool bPrint = true;
-
-
 
 #endif

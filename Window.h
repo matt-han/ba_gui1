@@ -11,7 +11,6 @@
 #include "Tools.h"
 
 #include <thread>
-#include <mutex>
 #include <vector>
 
 
@@ -63,9 +62,7 @@ public:
 	
 	void viewAllElements(BOOLEAN bView);
 	void viewPortElements(BOOLEAN bView);
-	//get
-	//string getTransferFile()
-	
+
 	LPCSTR  ClassName() const { return "Serial Port Tester"; }
 
 private:
@@ -107,7 +104,6 @@ private:
 	//Window handles
 	HWND _hwndCB_MasPorts;
 	HWND _hwndCB_SlvPorts;
-
 	HWND _hwndCB_Baud;
 	HWND _hwndCB_Baud_MAX;
 	HWND _hwnd_lbLoad;
@@ -122,6 +118,7 @@ private:
 	HWND _hwnd_Stop;
 	HWND _hwnd_Help;
 
+	//TO DO
 	//void CreateMyTooltip (HWND hwnd);
 	//HWND CreateToolTip(int toolID, HWND hDlg, PTSTR pszText);
 	

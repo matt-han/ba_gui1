@@ -9,14 +9,13 @@
 
 #include "Com.h"
 #include "TestManager.h"
-//#include "Constants.h"
+#include "Constants.h"
 #include "Tools.h"
 #include "IniFileHandler.h"
 
 #include <Windows.h>
 #include <string>
 #include <vector>
-#include <thread>
 
 using namespace std;
 
@@ -54,7 +53,6 @@ public:
 	void setRepeater(string);
 	void setBaudVector(vector<string>);
 	void setDefaultValues();
-	//is void 'cos gui does not handle values!
 	void handleGui();
 	
 	int checkInputConfigData();
@@ -70,8 +68,6 @@ private:
 //Variables
 
 	TestManager * _testManager;
-	
-	//thread _t1;
 	
 	int _iTestMode;
 	int _iParity;

@@ -9,34 +9,6 @@
 
 #include "Window.h"
 
-
-//ORIGINAL
-//
-//LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
-//{
-//    switch (uMsg)
-//    {
-//    case WM_DESTROY:
-//        PostQuitMessage(0);
-//        return 0;
-//
-//    case WM_PAINT:
-//        {
-//            PAINTSTRUCT ps;
-//            HDC hdc = BeginPaint(m_hwnd, &ps);
-//            FillRect(hdc, &ps.rcPaint, (HBRUSH) (COLOR_WINDOW+1));
-//            EndPaint(m_hwnd, &ps);
-//        }
-//        return 0;
-//
-//    default:
-//        return DefWindowProc(m_hwnd, uMsg, wParam, lParam);
-//    }
-//    return TRUE;
-//}
-
-
-
 //------------------------------------------------------------------------------
 //	own window procedure, to avoid the static problem
 //	Parameters:
@@ -77,7 +49,6 @@ LRESULT Window::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	_sHelpInfo.append("In a Master - Slave test both ports need to have the same test configuration. Please start the master and about 3 seconds later the slave.\n");
 	_sHelpInfo.append("In this test, both ports are independent and do not know of the existence of the other port. The master port sends information and \n");
 	_sHelpInfo.append("waits for a reply. The slave port waits for input information and resends the information.\n");
-	//_sHelpInfo.append("\n");
 
 
 	switch(uMsg)  
@@ -1016,11 +987,6 @@ void Window::sendPortBaudRate()
 //------------------------------------------------------------------------------
 void Window::sendTransferFile()
 {
-	//interpreter.setTransferFile(this->getTransferFile());
-	//int a = _sTransferFilePath.find_last_of("\\");
-	//clog << "\nFile to send : "
-	//	 << _sTransferFilePath.substr(a,_sTransferFilePath.npos - a)
-	//	 << endl;
 	interpreter->setTransferFile(this->_sTransferFilePath);
 }
 
@@ -1030,9 +996,6 @@ void Window::sendTransferFile()
 //------------------------------------------------------------------------------
 void Window::sendTextToSend()
 {
-	//GetWindowTextA(_hwnd_lbText, _szTextToSend, 30);
-	//clog << "\nText to send : " << _szTextToSend << endl;
-
 	interpreter->setTextToSend(_szTextToSend);
 }
 
@@ -1069,8 +1032,6 @@ void Window::sendTransTextMode(int iTransTextMode)
 //------------------------------------------------------------------------------
 void Window::sendTestSettings()
 {
-	//lock_guard<mutex> locker(_mutex);
-	
 	interpreter = new Interpreter();
 
 	switch(_iTextToTransfer)
@@ -1148,9 +1109,6 @@ void Window::saveTestSettings()
 	string sError = "";
 	if(sPath != "")
 	{
-		
-		
-		
 		Interpreter interSaveToFile;
 
 		interSaveToFile.setTestMode(_iTestMode);
@@ -1159,8 +1117,6 @@ void Window::saveTestSettings()
 		interSaveToFile.setSelectedMasterPort(_sMasPort);
 		interSaveToFile.setSelectedSlavePort(_sSlaPort);
 		interSaveToFile.setPortBaudRateMax(_iBaudrateMax);
-
-
 		interSaveToFile.setParity(_iParity);
 		interSaveToFile.setStopBits(_iStopBits);
 		interSaveToFile.setDataBits(_iDataBits);
@@ -1194,7 +1150,6 @@ void Window::saveTestSettings()
 		if(_iError != ERROR_SUCCESS)
 		{
 			sError = "Error saving to ini file.\n";
-			//sError.append(tools.convertToString(_iError));
 			sError.append(tools.errorCodeParser(_iError));
 			MessageBoxA(NULL, sError.c_str(), WINDOW_TITLE, MB_OK | MB_ICONERROR);
 		}
@@ -1215,27 +1170,19 @@ void Window::saveTestSettings()
 //------------------------------------------------------------------------------
 void Window::loadTestSettings(string sFilePath, string sPort)
 {
-	
 	interpreter = new Interpreter();
 
 	if (sFilePath == "")
-	{
 		_sPath = getFilePath();
-	}
 	else
 		_sPath = sFilePath;
 
-
 	if (_sPath != "")
-	{
 		_iError = interpreter->loadIniFile(_sPath, sPort);
-	}
 	else
-	{
 		_iError = ERROR_EMPTY_FILE;
-	}
 
-	delete interpreter;
+	
 
 	if(_iError != ERROR_SUCCESS)
 	{
@@ -1251,7 +1198,7 @@ void Window::loadTestSettings(string sFilePath, string sPort)
 		MessageBoxA(NULL, "testing finished", WINDOW_TITLE, MB_OK);
 	}
 
-
+	delete interpreter;
 	viewAllElements(TRUE);
 
 }
@@ -1263,8 +1210,6 @@ void Window::loadTestSettings(string sFilePath, string sPort)
 //------------------------------------------------------------------------------
 string Window::getFilePath()
 {
-	//GetSaveFileName()
-
 	OPENFILENAMEA ofn;       // common dialog box structure
 	char szFile[MAX_PATH];   // buffer for file name
 
@@ -1291,24 +1236,10 @@ string Window::getFilePath()
 	{
 
 	}
-	
-		
-//		hf = CreateFileA(ofn.lpstrFile, 
-//						GENERIC_READ,
-//						0,
-//						(LPSECURITY_ATTRIBUTES) NULL,
-//						OPEN_EXISTING,
-//						FILE_ATTRIBUTE_NORMAL,
-//						(HANDLE) NULL);
-//
+
 	//lpstrFile contains filepath
 	return ofn.lpstrFile;
 }
-
-
-
-
-
 
 
 //------------------------------------------------------------------------------
@@ -1317,8 +1248,6 @@ string Window::getFilePath()
 //------------------------------------------------------------------------------
 string Window::getSaveFilePath()
 {
-	//GetSaveFileName()
-
 	OPENFILENAMEA ofn;       // common dialog box structure
 	char szFile[MAX_PATH];   // buffer for file name
 
@@ -1345,21 +1274,16 @@ string Window::getSaveFilePath()
 	{
 		return "";
 	}
-	
-		
-//		hf = CreateFileA(ofn.lpstrFile, 
-//						GENERIC_READ,
-//						0,
-//						(LPSECURITY_ATTRIBUTES) NULL,
-//						OPEN_EXISTING,
-//						FILE_ATTRIBUTE_NORMAL,
-//						(HANDLE) NULL);
-//
+
 	//lpstrFile contains filepath
 	return ofn.lpstrFile;
 }
 
 
+
+//------------------------------------------------------------------------------
+//	Shows or hides the gui elements according to the input parameter bView
+//------------------------------------------------------------------------------
 void Window::viewAllElements(BOOLEAN bView)
 {
 	//Buttons
@@ -1399,7 +1323,10 @@ void Window::viewAllElements(BOOLEAN bView)
 }
 
 
-
+//------------------------------------------------------------------------------
+//	Shows or hides the gui port configuration settings according to the
+//	input parameter bView
+//------------------------------------------------------------------------------
 void Window::viewPortElements(BOOLEAN bView)
 {
 	//parity
@@ -1510,8 +1437,6 @@ void Window::viewPortElements(BOOLEAN bView)
 //    // Associate the ToolTip with the "tool" window.
 //    SendMessage(hwndTT, TTM_ADDTOOL, 0, (LPARAM) (LPTOOLINFO) &ti);
 //	SendMessage(hwndTT, TTM_ACTIVATE, true, NULL);
-
-
 
 
  //   INITCOMMONCONTROLSEX iccex; 

@@ -25,8 +25,6 @@ public:
 //------------------------------------------------------------------------------
 //Methods
 	int log(bool bLog, string sPort, int MasterSlave);
-	//void closelog(bool bLog);
-
 
 private:
 //------------------------------------------------------------------------------
@@ -37,7 +35,6 @@ private:
 	streambuf * backup, * psbuf;
 	ofstream filestr;
 	Tools tools;
-
 
 };
 #endif

@@ -34,14 +34,12 @@ public:
 
 	DCB dcb;
 
-	
 	vector<string> vPortList;
 	vector<string> vBaud;
 	vector<DWORD> dwvBaudRates;
 
 	string saDefaultBaudrates[25];
 	string sPort;
-
 
 	int iExitCode;
 

@@ -988,7 +988,7 @@ int FixedTest::startSlaveTest()
 //------------------------------------------------------------------------------
 int FixedTest::communicate(string sSendData, bool bMaster) 
 {
-//	bool bRead;
+
 	bTransmissionError = false;
 	bool bRead;
 	string sTemp = "";
@@ -1285,6 +1285,7 @@ int FixedTest::setTestInformation(string sTestInfo)
 	return ERROR_SUCCESS;
 }
 
+
 //------------------------------------------------------------------------------
 //	creates a string with the line number and textlenght for the next to arrive
 //	information, only slave uses this
@@ -1376,7 +1377,6 @@ int FixedTest::sendAndSync(string sInformation)
 	bool bStop	 = false;
 	bool bError = false;
 	int iCounter = 0;
-//	int iError	 = 1;
 	string sTemp = "";
 
 	bError = sendData(true, sInformation);
@@ -1645,4 +1645,3 @@ int FixedTest::communicateSlave(int iLength)
 		return ERROR_READ_PORT;
 	}//getData
 }
-

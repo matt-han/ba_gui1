@@ -1,3 +1,9 @@
+/*
+ * Clas to handle the test organization and starts the tests
+ */
+
+
+
 #ifndef _FIXEDTEST_H
 #define _FIXEDTEST_H
 

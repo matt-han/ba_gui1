@@ -27,6 +27,12 @@ PortCommunications::~PortCommunications(void)
 {
 }
 
+//------------------------------------------------------------------------------
+//	set the given COM port handle
+//	Parameters:
+//	 IN:
+//		- HANDLE hCom -> handle to a opened COM port
+//------------------------------------------------------------------------------
 void PortCommunications::setComHandle(HANDLE hCom)
 {
 	this->hCom = hCom;

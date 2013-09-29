@@ -1,3 +1,7 @@
+/*
+ * prepares variables and test structures to start the tests in class fixes test
+ */
+
 #ifndef _TESTMANAGER_H
 #define _TESTMANAGER_H
 

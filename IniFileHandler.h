@@ -1,8 +1,6 @@
 /*
- *	Opens, reads and closes cfg/ini files for automated testing
+ *	Opens, reads and closes ini files for automated testing
  */
-
-
 
 #ifndef _INIFILEHANDLER_H
 #define _INIFILEHANDLER_H

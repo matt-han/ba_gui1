@@ -162,7 +162,6 @@ int Com::closePort()
 //------------------------------------------------------------------------------
 void Com::enumeratePorts()
 {
-	//CUIntArray arrComPortNo; 
 	char szComPort[11];
 	HANDLE hPort;
 	string sPort;
@@ -309,6 +308,7 @@ vector<string> Com::returnBaudrates(string sChosenPort)
 		return vBaud;
 	}
 }
+
 
 //------------------------------------------------------------------------------
 //	Decode available baud rates for opened port. Fills vector vBaud with
@@ -482,6 +482,7 @@ int Com::setTimeOuts(int iTimeOut)
 		return ERROR_SUCCESS;
 }
 
+
 //------------------------------------------------------------------------------
 //	Calculate the timeouts acording to the information length and baud rate
 //	Parameter
@@ -530,6 +531,7 @@ int Com::calculateTimeOut(int iParity, int iStopbits, int iDatabits, int iBaud)
 	return iTimeOutms;
 }
 
+
 //------------------------------------------------------------------------------
 //	Save the port DCB structure for the opened port
 //
@@ -554,6 +556,7 @@ int Com::getDCB()
 			return ERROR_SUCCESS;
 		}
 }
+
 
 //------------------------------------------------------------------------------
 //	Set the port DCB structure after being edited

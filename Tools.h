@@ -1,11 +1,5 @@
 /*
  *	Class with diferent methods to do repeting operations across the project
- *  
- *  Methods:
- *		convertToString
- *		printTime and parseTime
- *		deleteSpacesandComents
- *		wait
  */
 
 

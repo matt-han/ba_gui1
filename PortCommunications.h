@@ -16,19 +16,12 @@ public:
 	PortCommunications(HANDLE hCom);
 	PortCommunications(void);
 	~PortCommunications(void);
-//------------------------------------------------------------------------------
-//Variables
-	
 
 //------------------------------------------------------------------------------
 //Methods
 	void setComHandle(HANDLE hCom);
 	bool readData(char *lpBuf, DWORD dwSize);
 	bool writeData(const char *lpBuf, DWORD dwSize);
-	//int checkPortStatus();
-	//BOOL ReadFromCOMPort(unsigned char* c_Data);
-//	BOOL WriteToCOMPort(unsigned char* c_Data);
-
 
 private:
 //------------------------------------------------------------------------------
@@ -36,7 +29,6 @@ private:
 
 	HANDLE hCom;
 	Tools tools;
-	//char * _lpBuf;
 };
 
 #endif

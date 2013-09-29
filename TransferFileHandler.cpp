@@ -43,9 +43,7 @@ int TransferFileHandler::openFile(string sFilePath)
 void TransferFileHandler::closeFile()
 {
 	if ( inputFile.is_open())
-	{
 		inputFile.close();
-	}
 }
 
 

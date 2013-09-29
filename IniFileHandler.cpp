@@ -1277,8 +1277,6 @@ string IniFileHandler::parseParityToIni(int iParity)
 }
 
 
-
-
 //------------------------------------------------------------------------------
 //	Parse GUI parameters to a string
 //	Parameters:
@@ -1357,6 +1355,8 @@ string IniFileHandler::parseDatabitsToIni(int iDatabits)
 
 	return sTemp;
 }
+
+
 //------------------------------------------------------------------------------
 //	parse INI file parameter to test setting and saves it in the right struct
 //	Parameters:
@@ -1580,6 +1580,7 @@ int IniFileHandler::parseDatabits(string sDatabits)
 	
 	return i;
 }
+
 
 //------------------------------------------------------------------------------
 //	parse INI file parameter to test setting

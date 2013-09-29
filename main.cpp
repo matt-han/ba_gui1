@@ -34,6 +34,7 @@ int main(int argc, char * argv[])
 	iTestError = 1;
 	int _iError = 2;
 
+	//if no arguments start the GUI
 	if (1 == argc)
 	{
 		HINSTANCE hInstance = GetModuleHandle(NULL);
@@ -42,8 +43,10 @@ int main(int argc, char * argv[])
 	else
 	{
 		bPrint = false;
+		//get the arguments from the command line
 		svParameters = tools.parseCmdLine(argv, argc);
 		
+		//parse the arguments
 		_iError = parseCmdParameters();
 		if (_iError == ERROR_SUCCESS)
 		{
@@ -51,11 +54,14 @@ int main(int argc, char * argv[])
 			cout << "\n\nStarting the test, parsing the configuration file" << endl;
 			cout << "Press ESC to stop the test" << endl << endl;
 
+			//start the test in a new thread
 			thread t1 (&start);
 			t1.detach();
 
+			//continues as long as esc nor the test is finished
 			while(bContinue && !bStopTest)
 			{
+				//if a key was stroked
 				if(kbhit())
 				{
 					c = getch();

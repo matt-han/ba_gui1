@@ -150,7 +150,8 @@ string Tools::delSpaces(string s)
 //	Parses the command line argunments and saves it in a string vector
 //	Parameters:
 //	 IN:
-//		- LPSTR pCmdLine -> command line arguments
+//		- char * argv[] -> command line arguments
+//		- int argc -> number of given arguments
 //	Return: string vector with the command line arguments
 //------------------------------------------------------------------------------
 vector<string> Tools::parseCmdLine(char * argv[], int argc)
@@ -160,33 +161,6 @@ vector<string> Tools::parseCmdLine(char * argv[], int argc)
 	string sCmdLine = convertToString(argv);
 	int i = 0;
 	int iLength = sCmdLine.length();
-
-	//for (int j = 0; i < iLength ; j++)
-	//{
-	//	
-	//	while(i < iLength)
-	//	{
-	//		//if not a space, save it to sTemp
-	//		if (0 == isspace(sCmdLine.at(i)) )
-	//		{
-	//			sTemp.append( 1, sCmdLine.at(i) );
-	//			i++;
-	//		}
-	//		else
-	//		{
-	//			i++;
-	//			break;
-	//		}
-	//	}//while
-
-	//	if (sTemp != "")
-	//	{
-	//		//clog << "stemp " << sTemp << "-" << endl << endl;
-	//		svParameters.push_back(sTemp);
-	//		sTemp = "";
-	//	}
-	//	
-	//}
 
 	for(int j = 1; j < argc; j++)
 	{
@@ -206,13 +180,11 @@ vector<string> Tools::parseCmdLine(char * argv[], int argc)
 //------------------------------------------------------------------------------
 void Tools::wait(int x)
 {
-	clog << "waitinng..." << endl;
+	clog << "waiting..." << endl;
 
 	for (int i = 0; i < x; i++)
-	{
-		
 		Sleep(10);
-	}
+
 	clog << endl;
 }
 
@@ -294,18 +266,14 @@ string Tools::replaceASCII(string sToSend)
 	string sSlash = "\\";
 	int iCharVal = 0;
 
-
-
 	for(int i = 0; i < sToSend.length();)
 	{
 		//if char at i == "\\"
 		if(0 == sToSend.compare(i,1,"\\"))
 		{
 			sTemp = sToSend.at(i+1);
-			//sTemp.append(sToSend.at(i+2));
+			
 			sTemp.insert(sTemp.end(), sToSend.at(i+2) );
-			//delete the 3 chars of the ASCII
-			//sToSend.erase(i,3);
 
 			//convert string with hex number to int
 			iCharVal = strtol(sTemp.c_str(), NULL, 16);
@@ -324,7 +292,6 @@ string Tools::replaceASCII(string sToSend)
 		else //append the char to the return string
 		{
 			sParsed.insert(sParsed.end(), sToSend.at(i) );
-				//append(sToSend.at(i));
 			i++;
 		}
 	}
@@ -477,6 +444,4 @@ void Tools::showCmdHelp()
 	cout << "/[COM Port]" << endl;
 	cout << " This is an optional parameter, it specifies which port will be tested" << endl;
 	cout << " If a port is given, the test configuration file header has to be [COM]" << endl << endl;
-	//cout << "" << endl;
-	//cout << "" << endl;
 }

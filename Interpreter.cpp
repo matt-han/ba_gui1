@@ -1,11 +1,5 @@
 #include "Interpreter.h"
 
-
-//void Interpreter::startT1()
-//{
-//	_t1 = thread (&Interpreter::handleGui, this);
-//}
-
 //------------------------------------------------------------------------------
 //Default constructor
 //------------------------------------------------------------------------------
@@ -190,8 +184,6 @@ void Interpreter::setTransferFile(string sTransferFile)
 void Interpreter::setTextToSend(string sTextToSend)
 {
 	this->_sTextToSend = sTextToSend;
-	//this->_sTextToSend = tools.replaceASCII(sTextToSend);
-
 }
 
 
@@ -257,7 +249,6 @@ void Interpreter::setBaudVector(vector<string> svBaud)
 //------------------------------------------------------------------------------
 int Interpreter::checkInputConfigData()
 {
-
 	//parity
 	if(_iParity == DEFAULT_VALUE)
 	{
